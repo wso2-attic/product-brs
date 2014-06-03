@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+  ~  Copyright (c) 2009, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~  WSO2 Inc. licenses this file to you under the Apache License,
+  ~  Version 2.0 (the "License"); you may not use this file except
+  ~  in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing,
+  ~  software distributed under the License is distributed on an
+  ~  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~  KIND, either express or implied.  See the License for the
+  ~  specific language governing permissions and limitations
+  ~  under the License.
+  -->
+
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+        <title>
+            WSO2 BRS - Frequently Asked Questions
+        </title>
+        <link href="css/brs-docs.css" rel="stylesheet"/>
+        <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+    </head>
+    <body xml:lang="en">
+        [
+        <a href="docs_index.html">Documentation Index</a>
+        ]
+        <h1>WSO2 Business Server (BRS) Frequently Asked Questions</h1>
+        <h2>Contents</h2>
+        <div class="toc">
+            <ol>
+                <li>
+                    <a href="#how-rule-engine">How to plug a new Rule Engine?</a>
+                </li>
+                <li>
+                    <a href="#how-fact-add">How to register new fact and result adapters?</a>
+                </li>
+                <li>
+                    <a href="#how-qos">Can I configure security, reliability, etc (QoS) for a rule
+                        service?
+                    </a>
+                </li>
+                <li>
+                    <a href="#can-rule-mediator">Can I used the rules in the mediators of WSO2 ESB
+                        ?
+                    </a>
+                </li>
+                <li>
+                    <a href="#when-services-xml">When should I use a services.xml along with the rule service?
+                    </a>
+                </li>
+                <li>
+                    <a href="#when-aar-file">When should I use the rule service archive (.aar)?
+                    </a>
+                </li>
+            </ol>
+
+            <h3 id="how-rule-engine">
+                1. How to plug a new Rule Engine?
+            </h3>
+            <p>There are two ways and please follow the <a href="extensions_guide.html">extending BRS Guide</a> and  <a href="configuration_language.html">Configuration Guide</a>.
+            </p>
+            <h3 id="how-fact-add">
+                2. How to register new fact and result adapters?
+            </h3>
+            <p>Please follow the extending BRS guide and configuration guide.</p>
+            <h3 id="how-qos">
+                3. Can I configure security, reliability, etc (QoS) for a rule service?
+            </h3>
+            <p>Yes, you can easily do. A rule service is similar to an axis2 service. You can
+                configure QoS for a rule service through service management admin UI or manually
+                editing services.xml of a rule service
+            </p>
+            <h3 id="can-rule-mediator">
+                4. Can I used the rules in the mediators of WSO2 ESB ?
+            </h3>
+            <p>Yes, Rule component has been integrated to the WSO2 ESB as a mediator. There are a
+                set of samples demonstrating it. Please checks the rule sample guide in the WSO2 ESB
+                documentation
+            </p>
+            <h3 id="when-services-xml">
+                5. When should I use a services.xml along with the rule service?
+            </h3>
+            <p>If you need to take features offered by the services.xml such as setting session scope , then you have to use a services.xml.
+            </p>
+            <h3 id="when-aar-file">
+                6. When should I use the rule service archive (.aar)?
+            </h3>
+            <p>If you have facts as a Jar file, rule set as a file, or if you require a services.xml (Axis2 Service Configuration), then, the rule service (.aar) should be used.
+            </p>
+        </div>
+    </body>
+</html>

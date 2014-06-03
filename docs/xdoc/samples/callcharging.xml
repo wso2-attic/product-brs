@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!--
+~ Copyright (c) 2009, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+~
+~ WSO2 Inc. licenses this file to you under the Apache License,
+~ Version 2.0 (the "License"); you may not use this file except
+~ in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing,
+~ software distributed under the License is distributed on an
+~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+~ KIND, either express or implied. See the License for the
+~ specific language governing permissions and limitations
+~ under the License.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <title>WSO2 BRS - Call Charging Service</title>
+  <link href="../css/brs-docs.css" rel="stylesheet" />
+  <link href="../styles/dist-docs.css" rel="stylesheet" type="text/css"
+  media="all" />
+</head>
+
+<body>
+<p>[<a href="../docs_index.html">Documentation Index</a>] 
+<h1>WSO2 BRS - Samples : Call Charging Service </h1>
+
+<p>This guide demonstrates a service for specifying the charge rates for calls.
+This service uses business rules.</p>
+
+<p>Please follow the <a href="../user_guide.html">User Guide</a> before proceeding with this sample, if you have
+not already followed the <a href="../user_guide.html">User Guide</a>. </p>
+
+<h2>Contents</h2>
+
+<div class="toc">
+<ul>
+  <li><a href="#CallChargingService">Call Charging Service </a> </li>
+  <li><a href="#References">References</a> </li>
+</ul>
+</div>
+
+<h2 id="CallChargingService">Call Charging Service</h2>
+
+<h3>Rules</h3>
+
+<p>Rule 1 : If the local calls were taken during daytime, then, the call rate
+is two dollars per minute.</p>
+
+<p>Rule 2 : If the local calls were taken during night, then, the call rate is
+one dollar per minute.</p>
+
+<p>Rule 3 : If the international were taken during daytime, then, the call rate
+is six dollars per minute.</p>
+
+<p>Rule 4 : If the international were taken during night, then, the call rate
+is four dollars per minute.</p>
+
+<h3>Facts</h3>
+
+<p>There are a one fact and a one result - <i>A call has been taken
+(CallLog)</i> and <i>a charge should be calculated for the call
+(CallCharge).</i></p>
+<pre xml:space="preserve">              </pre>
+<pre xml:space="preserve">package samples.callcharging;
+
+import java.util.Calendar;
+
+/**
+ * CallLog fact
+ */
+public class CallLog {
+
+    private String type;
+
+    private double period;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public double getPeriod() {
+        return period;
+    }
+
+    public void setPeriod(double period) {
+        this.period = period;
+    }
+
+    public int now() {
+        Calendar cal = Calendar.getInstance();
+        return cal.get(Calendar.HOUR_OF_DAY);
+    }
+}
+
+package samples.callcharging;
+
+/**
+ * CallCharge fact
+ */
+public class CallCharge {
+
+    private double amount;
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+}  </pre>
+
+<h3>Rule Service Configuration - service.rsl</h3>
+<pre xml:space="preserve">
+    &lt;ruleService
+        name=&quot;CallChargingService&quot;
+        xmlns=&quot;http://wso2.org/carbon/rules&quot;
+        targetNamespace=&quot;http://com.test/callcharging&quot;&gt;
+    &lt;ruleSet&gt;
+        &lt;rule resourceType=&quot;regular&quot; sourceType=&quot;inline&quot;&gt;
+            &lt;![CDATA[
+                package callcharging
+
+                import samples.callcharging.CallLog;
+                import samples.callcharging.CallCharge;
+
+                rule &quot;Local Call During Daytime&quot;
+                when
+                      callLog : CallLog( type == &quot;local&quot;)
+                           eval((6 &lt; callLog.now()) &amp;&amp; (callLog.now()&lt; 18))
+                then
+                           CallCharge c = new CallCharge();
+                           c.setAmount(callLog.getPeriod() * 2);
+                           insertLogical(c);
+                end
+
+                rule &quot;Local Call During Night&quot;
+                when
+                      callLog : CallLog( type == &quot;local&quot;)
+                           eval((18 &lt; callLog.now()) || (callLog.now()&lt; 5))
+                then
+                           CallCharge c = new CallCharge();
+                           c.setAmount(callLog.getPeriod() * 1);
+                           insertLogical(c);
+                end
+
+                rule &quot;IDD Call During Daytime&quot;
+                when
+                      callLog : CallLog( type == &quot;idd&quot;)
+                           eval((6 &lt; callLog.now()) &amp;&amp; (callLog.now()&lt; 18))
+                then
+                           CallCharge c = new CallCharge();
+                           c.setAmount(callLog.getPeriod() * 6);
+                           insertLogical(c);
+                end
+
+                rule &quot;IDD Call During Night&quot;
+                when
+                      callLog : CallLog( type == &quot;idd&quot;)
+                           eval((18 &lt; callLog.now()) || (callLog.now()&lt; 5))
+                then
+                           CallCharge c = new CallCharge();
+                           c.setAmount(callLog.getPeriod() * 4);
+                           insertLogical(c);
+                end
+
+            ]]&gt;
+        &lt;/rule&gt;
+    &lt;/ruleSet&gt;
+    &lt;operation name=&quot;charge&quot;&gt;
+        &lt;input wrapperElementName=&quot;callCharge&quot; namespace=&quot;http://com.test/callCharge&quot;&gt;
+            &lt;fact elementName=&quot;callLog&quot; namespace=&quot;http://com.test/callCharge&quot; type=&quot;samples.callcharging.CallLog&quot;&gt;&lt;/fact&gt;
+        &lt;/input&gt;
+        &lt;output wrapperElementName=&quot;callChargeRespone&quot; namespace=&quot;http://com.test/callCharge&quot;&gt;
+            &lt;fact elementName=&quot;callCharge&quot; namespace=&quot;http://com.test/callCharge&quot; type=&quot;samples.callcharging.CallCharge&quot;&gt;&lt;/fact&gt;
+        &lt;/output&gt;
+    &lt;/operation&gt;
+&lt;/ruleService&gt;
+            </pre>
+
+</p>
+
+<h3>Deploying Service </h3>
+
+<p>You can either create an .aar file and upload or create a rule service using
+rule service wizard UI. Please refer the <a href="../user_guide.html">User Guide</a> for more information.</p>
+
+<p><h3>Testing Sample</h3>
+You can use Try-it tool with the requests similar to the following. </p>
+
+<p><pre xml:space="preserve">&lt;type&gt;idd&lt;/type&gt;
+&lt;period&gt;12&lt;/period&gt;</pre>
+</p>
+
+<p>Another request </p>
+<pre>&lt;type&gt;local&lt;/type&gt;
+&lt;period&gt;12&lt;/period&gt;</pre>
+
+<p>You can also use the code generation. There is an option for code generation
+in the services management page. A client using generated stub codes is shown
+bellow. Codes was generated with option - Unpacks the databinding classes.</p>
+<pre>package test.com.Client;
+
+    import org.apache.axis2.AxisFault;
+    import test.com.callcharge.CallCharge;
+    import test.com.callcharge.CallChargeE;
+    import test.com.callcharge.CallLog;
+    import test.com.callcharging.CallChargingServiceStub;
+
+    import java.rmi.RemoteException;
+
+    public class CallChargingTestCase {
+        public static void main(String[] args) {
+            try {
+                CallChargingServiceStub callChargingServiceStub = new CallChargingServiceStub(&quot;http://localhost:9763/services/CallChargingService&quot;);
+
+                CallChargeE callChargeRequest = new CallChargeE();
+                CallLog callLog = new CallLog();
+                callLog.setPeriod(200);
+                callLog.setType(&quot;local&quot;);
+                CallLog[] callLogs = new CallLog[1];
+                callLogs[0] = callLog;
+
+                callChargeRequest.setCallLog(callLogs);
+
+                CallCharge[] callCharges = callChargingServiceStub.charge(callLogs);
+                if(callCharges != null){
+                    for (CallCharge callCharge : callCharges){
+                        System.out.println(&quot;Tha charge for the call : &quot; + callCharge.getAmount());
+
+                    }
+                }
+            } catch (AxisFault axisFault) {
+                axisFault.printStackTrace();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }</pre>
+
+<p><h2 id="References">References</h2>
+</p>
+</body>
+</html>

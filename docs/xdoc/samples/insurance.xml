@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!--
+~ Copyright (c) 2009, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+~
+~ WSO2 Inc. licenses this file to you under the Apache License,
+~ Version 2.0 (the "License"); you may not use this file except
+~ in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing,
+~ software distributed under the License is distributed on an
+~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+~ KIND, either express or implied. See the License for the
+~ specific language governing permissions and limitations
+~ under the License.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <title>WSO2 BRS - Samples Insurance Application</title>
+  <link href="../css/brs-docs.css" rel="stylesheet" />
+  <link href="../styles/dist-docs.css" rel="stylesheet" type="text/css"
+  media="all" />
+</head>
+
+<body>
+<p>[<a href="../docs_index.html">Documentation Index</a>] 
+<h1>WSO2 BRS - Samples : Insurance Service</h1>
+
+<p>This guide demonstrates a simple insurance service which uses business
+rules.</p>
+
+<p>Please follow the <a href="../user_guide.html">User Guide</a> before proceeding with this sample, if you have
+not already followed the <a href="../user_guide.html">User Guide</a>. </p>
+
+<h2>Contents</h2>
+
+<div class="toc">
+<ul>
+  <li><a href="#InsuranceApplication">Insurance Service</a> </li>
+  <li><a href="#References">References</a> </li>
+</ul>
+</div>
+
+<h2 id="InsuranceApplication">Insurance Service</h2>
+
+<h3>Rules</h3>
+
+<p>Given a car and a driver, if all of the following conditions are met : <ul>
+  <li>The car is red</li>
+  <li>The car is in a sport class</li>
+  <li>The driver is male</li>
+  <li>The driver is between the ages of 16-25</li>
+</ul>
+The consequence is a 20% insurance premium increase. </p>
+
+<h3>Facts</h3>
+</p>
+
+<p>There are two facts - Driver and Car , and a one result - Policy.</p>
+<pre>package samples.insurance;
+
+/**
+ * Car
+ */
+public class Car {
+
+    private String style;
+    private String color;
+
+    public String getStyle() {
+        return style;
+    }
+
+    public void setStyle(String style) {
+        this.style = style;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+}
+package samples.insurance;
+
+/**
+ * Driver
+ */
+public class Driver {
+
+    private int age;
+    private String name;
+    private boolean male;
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public boolean isMale() {
+        return male;
+    }
+
+    public void setMale(boolean male) {
+        this.male = male;
+    }
+}</pre>
+<pre>package samples.insurance;
+
+/**
+ * Policy
+ */
+public class Policy {
+
+    private double premium = 100000;
+
+    public double getPremium() {
+        return premium;
+    }
+
+    public void setPremium(double premium) {
+        this.premium = premium;
+    }
+
+    public void increasePremium(double percentage) {
+        setPremium((percentage + 1) * premium);
+    }
+
+    public void decreasePremium(double percentage) {
+        setPremium((1 - percentage) * premium);
+    }
+}</pre>
+
+<p><h3>Rule Service Configuration - service.rsl</h3>
+</p>
+<pre>&lt;ruleService
+        name=&quot;InsuranceService&quot;
+        xmlns=&quot;http://wso2.org/carbon/rules&quot;
+        targetNamespace=&quot;http://com.test/insurance&quot;&gt;
+    &lt;ruleSet&gt;
+        &lt;rule resourceType=&quot;regular&quot; sourceType=&quot;inline&quot;&gt;
+            &lt;![CDATA[
+                package insurance
+
+                import samples.insurance.Driver;
+                import samples.insurance.Car;
+                import samples.insurance.Policy;
+
+                rule &quot;High Risk&quot;
+                when
+                      Driver( ( male == true) &amp;&amp; ( age &gt;= 16 ) &amp;&amp; ( age &lt;= 25 ))
+                      Car ( ( style == &quot;sport&quot;) &amp;&amp; ( color==&quot;red&quot; ) )
+                then
+                      Policy p = new Policy ();
+                           p.increasePremium(0.2);
+                           insertLogical(p);
+                end
+            ]]&gt;
+        &lt;/rule&gt;
+    &lt;/ruleSet&gt;
+    &lt;operation name=&quot;applyForInsurance&quot;&gt;
+        &lt;input wrapperElementName=&quot;applyForInsurance&quot; namespace=&quot;http://com.test/applyForInsurance&quot;&gt;
+            &lt;fact elementName=&quot;carInsurance&quot; namespace=&quot;http://com.test/applyForInsurance&quot; type=&quot;samples.insurance.Car&quot;&gt;&lt;/fact&gt;
+	    &lt;fact elementName=&quot;driverInsurance&quot; namespace=&quot;http://com.test/applyForInsurance&quot; type=&quot;samples.insurance.Driver&quot;&gt;&lt;/fact&gt;
+        &lt;/input&gt;
+        &lt;output wrapperElementName=&quot;insurancerApplicationRespone&quot; namespace=&quot;http://com.test/applyForInsurance&quot;&gt;
+            &lt;fact elementName=&quot;insurancePolicy&quot; namespace=&quot;http://com.test/applyForInsurance&quot; type=&quot;samples.insurance.Policy&quot;&gt;&lt;/fact&gt;
+        &lt;/output&gt;
+    &lt;/operation&gt;
+&lt;/ruleService&gt;</pre>
+
+<h3>Deploying Service </h3>
+
+<p>You can either create an .aar file and upload or create a rule service using
+rule service wizard UI. Please refer the <a href="../user_guide.html">User Guide</a> for more information.</p>
+
+<p><h3>Testing Sample</h3>
+You can use Try-it tool with a request similar to the following. </p>
+
+<p>Put following in the car </p>
+<pre>&lt;color&gt;red&lt;/color&gt;
+&lt;style&gt;sport&lt;/style&gt;</pre>
+
+<p>Put following in the Driver </p>
+<pre>&lt;age&gt;20&lt;/age&gt;
+&lt;name&gt;your name&lt;/name&gt;
+&lt;male&gt;true&lt;/male&gt;</pre>
+
+<p>You can also use the code generation. There is an option for code generation
+in the services management page. A client using generated stub codes is shown
+bellow. Codes was generated with option - Unpacks the databinding classes.</p>
+<pre>package org.wso2.carbon.samples;
+
+import org.apache.axis2.AxisFault;
+import org.wso2.carbon.samples.insuranceService.insurance.ApplyForInsurance;
+import org.wso2.carbon.samples.insuranceService.insurance.Car;
+import org.wso2.carbon.samples.insuranceService.insurance.Driver;
+import org.wso2.carbon.samples.insuranceService.insurance.Policy;
+import org.wso2.carbon.samples.insuranceService.stub.InsuranceServiceStub;
+import java.rmi.RemoteException;
+
+public class InsuranceServiceTestCase {
+
+    public static void main(String[] args) {
+
+        try {
+            InsuranceServiceStub insuranceServiceStub =
+                    new InsuranceServiceStub("http://localhost:9763/services/InsuranceService");
+            ApplyForInsurance applyForInsurance = new ApplyForInsurance();
+
+            Car car = new Car();
+            car.setColor("red");
+            car.setStyle("sport");
+            Car[] cars = new Car[1];
+            cars[0] = car;
+
+            Driver driver = new Driver();
+            driver.setName("your name");
+            driver.setAge(24);
+            driver.setMale(true);
+            Driver[] drivers = new Driver[1];
+            drivers[0] = driver;
+
+            applyForInsurance.setCarInsurance(cars);
+            applyForInsurance.setDriverInsurance(drivers);
+
+            Policy[] policies = insuranceServiceStub.applyForInsurance(cars, drivers);
+            double result = policies[0].getPremium();
+            System.out.println(result);
+        } catch (AxisFault axisFault) {
+            axisFault.printStackTrace();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+}</pre>
+
+<p><h2 id="References">References</h2>
+
+</p>
+</body>
+</html>

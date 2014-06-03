@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!--
+~ Copyright (c) 2009, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+~
+~ WSO2 Inc. licenses this file to you under the Apache License,
+~ Version 2.0 (the "License"); you may not use this file except
+~ in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing,
+~ software distributed under the License is distributed on an
+~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+~ KIND, either express or implied. See the License for the
+~ specific language governing permissions and limitations
+~ under the License.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"></meta>
+  <title>WSO2 BRS - User Guide</title>
+  <link href="css/brs-docs.css" rel="stylesheet"></link>
+  <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"></link>
+</head>
+
+<body>
+<p>[<a href="docs_index.html">Documentation Index</a>] 
+<h1>WSO2 Business Rules Server (BRS) User Guide</h1>
+
+<p>The goal of this guide is to provide guidelines to be followed in order to
+get familiar with both Rule Service Web UI and the procedure of exposing a rule
+set as a web service. </p>
+
+<h2>Contents</h2>
+
+<div class="toc">
+<ul>
+  <li><a href="#Sample">Order Approval Sample</a> </li>
+  <li><a href="#Upload">Rule Service Upload</a> </li>
+  <li><a href="#Wizard">Rule Service Wizard</a> </li>
+  <li><a href="#BankingSample">Banking Sample</a> </li>
+  <li><a href="#References">References</a> </li>
+</ul>
+</div>
+
+<h2 id="Sample">Order Approval Sample</h2>
+
+<p>This guide is centered on a very simple example and provides various methods
+of implementing that sample. The sample is shown bellow and it is only a part
+of a large rule set of an order processing application. </p>
+
+<h3>Rules</h3>
+<pre xml:space="preserve">Rule 1 : An order for stocks of IBM is accepted only if the number of stocks is higher than 10.
+Rule 2 : An order for stocks of SUN is accepted only if the stock prize is higher than 100 $.
+Rule 3 : An order for stocks of MSFT is accepted only if the stock prize is higher than 50 $ and the number of stocks is lower than 200.
+            </pre>
+
+<h3>Facts</h3>
+
+<p>Above three rules are to use validating orders. For these rules , the
+<i>fact</i> is <i>A Customer places an order.</i> and can be captured using a
+Java bean as follows. </p>
+<pre xml:space="preserve">                package samples.userguide;
+
+                /**
+                * Represents<i> the fact of a customer places an order</i> 
+                */
+                public class PlaceOrder {
+
+                String symbol;
+                int quantity;
+                double price;
+
+                public String getSymbol() {
+                return symbol;
+                }
+
+                public void setSymbol(String symbol) {
+                this.symbol = symbol;
+                }
+
+                public int getQuantity() {
+                return quantity;
+                }
+
+                public void setQuantity(int quantity) {
+                this.quantity = quantity;
+                }
+
+                public double getPrice() {
+                return price;
+                }
+
+                public void setPrice(double price) {
+                this.price = price;
+                }
+                }
+            </pre>
+
+<p>The results of the above three rule execution is either an OrderAccept or
+OrderReject. Those can be captured using Java beans as follows. </p>
+<pre xml:space="preserve">                package samples.userguide;
+
+                /**
+                * Order accept notification
+                */
+                public class OrderAccept {
+
+                private String message;
+
+                public String getMessage() {
+                return message;
+                }
+
+                public void setMessage(String message) {
+                this.message = message;
+                }
+                }
+            </pre>
+<pre xml:space="preserve">                package samples.userguide;
+
+                /**
+                * Order Reject Notification
+                */
+                public class OrderReject {
+
+                private String reason;
+
+                public String getReason() {
+                return reason;
+                }
+
+                public void setReason(String reason) {
+                this.reason = reason;
+                }
+                }
+            </pre>
+
+<p>Using above three rules, fact and result definitions, we can now define our
+rules using a rule language of a rule engine. WSO2 BRS is based on the
+JSR 94 Java Rule Specification and uses the open source Drools rule engine as
+the default JSR 94 provider. Let us write the rules of our example using Drools
+rule language. </p>
+
+<h3>Drools Rule File</h3>
+<pre xml:space="preserve">package OrderApproval;
+
+import samples.userguide.OrderAccept;
+import samples.userguide.OrderReject;
+import samples.userguide.PlaceOrder;
+
+rule "Order Approval Rule" dialect "mvel" no-loop true salience 4
+
+when
+$placeOrder : PlaceOrder( ( symbol == "IBM" &amp;&amp; quantity &gt; 10 ) || ( symbol == "SUN" &amp;&amp; price &gt; 100 ) || ( symbol == "MSFT" &amp;&amp; price &gt; 50 &amp;&amp; quantity &lt; 200 ) )
+then
+
+OrderAccept orderAccept = new OrderAccept();
+orderAccept.setMessage("Accepted order for: "+ $placeOrder.quantity + " stocks of "+
+$placeOrder.symbol +" at$ " + $placeOrder.price);
+insertLogical(orderAccept);
+
+end
+
+rule "IBM Order Deny Rule" dialect "mvel" no-loop true salience 3
+
+when
+not ( OrderAccept())
+$placeOrder : PlaceOrder( symbol == "IBM" )
+then
+retract($placeOrder);
+OrderReject orderReject = new OrderReject();
+orderReject.setReason("An Order for stocks of IBM is accepted only if the number of stocks is higher than 10.");
+insertLogical(orderReject);
+end
+
+rule "SUN Order Deny Rule" dialect "mvel" no-loop true salience 2
+when
+not ( OrderAccept())
+$placeOrder : PlaceOrder( symbol == "SUN" )
+then
+retract($placeOrder);
+OrderReject orderReject = new OrderReject();
+orderReject.setReason("An Order for stocks of SUN is accepted only if the stock price is higher than 100 $.");
+insertLogical(orderReject);
+end
+
+rule "MSFT Order Deny Rule" dialect "mvel" no-loop true salience 1
+when
+not ( OrderAccept())
+$placeOrder : PlaceOrder( symbol == "MSFT" )
+then
+retract($placeOrder);
+OrderReject orderReject = new OrderReject();
+orderReject.setReason("An Order for stocks of MSFT is accepted only if the stock price is higher than 50 $ and the number of stocks is lower than 200.");
+insertLogical(orderReject);
+end
+
+            </pre>
+
+<h2>Creating and Deploying the Rule Service</h2>
+
+<p>There are two ways for creating a rule service using Admin Console : Rule
+Service Upload and Rule Service Wizard. </p>
+
+<h2 id="Upload">Rule Service Upload</h2>
+This demonstrates how to use the rule service upload UI for deploying a rule
+service. 
+<p>Step 1 : Create a valid jar containing the java classes of facts and results
+defined in the Order Approval Sample presented above. </p>
+
+<p>Step 2 : Creating a rule service configuration. Please refer the <a href="configuration_language.html">Configuration Guide</a>
+ for writing a rule service configuration. The configuration
+required for the sample is shown bellow. It should name as service.rsl
+(Rule Service Language). </p>
+<pre xml:space="preserve">&lt;ruleService
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name=&quot;OrderApprovalService&quot;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xmlns=&quot;http://wso2.org/carbon/rules&quot;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;targetNamespace=&quot;http://com.test/orderApproval&quot;&gt;
+&nbsp;&nbsp;&lt;ruleSet&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;rule&nbsp;resourceType=&quot;regular&quot;&nbsp;sourceType=&quot;file&quot;&gt;orderApprovalRules.drl&lt;/rule&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/ruleSet&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;operation&nbsp;name=&quot;placeOrder&quot;&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;input&nbsp;wrapperElementName=&quot;placeOrder&quot;&nbsp;namespace=&quot;http://com.test/placeorder&quot;&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;fact&nbsp;elementName=&quot;order&quot;&nbsp;namespace=&quot;http://com.test/placeorder&quot;&nbsp;type=&quot;samples.userguide.PlaceOrder&quot;&gt;&lt;/fact&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/input&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;output&nbsp;wrapperElementName=&quot;placeOrderRespone&quot;&nbsp;namespace=&quot;http://com.test/placeorder&quot;&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;fact&nbsp;elementName=&quot;orderAccept&quot;&nbsp;namespace=&quot;http://com.test/placeorder&quot;&nbsp;type=&quot;samples.userguide.OrderAccept&quot;&gt;&lt;/fact&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;fact&nbsp;elementName=&quot;orderReject&quot;&nbsp;namespace=&quot;http://com.test/placeorder&quot;&nbsp;type=&quot;samples.userguide.OrderReject&quot;&gt;&lt;/fact&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/output&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/operation&gt;
+&lt;/ruleService&gt;</pre>
+
+<p>Step 4 : Organizing created three artifacts as per the figure showen
+bellow.</p>
+
+<p><img src="images/rule-service-dir.PNG"
+alt="Rule Service Directory Structure" /> </p>
+
+<p>Step 5 : Make a OrderApprovalService.aar file from the above content and
+upload using Rule Service Upload UI </p>
+
+<h3>Rule Service Archive Upload UI</h3>
+
+<p><img src="images/rule-service-upload.PNG" alt="Rule Service Upload" /> </p>
+
+<h3>Testing Sample</h3>
+
+<p>You can use Try-it tool for testing sample. You have to use a request
+similar to the one shown bellow. </p>
+<pre xml:space="preserve">                &lt;symbol&gt;IBM&lt;/symbol&gt;
+                &lt;quantity&gt;223&lt;/quantity&gt;
+                &lt;price&gt;14&lt;/price&gt;</pre>
+
+<p>You can test each rule by changing values in the symbol, price and quantity.
+For the above given request , the response is shown bellow </p>
+<pre xml:space="preserve">                &lt;brs:placeOrderResponse&gt;
+                   &lt;brs:result&gt;
+                      &lt;brs:OrderAccept xsi:type="ax2277:OrderAccept"&gt;
+                          &lt;ax2275:message&gt;Accepted order for: 223 stocks of IBM at$ 14.0&lt;/ax2275:message&gt;
+                      &lt;/brs:OrderAccept&gt;
+                   &lt;/brs:result&gt;
+                &lt;/brs:placeOrderResponse&gt;</pre>
+
+<p>You can also use the WSDL of the service and generate the client side
+code(stub) required for the service invocation. There is an option for code
+generation in the services management page. A client using generated stub codes
+is shown bellow. Codes was generated with option - Unpacks the databinding
+classes. </p>
+<pre>package org.wso2.carbon.samples;
+import org.wso2.carbon.samples.orderApprovalService.order.OrderAccept;
+import org.wso2.carbon.samples.orderApprovalService.order.PlaceOrder;
+import org.wso2.carbon.samples.orderApprovalService.order.PlaceOrderE;
+import org.wso2.carbon.samples.orderApprovalService.order.PlaceOrderRespone;
+import org.wso2.carbon.samples.orderApprovalService.stub.OrderApprovalServiceCallbackHandler;
+import org.wso2.carbon.samples.orderApprovalService.stub.OrderApprovalServiceStub;
+import java.rmi.RemoteException;
+
+public class PlaceOrderTestCase {
+
+    public static void main(String[] args) {
+
+        try {
+            OrderApprovalServiceStub orderApprovalServiceStub = new OrderApprovalServiceStub("http://localhost:9763/services/OrderApprovalService");
+            PlaceOrderE placeOrderE = new PlaceOrderE();
+            PlaceOrder placeOrder = new PlaceOrder();
+            placeOrder.setSymbol("IBM");
+            placeOrder.setPrice(150);
+            placeOrder.setQuantity(128);
+            PlaceOrder[] placeOrders = new PlaceOrder[1];
+            placeOrders[0] = placeOrder;
+            placeOrderE.setOrder(placeOrders);
+
+            PlaceOrderRespone placeOrderRespone = null; //new PlaceOrderRespone();
+            try {
+                placeOrderRespone = orderApprovalServiceStub.placeOrder(placeOrders);
+            } catch (RemoteException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+            OrderAccept[] orderAccepts = placeOrderRespone.getOrderAccept();
+            String result = orderAccepts[0].getMessage();
+            System.out.println(result);
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+</pre>
+
+<h2 id="Wizard">Rule Service Wizard</h2>
+
+<p>Step 1 : Service Information. Please give the service name as
+OrderApprovalService2 if you have uploaded the OrderApprovalService.arr
+already. The description is optional. Now go to the next step </p>
+
+<p><img src="images/setp-1.PNG" alt="Step-1" /></p>
+
+<p>Step 2 : Rule Set Information. There are four ways to specify the rule set
+or rule script. In-lined, upload, url or as a registry key. If you are going to
+specify as a registry key, then you have to put the rule script in the system
+governance registry.(Multiple scripts can be added here) </p>
+
+<h3>In-Lined</h3>
+
+<p><img src="images/setp-2-inlined.PNG" alt="Step-2-Inlined" /> </p>
+
+<h3>Registry</h3>
+
+<p><img src="images/setp-2-reg.PNG" alt="Step-2-Registry" /> </p>
+
+<h3>Upload</h3>
+
+<p><img src="images/setp-2-upload.PNG" alt="Step-2-Uplaod" /> </p>
+
+<h3>URL</h3>
+
+<p><img src="images/setp-2-url.PNG" alt="Step-2-Url" /> </p>
+
+<p>Step 3 : Facts Upload. In this step, you have to upload facts and results
+that are used in your rule script. It should be a valid jar file. Please make a
+jar file from the facts and results define in section one (Multiple jars can be uploaded) </p>
+
+<p><img src="images/setp-3.PNG" alt="Step-3" /></p>
+
+<p>Step 4 : Operation Summary. This displays any operation available in the
+service. You can uses add operation button to create a new operation </p>
+
+<p><img src="images/setp-4.PNG" alt="Step-4" /></p>
+
+<p>Step 5 : Add Operation. Please put the operation name. It is mandatory.
+Then, defines the required input and output facts.The type is the only mandatory
+attribute in both input and output facts. You can use fact selector to select a
+type, which we have already uploaded in the input fact upload step. Please add a one
+fact with the type as samples.userguide.PlaceOrder and two outputs with types
+as samples.userguide.OrderReject and samples.userguide.OrderAccept. Now click
+the add button. This will bring you to the previous step (i.e. Operations
+Summary). Now click finish button to create and deploy the rule service. </p>
+
+<p><img src="images/setp-5.PNG" alt="Step-5" /> </p>
+
+<h3>Fact Selector</h3>
+
+<p><img src="images/setp-5-fact.PNG" alt="Step-5-Fact" /> </p>
+
+<p>Testing the sample is similar to the testing procedure described in the rule
+service upload sample. </p>
+
+<h2 id="References">References</h2>
+</p>
+</body>
+</html>

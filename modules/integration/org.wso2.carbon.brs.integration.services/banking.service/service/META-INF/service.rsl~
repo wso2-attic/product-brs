@@ -1,0 +1,134 @@
+<ruleService
+        name="BankingService"
+	scope="transportsession"
+        xmlns="http://wso2.org/carbon/rules"
+        targetNamespace="http://com.test/Banking">
+    <ruleSet>
+        <rule resourceType="regular" sourceType="inline">
+            <![CDATA[
+                package Banking;
+
+                import samples.banking.Account;
+                import samples.banking.Deposit;
+                import samples.banking.DepositAccept;
+                import samples.banking.WithdrawAccept;
+                import samples.banking.WithdrawReject;
+                import samples.banking.Withdraw;
+
+                rule "Deposit with amount higher than 1000 in an Existing Account" dialect "mvel" no-loop true salience 6
+
+                when
+                $deposit : Deposit( amount > 1000 )
+                $account : Account( accountNumber == $deposit.accountNumber )
+                then
+                $account.increment($deposit.amount * 1.05);
+                DepositAccept depositAccept = new DepositAccept();
+                depositAccept.setMessage("Deposit was successfully done. 5 percentage credits is given because the deposit amount is higher than 1000. Amount was : " + $deposit.amount + ". Your account balance is now : "+ $account.balance);
+
+                insertLogical(depositAccept);
+                end
+
+                rule "Deposit with amount higher than 1000 in a new Account" dialect "mvel" no-loop true salience 5
+
+                when
+                $deposit : Deposit( amount > 1000)
+                not( Account( accountNumber == $deposit.accountNumber ) )
+                then
+                Account account = new Account();
+                account.setAccountNumber($deposit.accountNumber);
+                account.increment($deposit.amount * 1.05);
+                DepositAccept depositAccept = new DepositAccept();
+                depositAccept.setMessage("Deposit was successfully done.5 percentage credits is given because the deposit amount is higher than 1000. Amount was : " + $deposit.amount + ". Your account balance is now : "+ account.balance);
+                retract($deposit);
+                insert(account);
+		/* When using insertLogical method with drools 5.6.0 version, objects retract soon after condition become false.
+		So first response depositAccept will be retracted after adding insert object.
+		Changed insertLogical to insert method to send the response object .
+		insertLogical(depositAccept);
+		*/
+		insert(depositAccept);
+                end
+
+                rule "Deposit in an Existing Account" dialect "mvel" no-loop true salience 4
+
+                when
+                $deposit : Deposit( amount <= 1000 )
+                $account : Account( accountNumber == $deposit.accountNumber )
+                then
+                $account.increment($deposit.amount);
+                DepositAccept depositAccept = new DepositAccept();
+                depositAccept.setMessage("Deposit was successfully done. 5 percentage credits would be given if the deposit amount was higher than 1000. Amount was : " + $deposit.amount + ". Your account balance is now : "+ $account.balance);
+
+                insertLogical(depositAccept);
+                end
+
+                rule "Deposit in a new Account" dialect "mvel" no-loop true salience 3
+
+                when
+                $deposit : Deposit( amount <= 1000)
+                not( Account( accountNumber == $deposit.accountNumber) )
+                then
+                Account account = new Account();
+                account.setAccountNumber($deposit.accountNumber);
+                account.increment($deposit.amount);
+                DepositAccept depositAccept = new DepositAccept();
+                depositAccept.setMessage("Deposit was successfully done.5 percentage credits would be given if the deposit amount was higher than 1000. Amount was : " + $deposit.amount + ". Your account balance is now : "+ account.balance);
+
+                retract($deposit);
+                insert(account);
+		/* When using insertLogical method with drools 5.6.0 version, objects retract soon after condition become false.
+		So first response depositAccept will be retracted after adding insert object.
+		Changed insertLogical to insert method to send the response object .
+		insertLogical(depositAccept);
+		*/
+                insert(depositAccept);
+
+                end
+
+                rule "Withdrawing Allow" dialect "mvel" no-loop true salience 2
+
+                when
+                $withdraw : Withdraw()
+                $account : Account( accountNumber == $withdraw.accountNumber )
+                eval($account.balance > $withdraw.amount)
+                then
+                $account.decrement($withdraw.amount);
+                WithdrawAccept withdrawAccept = new WithdrawAccept();
+                withdrawAccept.setMessage("Withdraw was successfully done. Amount was : " + $withdraw.amount + ". Your new account balance is : "+ $account.balance);
+                insertLogical(withdrawAccept);
+                end
+
+                rule "Withdrawing Deny" dialect "mvel" no-loop true salience 1
+
+                when
+                $withdraw : Withdraw()
+                $account : Account( accountNumber == $withdraw.accountNumber )
+                eval($account.balance < $withdraw.amount)
+                then
+
+                WithdrawReject withdrawReject = new WithdrawReject();
+                withdrawReject.setReason("Withdrawing is only allowed if the account balance is higher than the requested amount. Your account balance is : "+ $account.balance);
+                insertLogical(withdrawReject);
+                end
+
+            ]]>
+        </rule>
+    </ruleSet>
+    <operation name="withDraw">
+        <input wrapperElementName="withDraw" namespace="http://com.test/withDraw">
+            <fact elementName="withDraw" namespace="http://com.test/withDraw" type="samples.banking.Withdraw"></fact>
+        </input>
+        <output wrapperElementName="withDrawRespone" namespace="http://com.test/withDraw">
+            <fact elementName="withdrawAccept" namespace="http://com.test/withDraw" type="samples.banking.WithdrawAccept"></fact>
+            <fact elementName="withdrawReject" namespace="http://com.test/withDraw" type="samples.banking.WithdrawReject"></fact>
+        </output>
+    </operation>
+    <operation name="deposit">
+        <input wrapperElementName="deposit" namespace="http://com.test/deposit">
+            <fact elementName="deposit" namespace="http://com.test/deposit" type="samples.banking.Deposit"></fact>
+        </input>
+        <output wrapperElementName="depositRespone" namespace="http://com.test/deposit">
+            <fact elementName="depositAccept" namespace="http://com.test/deposit" type="samples.banking.DepositAccept"></fact>
+        </output>
+    </operation>
+</ruleService>

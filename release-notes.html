@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+  ~  Copyright (c) 2009, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~  WSO2 Inc. licenses this file to you under the Apache License,
+  ~  Version 2.0 (the "License"); you may not use this file except
+  ~  in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing,
+  ~  software distributed under the License is distributed on an
+  ~  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~  KIND, either express or implied.  See the License for the
+  ~  specific language governing permissions and limitations
+  ~  under the License.
+  -->
+
+<!DOCTYPE html
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+      <meta content="text/html; charset=iso-8859-1" http-equiv="content-type"/>
+      <title>WSO2 BRS @product.version@ Released </title>
+      <link href="css/brs-docs.css" rel="stylesheet"/>
+      <link href="styles/dist-docs.css" rel="stylesheet" type="text/css"
+            media="all"/>
+  </head>
+  <body>
+  <div id="header">
+</div>
+
+<div id="main-content">
+<h1>The WSO2 Business Rules Server (BRS) @product.version@ Released!</h1>
+<p>
+    The WSO2 BRS team is pleased to announce the release of version @product.version@ of
+    the Open Source Business Rules Server (BRS).
+</p>
+
+<p>WSO2 Business Rules Server (WSO2 BRS) is to be your Business Rule Management
+System (BRMS). Our ultimate goal is to provide you with the suitable capability
+of codifying, executing, and maintaining your organization's decisions. </p>
+    <p>BRS @product.version@ supports exposing your organization' decisions as <strong>Secure,
+Reliable Web services</strong>. The integration with our Enterprise Service Bus
+supports incorporating your dynamic integration decisions to the your
+enterprise' applications integration solution.</p>
+
+<p>WSO2 BRS @product.version@ is developed on top of the revolutionary <a
+href="http://wso2.com/products/carbon/">Carbon platform</a> 
+, and is based on the OSGi framework to achieve the better modularity for
+your Service Oriented Architecture (SOA). This also contains a lots of new
+features and many other optional components to customize the behavior of the
+server. Further, if you do not want any of the built in features, you can
+uninstall those features without any trouble. In other words, BRS can be
+customized to your SOA needs. </p>
+
+<p>
+    You can download this distribution from <a href="http://wso2.com/products/business-rules-server/">
+    http://wso2.com/products/business-rules-server/</a> and give it a try.</p>
+
+<h2>How to Run </h2>
+<ol>
+  <li>Extract the downloaded zip</li>
+  <li>Go to the bin directory in the extracted folder</li>
+  <li>Run the wso2server.sh or wso2server.bat as appropriate</li>
+  <li>Point your browser to the URL https://localhost:9443/carbon</li>
+  <li>Use "admin", "admin" as the username and password to login as an admin
+    and create a user account</li>
+
+  <li>Assign the required permissions to the user through a role</li>
+  <li>If you need to start the OSGi console with the server use the property
+    -DosgiConsole when starting the server. The INSTALL.txt file found on the
+    installation directory will give you a comprehensive set of options and
+    properties that can be passed into the startup script</li>
+</ol>
+
+<h2>Key Features of WSO2 BRS @product.version@</h2>
+<ul>
+  <li>Expose Bussiness rules as a web Service</li>
+  <li>Drools based back end runtime</li>
+  <li>Management User Interface for creating, deploying, monitoring, and testing rule services</li>
+  <li>JSR 94 Compliant</li>
+  <li>Based on carbon platform it provides all the QOS features such as Security, Reliable Messaging, caching etc ...</li>
+  </ul>
+
+<p>
+    All the open issues pertaining to WSO2 BRS @product.version@ are reported at following
+    locations:
+</p>
+
+<h3>Issues Fixed for this release</h3>
+<ul>
+    <li>WSO2 BRS related components of the WSO2 Carbon Platform -
+        <a href="https://wso2.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=@fixed.issue.filter@">https://wso2.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=@fixed.issue.filter@</a>
+    </li>
+</ul>
+
+<h3>Known Issues</h3>
+<ul>
+    <li>For a complete list of features to be implemented please refer the list of known issues :
+        <a href="https://wso2.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=@known.issue.filter@">https://wso2.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=@known.issue.filter@</a>
+    </li>
+
+</ul>
+
+
+<h2>How You Can Contribute</h2>
+    <h3>
+      Mailing Lists
+    </h3>
+    <p>
+      Join our mailing list and correspond with the developers directly.
+    </p>
+    <ul>
+      <li>
+        Developer List : <a href="mailto:dev@wso2.org">dev@wso2.org</a>
+        | <a href="mailto:dev-request@wso2.org?subject=subscribe">Subscribe</a>
+        | <a href="http://wso2.org/mailarchive/dev/">Mail Archive</a>
+      </li>
+      <li>
+        User List : <a href="mailto:user@wso2.org">user@wso2.org</a>
+        | <a href="mailto:user-request@wso2.org?subject=subscribe">Subscribe</a>
+        | <a href="http://wso2.org/mailarchive/user/">Mail Archive</a>
+      </li>
+    </ul>
+    <h3>
+      Reporting Issues
+    </h3>
+    <p>
+      WSO2 encourages you to report issues and your enhancement requests for the
+      WSO2 BRS using the public <a
+      href="http://www.wso2.org/jira/browse/BRS">JIRA</a>.
+    </p>
+    <p>
+      You can also watch how they are resolved, and comment on the progress..
+    </p>
+    <h3>
+      Discussion Forums
+    </h3>
+    <p>
+      Alternatively, questions could be raised using the forums available.
+    </p>
+    <p>
+      <a href="http://wso2.org/forum/975">WSO2 BRS Forum</a> :
+      Discussion forum for WSO2 BRS developers/users
+    </p>
+
+<h2>Support</h2>
+
+<p>
+    We are committed to ensuring that your enterprise middleware deployment is completely supported from
+    evaluation to production. Our unique approach ensures that all support leverages our open development
+    methodology and is provided by the very same engineers who build the technology.
+    <br/>
+    <br/>
+
+    For more details and to take advantage of this unique opportunity please visit
+    <a target="_blank" href="http://wso2.com/support/">http://wso2.com/support/</a>
+</p>
+
+<p> For more information about WSO2 BRS, please see
+    <a href="http://wso2.com/products/business-rules-server/" target="_blank">http://wso2.com/products/business-rules-server/</a>
+</p>
+
+
+<p>We welcome your feedback on this implementation. Thank you for your interest in WSO2 BRS. </p>
+
+<p><i>-- The WSO2 BRS Team --</i> </p>
+</div>
+  </body>
+</html>

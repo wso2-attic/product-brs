@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!--
+~ Copyright (c) 2009, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+~
+~ WSO2 Inc. licenses this file to you under the Apache License,
+~ Version 2.0 (the "License"); you may not use this file except
+~ in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing,
+~ software distributed under the License is distributed on an
+~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+~ KIND, either express or implied. See the License for the
+~ specific language governing permissions and limitations
+~ under the License.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <title>WSO2 BRS - Get Quote Service</title>
+  <link href="../css/brs-docs.css" rel="stylesheet" />
+  <link href="../styles/dist-docs.css" rel="stylesheet" type="text/css"
+  media="all" />
+</head>
+
+<body>
+<p>[<a href="../docs_index.html">Documentation Index</a>] 
+<h1>WSO2 BRS - Samples : Get Quote Service</h1>
+
+<p>This guide demonstrates a service for getting quotations. This service uses
+business rules for creating quotations.</p>
+
+<p>Please follow the <a href="../user_guide.html">User Guide</a> before proceeding with this sample, if you have
+not already followed the <a href="../user_guide.html">User Guide</a>. </p>
+
+<h2>Contents</h2>
+
+<div class="toc">
+<ul>
+  <li><a href="#GetQuoteService">Get Quote Service</a> </li>
+  <li><a href="#References">References</a> </li>
+</ul>
+</div>
+
+<h2 id="GetQuoteService">Get Quote Service</h2>
+
+<h3>Rules</h3>
+
+<p>Rule 1: If the customer has bronze status, then the item costs five
+dollars.</p>
+
+<p>Rule 2 : If the customer has silver status, then the item costs four
+dollars.</p>
+
+<p>Rule 3 : If the customer has gold status, then the item costs three
+dollars.</p>
+
+<h3>Facts</h3>
+
+<p>There is a one fact - <i>A customer made a get quote request</i>. Quotation
+is to capture the result of the rules execution. </p>
+<pre xml:space="preserve">              </pre>
+<pre xml:space="preserve"> package samples.userguide;
+
+ package samples.quotation;
+
+ /**
+  * Customer fact
+ */
+ public class Customer {
+
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+ }
+
+ package samples.quotation;
+
+ /**
+  * Quotation result
+ */
+ public class Quotation {
+
+    private int price;
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+            this.price = price;
+    }
+ }
+            </pre>
+
+<h3>Rule Service Configuration - service.rsl</h3>
+<pre xml:space="preserve">&lt;ruleService
+        name=&quot;GetQuoteService&quot;
+        xmlns=&quot;http://wso2.org/carbon/rules&quot;
+        targetNamespace=&quot;http://com.test/quotation&quot;&gt;
+    &lt;ruleSet&gt;
+        &lt;rule resourceType=&quot;regular&quot; sourceType=&quot;inline&quot;&gt;
+            &lt;![CDATA[
+                package quotation
+
+                import samples.quotation.Customer;
+                import samples.quotation.Quotation;
+
+                rule &quot;Gold Customer&quot;
+                when
+                      Customer( status == &quot;gold&quot; )
+                then
+                      Quotation q = new Quotation();
+                      q.setPrice(3);
+                      insertLogical(q);
+                end
+
+                rule &quot;Silver Customer&quot;
+                when
+                      Customer( status == &quot;silver&quot; )
+                then
+                      Quotation q = new Quotation();
+                      q.setPrice(4);
+                      insertLogical(q);
+                end
+
+                rule &quot;Bronze Customer&quot;
+                when
+                      Customer( status == &quot;bronze&quot; )
+                then
+                      Quotation q = new Quotation();
+                      q.setPrice(5);
+                      insertLogical(q);
+                end
+            ]]&gt;
+        &lt;/rule&gt;
+    &lt;/ruleSet&gt;
+    &lt;operation name=&quot;getQuote&quot;&gt;
+        &lt;input wrapperElementName=&quot;placeCustomerDetail&quot; namespace=&quot;http://com.test/placeCustomerDetail&quot;&gt;
+            &lt;fact elementName=&quot;customerDetail&quot; namespace=&quot;http://com.test/placeCustomerDetail&quot; type=&quot;samples.quotation.Customer&quot;&gt;&lt;/fact&gt;
+        &lt;/input&gt;
+        &lt;output wrapperElementName=&quot;placeCustomerDetailRespone&quot; namespace=&quot;http://com.test/placeCustomerDetail&quot;&gt;
+            &lt;fact elementName=&quot;getQuotation&quot; namespace=&quot;http://com.test/placeCustomerDetail&quot; type=&quot;samples.quotation.Quotation&quot;&gt;&lt;/fact&gt;
+        &lt;/output&gt;
+    &lt;/operation&gt;
+&lt;/ruleService&gt;</pre>
+</p>
+
+<h3>Deploying Service </h3>
+
+<p>You can either create an .aar file and upload or create a rule service using
+rule service wizard UI. Please refer the <a href="../user_guide.html">User Guide</a> for more information.</p>
+
+<p><h3>Testing Sample</h3>
+You can use Try-it tool with the requests similar to the following. </p>
+
+<p><pre xml:space="preserve">&lt;status&gt;bronze&lt;/status&gt;</pre>
+</p>
+
+<p>You can also use the code generation. There is an option for code generation
+in the services management page. A client using generated stub codes is shown
+bellow. Codes was generated with option Unpacks the databinding classes.</p>
+<pre>package org.wso2.carbon.samples;
+
+import org.apache.axis2.AxisFault;
+import org.wso2.carbon.samples.quoteService.customerDetail.Customer;
+import org.wso2.carbon.samples.quoteService.customerDetail.PlaceCustomerDetail;
+import org.wso2.carbon.samples.quoteService.customerDetail.Quotation;
+import org.wso2.carbon.samples.quoteService.stub.GetQuoteServiceStub;
+import java.rmi.RemoteException;
+
+public class GetQuoteServiceTestCase {
+
+    public static void main(String[] args) {
+
+        try {
+            GetQuoteServiceStub getQuoteServiceStub = new GetQuoteServiceStub("http://localhost:9763/services/GetQuoteService");
+
+            PlaceCustomerDetail placeCustomerDetail = new PlaceCustomerDetail();
+            Customer customer = new Customer();
+            customer.setStatus("gold");
+            Customer[] customers = new Customer[1];
+            customers[0] = customer;
+            placeCustomerDetail.setCustomerDetail(customers);
+
+            Quotation[] quotations = getQuoteServiceStub.getQuote(customers);
+            int result = quotations[0].getPrice();
+            System.out.println(result);
+        } catch (AxisFault axisFault) {
+            axisFault.printStackTrace();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+}</pre>
+
+<p><h2 id="References">References</h2>
+</p>
+</body>
+</html>

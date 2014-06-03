@@ -1,0 +1,48 @@
+<ruleService
+        name="MIPCalculateService"
+        xmlns="http://wso2.org/carbon/rules"
+        targetNamespace="http://com.test/MIPCalculateService">
+    <ruleSet>
+        <rule resourceType="regular" sourceType="inline">
+            <![CDATA[
+                package MIPCalculateService
+
+                import samples.MIPCalculate.Client;
+                import samples.MIPCalculate.MIP;
+
+                rule "Calculate the MIP for PMI " no-loop true
+                when
+                    user : Client(loanType == "PMI")
+                then
+                    MIP mip = new MIP();
+                    double loanAmount = user.getMortgageValue() - user.getDownPayment();
+                    double lvt = loanAmount / user.getMortgageValue();
+                    double lvtAmount = lvt * user.getMortgageValue();
+                    mip.setAnnualMIP(lvtAmount * 0.05);
+                    insertLogical(mip);
+
+                end
+
+                rule "Calculate the MIP for FHA loan" no-loop true
+                when
+                    user : Client(loanType == "FHA")
+                then
+                    MIP mip = new MIP();
+                    double loanAmount = user.getMortgageValue() - user.getDownPayment();
+                    double lvt = loanAmount / user.getMortgageValue();
+                    double lvtAmount = lvt * user.getMortgageValue();
+                    mip.setAnnualMIP(lvtAmount * 0.15);
+                    insertLogical(mip);
+                end
+            ]]>
+        </rule>
+    </ruleSet>
+    <operation name="calculate">
+        <input wrapperElementName="placeClientDetail" namespace="http://com.test/placeClientDetail">
+            <fact elementName="clientDetail" namespace="http://com.test/placeClientDetail" type="samples.MIPCalculate.Client"></fact>
+        </input>
+        <output wrapperElementName="placeClientDetailRespone" namespace="http://com.test/placeClientDetail">
+            <fact elementName="MIP" namespace="http://com.test/placeClientDetail" type="samples.MIPCalculate.MIP"></fact>
+        </output>
+    </operation>
+</ruleService>

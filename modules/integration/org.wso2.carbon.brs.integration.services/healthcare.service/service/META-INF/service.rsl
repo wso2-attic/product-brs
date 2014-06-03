@@ -1,0 +1,43 @@
+<ruleService
+        name="HealthCareService"
+        xmlns="http://wso2.org/carbon/rules"
+        targetNamespace="http://com.test/HeathCareService">
+    <ruleSet>
+        <rule resourceType="regular" sourceType="inline">
+            <![CDATA[
+                package HeathCareService
+
+                import samples.heathcare.Patient;
+                import samples.heathcare.Dose;
+
+                rule "Rule one" no-loop true
+                when
+                    Patient( ( medication in ( "Amoxicillin", "Cefuroxime", "Levofloxacin" ) ) && ( ( age  > 16 ) && ( age < 60 ) ) && ( creatinineLevel == 0 )  )
+                then
+                    Dose msg = new Dose();
+                    msg.setMessage("500 mg every 24 hours for 14 days");
+                    insertLogical(msg);
+                end
+
+                rule "Rule two" no-loop true
+                when
+                    Patient( ( medication in ( "Amoxicillin", "Cefuroxime", "Levofloxacin" ) ) && ( ( age  > 16) && ( age < 60 ) ) && ( ( creatinineLevel > 0 ) &&  ( creatinineLevel < 1.5 ) ) )
+                then
+                    Dose msg = new Dose();
+                    msg.setMessage("250 mg every 24 hours for 14 days");
+                    insertLogical(msg);
+                end
+            ]]>
+        </rule>
+    </ruleSet>
+    <operation name="recommendDose">
+        <input wrapperElementName="patientDetail" namespace="http://com.test/patientDetail">
+            <fact elementName="patientDetail" namespace="http://com.test/patientDetail" type="samples.heathcare.Patient"></fact>
+        </input>
+        <output wrapperElementName="patientDetailRespone" namespace="http://com.test/patientDetail">
+            <fact elementName="recommendDose" namespace="http://com.test/patientDetail" type="samples.heathcare.Dose"></fact>
+        </output>
+    </operation>
+</ruleService>
+
+
