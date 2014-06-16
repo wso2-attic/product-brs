@@ -1,0 +1,35 @@
+<ruleService
+        name="InsuranceService"
+        xmlns="http://wso2.org/carbon/rules"
+        targetNamespace="http://com.test/insurance">
+    <ruleSet>
+        <rule resourceType="regular" sourceType="inline">
+            <![CDATA[
+                package insurance
+
+                import samples.insurance.Driver;
+                import samples.insurance.Car;
+                import samples.insurance.Policy;
+
+                rule "High Risk"
+                when
+                      Driver( ( male == true) && ( age >= 16 ) && ( age <= 25 ))
+                      Car ( ( style == "sport") && ( color=="red" ) )
+                then
+                      Policy p = new Policy ();
+                           p.increasePremium(0.2);
+                           insertLogical(p);
+                end
+            ]]>
+        </rule>
+    </ruleSet>
+    <operation name="applyForInsurance">
+        <input wrapperElementName="applyForInsurance" namespace="http://com.test/applyForInsurance">
+            <fact elementName="carInsurance" namespace="http://com.test/applyForInsurance" type="samples.insurance.Car"></fact>
+	    <fact elementName="driverInsurance" namespace="http://com.test/applyForInsurance" type="samples.insurance.Driver"></fact>
+        </input>
+        <output wrapperElementName="insurancerApplicationRespone" namespace="http://com.test/applyForInsurance">
+            <fact elementName="insurancePolicy" namespace="http://com.test/applyForInsurance" type="samples.insurance.Policy"></fact>
+        </output>
+    </operation>
+</ruleService>

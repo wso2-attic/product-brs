@@ -1,0 +1,78 @@
+<ruleService
+        name="ShoppingService"
+        xmlns="http://wso2.org/carbon/rules"
+        targetNamespace="http://com.test/shopping"
+	scope="transportsession">
+    <ruleSet>
+        <rule resourceType="regular" sourceType="inline">
+            <![CDATA[
+package shopping
+
+dialect "mvel"
+
+import samples.shopping.Customer;
+import samples.shopping.Product;
+import samples.shopping.Purchase;
+import samples.shopping.Discount;
+import samples.shopping.PurchaseLog;
+
+rule "Purchase notification new customer"
+    salience 11 no-loop true
+when
+    $p : Purchase()
+    not Customer(name == $p.customer)
+then
+    System.out.println( "New Customer : " + $p.customer);
+    insert(new Customer($p.customer, 0));
+end
+
+rule "Purchase notification"
+    salience 10 no-loop true
+when
+    $c : Customer()
+    $purchase : Purchase( customer == $c.name) 
+    $product : Product( name == $purchase.product)
+then      
+    insert(new PurchaseLog($c.name, $product));
+    modify($c){
+     setDiscount(0)
+    }       
+    System.out.println( "Customer " + $c.name + " just purchased " + $product.name );
+end
+
+rule "Apply 10% discount if total purchases is over 100" salience 9  no-loop true dialect "java"
+    when    
+            $p : Purchase()  
+$c : Customer(name == $p.customer)
+$i : Double(doubleValue  > 100) from accumulate ( PurchaseLog( customer == $c.name, $price : product.price ), 
+                                                            sum( $price ) )
+    then            
+  $c.setDiscount( 10 );
+insert( new Discount($c, 10) );
+System.out.println( "Customer " + $c.getName() + " now has a shopping total of " + $i );
+end
+
+rule "cleanUp" salience 8
+when  
+ $p : Purchase()  
+then
+ retract($p);
+end 
+            ]]>
+        </rule>
+    </ruleSet>			
+
+ 	<operation name="purchase">
+        <input wrapperElementName="purchaseOrder" namespace="http://com.test/purchaseOrder">
+            <fact elementName="purchase" namespace="http://com.test/purchaseOrder" type="samples.shopping.Purchase"></fact>
+        </input>
+        <output wrapperElementName="purchaseOrderRespone" namespace="http://com.test/purchaseOrder">
+            <fact elementName="discount" namespace="http://com.test/purchaseOrder" type="samples.shopping.Discount"></fact>
+        </output>
+    </operation>
+    <operation name="addProduct">
+        <input wrapperElementName="addProduct" namespace="http://com.test/addProduct">
+            <fact elementName="addProduct" namespace="http://com.test/addProduct" type="samples.shopping.Product"></fact>
+        </input>
+    </operation>
+</ruleService>

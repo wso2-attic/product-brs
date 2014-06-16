@@ -1,0 +1,65 @@
+<ruleService
+        name="GreetingService"
+        xmlns="http://wso2.org/carbon/rules"
+        targetNamespace="http://com.test/greeting">
+    <ruleSet>
+        <rule resourceType="regular" sourceType="inline">
+            <![CDATA[
+                    package greeting
+
+                    import samples.greeting.GreetingMessage;
+                    import samples.greeting.User;
+
+                    rule "Early morning rule" no-loop true
+                    when
+                        user : User()
+                        eval(user.now() < 6 )
+                    then
+                        GreetingMessage msg = new GreetingMessage();
+                        msg.setMessage("Good Early Morning  " + user.getName() + " !!! ");
+                        insertLogical(msg);
+                    end
+
+                    rule "Is Morning" no-loop true
+                    when
+                        user : User()
+                        eval((6 <= user.now()) && (user.now()< 12))
+                    then
+                        GreetingMessage msg = new GreetingMessage();
+                        msg.setMessage("Good Morning  " + user.getName() + " !!! ");
+                        insertLogical(msg);
+                    end
+
+                    rule "Is afternoon" no-loop true
+                    when
+                        user : User()
+                        eval((12 <= user.now()) && (user.now() < 18))
+                    then
+                        GreetingMessage msg = new GreetingMessage();
+                        msg.setMessage("Good Afternoon  " + user.getName() + " !!! ");
+                        insertLogical(msg);
+                    end
+
+                    rule "Is Night" no-loop true
+                    when
+                        user : User()
+                        eval( (18 <= user.now()) && (user.now() < 24))
+                    then
+                        GreetingMessage msg = new GreetingMessage();
+                        msg.setMessage("Good Night  " + user.getName() + " !!! ");
+                        insertLogical(msg);
+                    end
+            ]]>
+        </rule>
+    </ruleSet>
+    <operation name="greetMe">
+        <input wrapperElementName="user" namespace="http://com.test/greeting">
+            <fact elementName="user" namespace="http://com.test/greeting" type="samples.greeting.User"></fact>
+        </input>
+        <output wrapperElementName="greetingMessage" namespace="http://com.test/greeting">
+            <fact elementName="greetingMessage" namespace="http://com.test/greeting" type="samples.greeting.GreetingMessage"></fact>
+        </output>
+    </operation>
+</ruleService>
+
+

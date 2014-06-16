@@ -1,0 +1,51 @@
+<ruleService
+        name="GetQuoteService"
+        xmlns="http://wso2.org/carbon/rules"
+        targetNamespace="http://com.test/quotation">
+    <ruleSet>
+        <rule resourceType="regular" sourceType="inline">
+            <![CDATA[
+                package quotation
+
+                import samples.quotation.Customer;
+                import samples.quotation.Quotation;
+
+                rule "Gold Customer"
+                when
+                      Customer( status == "gold" )
+                then
+                      Quotation q = new Quotation();
+                      q.setPrice(3);
+                      insertLogical(q);
+                end
+
+                rule "Silver Customer"
+                when
+                      Customer( status == "silver" )
+                then
+                      Quotation q = new Quotation();
+                      q.setPrice(4);
+                      insertLogical(q);
+                end
+
+                rule "Bronze Customer"
+                when
+                      Customer( status == "bronze" )
+                then
+                      Quotation q = new Quotation();
+                      q.setPrice(5);
+                      insertLogical(q);
+                end
+            ]]>
+        </rule>
+    </ruleSet>
+    <operation name="getQuote">
+        <input wrapperElementName="placeCustomerDetail" namespace="http://com.test/placeCustomerDetail">
+            <fact elementName="customerDetail" namespace="http://com.test/placeCustomerDetail" type="samples.quotation.Customer"></fact>
+        </input>
+        <output wrapperElementName="placeCustomerDetailRespone" namespace="http://com.test/placeCustomerDetail">
+            <fact elementName="getQuotation" namespace="http://com.test/placeCustomerDetail" type="samples.quotation.Quotation"></fact>
+        </output>
+    </operation>
+</ruleService>
+

@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!--
+~ Copyright (c) 2009, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+~
+~ WSO2 Inc. licenses this file to you under the Apache License,
+~ Version 2.0 (the "License"); you may not use this file except
+~ in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing,
+~ software distributed under the License is distributed on an
+~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+~ KIND, either express or implied. See the License for the
+~ specific language governing permissions and limitations
+~ under the License.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <title>WSO2 BRS - Samples - Banking Sample</title>
+  <link href="../css/brs-docs.css" rel="stylesheet" />
+  <link href="../styles/dist-docs.css" rel="stylesheet" type="text/css"
+  media="all" />
+</head>
+
+<body>
+<p>[<a href="../docs_index.html">Documentation Index</a>] 
+<h1>WSO2 BRS - Samples : Shopping Service</h1>
+
+<p>This guide demonstrates a simple shopping application which uses business
+rules.</p>
+
+<p>Please follow the <a href="../user_guide.html">User Guide</a> before
+proceeding with this sample, if you have not already followed the <a
+href="../user_guide.html">User Guide</a>. </p>
+
+<h2>Contents</h2>
+
+<div class="toc">
+<ul>
+  <li><a href="#ShoppingSample">Shopping Sample</a> </li>
+  <li><a href="#References">References</a> </li>
+</ul>
+</div>
+
+<h2 id="ShoppingSample">Shopping Sample</h2>
+This sample should be deployed in a stateful axis2 session - i.e. session scope
+or transport scope. This demonstrate the stateful behavior of a rule session . 
+<h3>Rules</h3>
+
+<p>Rule 1: Apply 10% discount if total purchases is over 100 </p>
+
+<h3>Facts</h3>
+
+<p>There are two facts - <i>A customer made a purchase</i> and <i>a product is
+added</i>. </p>
+
+<pre xml:space="preserve">package samples.shopping;
+
+/**
+ * Product
+ */
+public class Product {
+
+    private String name;
+    private float price;
+
+    public String getName() {
+        return name;
+    }
+
+    public float getPrice() {
+        return price;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPrice(float price) {
+        this.price = price;
+    }
+}
+
+package samples.shopping;
+
+/**
+ * Customer
+ */
+public class Customer {
+
+    private String name;
+
+    private int discount;
+
+    public Customer(String name,
+                    int discount) {
+        this.name = name;
+        this.discount = discount;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(int discount) {
+        this.discount = discount;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+}
+
+package samples.shopping;
+
+/**
+ * Discount
+ */
+public class Discount {
+
+    private Customer customer;
+    private int amount;
+
+    public Discount(Customer customer,
+                    int amount) {
+        this.customer = customer;
+        this.amount = amount;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+}
+
+package samples.shopping;
+
+/**
+ * Purchase
+ */
+public class Purchase {
+
+    private String customer;
+    private String product;
+
+    public String getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(String customer) {
+        this.customer = customer;
+    }
+
+    public String getProduct() {
+        return product;
+    }
+
+    public void setProduct(String product) {
+        this.product = product;
+    }
+}
+
+package samples.shopping;
+
+/**
+ * Purchase Log
+ */
+public class PurchaseLog {
+
+    private String customer;
+
+    private Product product;
+
+    public PurchaseLog(String customer, Product product) {
+        this.customer = customer;
+        this.product = product;
+    }
+
+    public String getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(String customer) {
+        this.customer = customer;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+}
+            </pre>
+
+<h3>Rule Service Configuration - service.rsl</h3>
+<pre xml:space="preserve">&lt;ruleService
+        name=&quot;ShoppingService&quot;
+        xmlns=&quot;http://wso2.org/carbon/rules&quot;
+        targetNamespace=&quot;http://com.test/shopping&quot;
+	    scope=&quot;transportsession&quot;&gt;
+    &lt;ruleSet&gt;
+        &lt;rule resourceType=&quot;regular&quot; sourceType=&quot;inline&quot;&gt;
+            &lt;![CDATA[
+                package shopping
+
+                dialect &quot;mvel&quot;
+
+                import samples.shopping.Customer;
+                import samples.shopping.Product;
+                import samples.shopping.Purchase;
+                import samples.shopping.Discount;
+                import samples.shopping.PurchaseLog;
+
+                rule &quot;Purchase notification new customer&quot;
+                    salience 11 no-loop true
+                when
+                    $p : Purchase()
+                    not Customer(name == $p.customer)
+                then
+                    System.out.println( &quot;New Customer : &quot; + $p.customer);
+                    insert(new Customer($p.customer, 0));
+                end
+
+                rule &quot;Purchase notification&quot;
+                    salience 10 no-loop true
+                when
+                    $c : Customer()
+                    $purchase : Purchase( customer == $c.name)
+                    $product : Product( name == $purchase.product)
+                then
+                    insert(new PurchaseLog($c.name, $product));
+                    modify($c){
+                     setDiscount(0)
+                    }
+                    System.out.println( &quot;Customer &quot; + $c.name + &quot; just purchased &quot; + $product.name );
+                end
+
+                rule &quot;Apply 10% discount if total purchases is over 100&quot; salience 9  no-loop true dialect &quot;java&quot;
+                    when
+                            $p : Purchase()
+                $c : Customer(name == $p.customer)
+                $i : Double(doubleValue  &gt; 100) from accumulate ( PurchaseLog( customer == $c.name, $price : product.price ),
+                                                                            sum( $price ) )
+                    then
+                  $c.setDiscount( 10 );
+                insert( new Discount($c, 10) );
+                System.out.println( &quot;Customer &quot; + $c.getName() + &quot; now has a shopping total of &quot; + $i );
+                end
+
+                rule &quot;cleanUp&quot; salience 8
+                when
+                 $p : Purchase()
+                then
+                 retract($p);
+                end
+            ]]&gt;
+        &lt;/rule&gt;
+    &lt;/ruleSet&gt;
+
+ 	&lt;operation name=&quot;purchase&quot;&gt;
+        &lt;input wrapperElementName=&quot;purchaseOrder&quot; namespace=&quot;http://com.test/purchaseOrder&quot;&gt;
+            &lt;fact elementName=&quot;purchase&quot; namespace=&quot;http://com.test/purchaseOrder&quot; type=&quot;samples.shopping.Purchase&quot;&gt;&lt;/fact&gt;
+        &lt;/input&gt;
+        &lt;output wrapperElementName=&quot;purchaseOrderRespone&quot; namespace=&quot;http://com.test/purchaseOrder&quot;&gt;
+            &lt;fact elementName=&quot;discount&quot; namespace=&quot;http://com.test/purchaseOrder&quot; type=&quot;samples.shopping.Discount&quot;&gt;&lt;/fact&gt;
+        &lt;/output&gt;
+    &lt;/operation&gt;
+    &lt;operation name=&quot;addProduct&quot;&gt;
+        &lt;input wrapperElementName=&quot;addProduct&quot; namespace=&quot;http://com.test/addProduct&quot;&gt;
+            &lt;fact elementName=&quot;addProduct&quot; namespace=&quot;http://com.test/addProduct&quot; type=&quot;samples.shopping.Product&quot;&gt;&lt;/fact&gt;
+        &lt;/input&gt;
+    &lt;/operation&gt;
+&lt;/ruleService&gt;</pre>
+</p>
+
+<h3>Axis2 Service Configuration - services.xml </h3>
+<pre>&lt;service name="ShoppingService" scope="transportsession"&gt;   
+    &lt;operation name="purchase"/&gt;
+    &lt;operation name="addProduct" mep="http://www.w3.org/ns/wsdl/in-only"/&gt;
+&lt;/service&gt;</pre>
+
+<h3>Deploying Service </h3>
+
+<p>You can either create an .aar file and upload or create a rule service using
+rule service wizard UI. Please refer the <a href="../user_guide.html">User
+Guide</a> for more information.</p>
+
+<p><h3>Testing Sample</h3>
+You can use Try-it tool with the requests similar to the following. Please as
+the first step do a add product. Then after you can buy them </p>
+
+<p>Adding a product </p>
+
+<p><pre xml:space="preserve"> &lt;name&gt;product name&lt;/name&gt;
+ &lt;price&gt;12.34&lt;/price&gt;</pre>
+</p>
+
+<p>Doing a purchase </p>
+<pre>&lt;customer&gt;your name &lt;/customer&gt;
+&lt;product&gt;product name&lt;/product&gt;</pre>
+
+<p>In additions to the responses, please look at the BRS console too. </p>
+
+<p>You can also use the code generation. There is an option for code generation
+in the services management page. However, in the axis2 stub-based clients,
+there is a limitation in managing session with in-only operations such as
+addProduct. Therefore, prior to use the code generation, you have to remove
+<strong>mep=http://www.w3.org/ns/wsdl/in-only</strong> from the service xml and
+redeploys the service. This makes addProduct method returning an empty result.
+A client using generated stub codes is shown bellow. Codes was generated with
+option - Unpacks the databinding classes.</p>
+<pre>package org.wso2.carbon.samples;
+
+import org.apache.axis2.AxisFault;
+import org.wso2.carbon.samples.shoppingService.product.AddProduct;
+import org.wso2.carbon.samples.shoppingService.product.Product;
+import org.wso2.carbon.samples.shoppingService.purchaseOrder.Discount;
+import org.wso2.carbon.samples.shoppingService.purchaseOrder.Purchase;
+import org.wso2.carbon.samples.shoppingService.purchaseOrder.PurchaseOrder;
+import org.wso2.carbon.samples.shoppingService.stub.ShoppingServiceStub;
+import java.rmi.RemoteException;
+
+public class ShoppingServiceTestCase {
+
+    public static void main(String[] args) {
+
+        ShoppingServiceStub shoppingServiceStub = null;
+        try {
+            shoppingServiceStub = new ShoppingServiceStub("http://localhost:9763/services/ShoppingService");
+            shoppingServiceStub._getServiceClient().getOptions().setManageSession(true);
+
+            AddProduct addProduct = new AddProduct();
+            Product product = new Product();
+            product.setName("toy");
+            product.setPrice(200);
+            Product[] products = new Product[1];
+            products[0] = product;
+
+            shoppingServiceStub.addProduct(products);
+
+            PurchaseOrder purchaseOrder = new PurchaseOrder();
+            Purchase purchase = new Purchase();
+            purchase.setCustomer("Ishara");
+            purchase.setProduct("toy");
+
+            Purchase[] purchases = new Purchase[1];
+            purchases[0] = purchase;
+
+            purchaseOrder.setPurchase(purchases);
+            Discount[] discounts = shoppingServiceStub.purchase(purchases);
+            int result = discounts[0].getAmount();
+            System.out.println(result);
+
+        } catch (AxisFault axisFault) {
+            axisFault.printStackTrace();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+}
+</pre>
+
+<p><h2 id="References">References</h2>
+</p>
+</body>
+</html>

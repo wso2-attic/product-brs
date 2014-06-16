@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!--
+~ Copyright (c) 2009, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+~
+~ WSO2 Inc. licenses this file to you under the Apache License,
+~ Version 2.0 (the "License"); you may not use this file except
+~ in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing,
+~ software distributed under the License is distributed on an
+~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+~ KIND, either express or implied. See the License for the
+~ specific language governing permissions and limitations
+~ under the License.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <title>WSO2 BRS - Samples Banking Service</title>
+  <link href="../css/brs-docs.css" rel="stylesheet" />
+  <link href="../styles/dist-docs.css" rel="stylesheet" type="text/css"
+  media="all" />
+</head>
+
+<body>
+<p>[<a href="../docs_index.html">Documentation Index</a>] 
+<h1>WSO2 BRS - Samples : Banking Service</h1>
+
+<p>This guide demonstrates a simple banking application which uses business
+rules.</p>
+
+<p>Please follow the <a href="../user_guide.html">User Guide</a> before proceeding with this sample, if you have
+not already followed the <a href="../user_guide.html">User Guide</a>. </p>
+
+<h2>Contents</h2>
+
+<div class="toc">
+<ul>
+  <li><a href="#BankingSample">Banking Service</a> </li>
+  <li><a href="#References">References</a> </li>
+</ul>
+</div>
+
+<h2 id="BankingSample">Banking Sample</h2>
+This sample should be deployed in a stateful axis2 session - i.e. session scope
+or transport scope. This demonstrates the stateful behavior of a rule session . 
+<h3>Rules</h3>
+
+<p>Rule 1: Withdrawing is only allowed if the account balance is higher than
+the requested amount</p>
+
+<p>Rule 2: 5% credits is given if the deposit is higher than 1000 </p>
+
+<h3>Facts</h3>
+
+<p>There are two facts - <i>A customer made a deposit request</i> and <i>A
+customer made a withdraw request</i>.</p>
+</p>
+
+<p><pre xml:space="preserve">              </pre>
+<pre xml:space="preserve">package samples.banking;
+
+/**
+ * Account
+ */
+public class Account {
+
+    private String accountNumber;
+
+    private int balance;
+
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
+    public int getBalance() {
+        return balance;
+    }
+
+    public void setBalance(int balance) {
+        this.balance = balance;
+    }
+
+    public void increment(int value) {
+        balance += value;
+    }
+
+    public void decrement(int value) {
+        balance -= value;
+    }
+}
+
+package samples.banking;
+
+/**
+ * Deposit fact
+ */
+public class Deposit {
+
+    private String accountNumber;
+    private int amount;
+
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+}
+
+package samples.banking;
+
+/**
+ * DepositAccept facts
+ */
+public class DepositAccept {
+
+    private String message;
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+}
+
+package samples.banking;
+
+/**
+ * Withdraw fact
+ */
+public class Withdraw {
+
+    private String accountNumber;
+
+    private int amount;
+
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+}
+
+package samples.banking;
+
+/**
+ * WithdrawAccept fact
+ */
+public class WithdrawAccept {
+
+    private String message;
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+}
+
+package samples.banking;
+
+/**
+ * WithdrawReject fact
+ */
+public class WithdrawReject {
+
+    private String reason;
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+}
+
+</pre>
+
+<h3>Rule Service Configuration - service.rsl</h3>
+<pre xml:space="preserve">&lt;ruleService
+        name=&quot;BankingService&quot;
+	    scope=&quot;transportsession&quot;
+        xmlns=&quot;http://wso2.org/carbon/rules&quot;
+        targetNamespace=&quot;http://com.test/Banking&quot;&gt;
+    &lt;ruleSet&gt;
+        &lt;rule resourceType=&quot;regular&quot; sourceType=&quot;inline&quot;&gt;
+            &lt;![CDATA[
+                package Banking;
+
+                import samples.banking.Account;
+                import samples.banking.Deposit;
+                import samples.banking.DepositAccept;
+                import samples.banking.WithdrawAccept;
+                import samples.banking.WithdrawReject;
+                import samples.banking.Withdraw;
+
+                rule &quot;Deposit with amount higher than 1000 in an Existing Account&quot; dialect &quot;mvel&quot; no-loop true salience 6
+
+                when
+                $deposit : Deposit( amount &gt; 1000 )
+                $account : Account( accountNumber == $deposit.accountNumber )
+                then
+                $account.increment($deposit.amount * 1.05);
+                DepositAccept depositAccept = new DepositAccept();
+                depositAccept.setMessage(&quot;Deposit was successfully done. 5 percentage credits is given because the deposit amount is higher than 1000. Amount was : &quot; + $deposit.amount + &quot;. Your account balance is now : &quot;+ $account.balance);
+
+                insertLogical(depositAccept);
+                end
+
+                rule &quot;Deposit with amount higher than 1000 in a new Account&quot; dialect &quot;mvel&quot; no-loop true salience 5
+
+                when
+                $deposit : Deposit( amount &gt; 1000)
+                not( Account( accountNumber == $deposit.accountNumber ) )
+                then
+                Account account = new Account();
+                account.setAccountNumber($deposit.accountNumber);
+                account.increment($deposit.amount * 1.05);
+                DepositAccept depositAccept = new DepositAccept();
+                depositAccept.setMessage(&quot;Deposit was successfully done.5 percentage credits is given because the deposit amount is higher than 1000. Amount was : &quot; + $deposit.amount + &quot;. Your account balance is now : &quot;+ account.balance);
+                retract($deposit);
+                insert(account);
+                insertLogical(depositAccept);
+                end
+
+                rule &quot;Deposit in an Existing Account&quot; dialect &quot;mvel&quot; no-loop true salience 4
+
+                when
+                $deposit : Deposit( amount &lt;= 1000 )
+                $account : Account( accountNumber == $deposit.accountNumber )
+                then
+                $account.increment($deposit.amount);
+                DepositAccept depositAccept = new DepositAccept();
+                depositAccept.setMessage(&quot;Deposit was successfully done. 5 percentage credits would be given if the deposit amount was higher than 1000. Amount was : &quot; + $deposit.amount + &quot;. Your account balance is now : &quot;+ $account.balance);
+
+                insertLogical(depositAccept);
+                end
+
+                rule &quot;Deposit in a new Account&quot; dialect &quot;mvel&quot; no-loop true salience 3
+
+                when
+                $deposit : Deposit( amount &lt;= 1000)
+                not( Account( accountNumber == $deposit.accountNumber) )
+                then
+                Account account = new Account();
+                account.setAccountNumber($deposit.accountNumber);
+                account.increment($deposit.amount);
+                DepositAccept depositAccept = new DepositAccept();
+                depositAccept.setMessage(&quot;Deposit was successfully done.5 percentage credits would be given if the deposit amount was higher than 1000. Amount was : &quot; + $deposit.amount + &quot;. Your account balance is now : &quot;+ account.balance);
+
+                retract($deposit);
+                insert(account);
+                insertLogical(depositAccept);
+
+                end
+
+                rule &quot;Withdrawing Allow&quot; dialect &quot;mvel&quot; no-loop true salience 2
+
+                when
+                $withdraw : Withdraw()
+                $account : Account( accountNumber == $withdraw.accountNumber )
+                eval($account.balance &gt; $withdraw.amount)
+                then
+                $account.decrement($withdraw.amount);
+                WithdrawAccept withdrawAccept = new WithdrawAccept();
+                withdrawAccept.setMessage(&quot;Withdraw was successfully done. Amount was : &quot; + $withdraw.amount + &quot;. Your new account balance is : &quot;+ $account.balance);
+                insertLogical(withdrawAccept);
+                end
+
+                rule &quot;Withdrawing Deny&quot; dialect &quot;mvel&quot; no-loop true salience 1
+
+                when
+                $withdraw : Withdraw()
+                $account : Account( accountNumber == $withdraw.accountNumber )
+                eval($account.balance &lt; $withdraw.amount)
+                then
+
+                WithdrawReject withdrawReject = new WithdrawReject();
+                withdrawReject.setReason(&quot;Withdrawing is only allowed if the account balance is higher than the requested amount. Your account balance is : &quot;+ $account.balance);
+                insertLogical(withdrawReject);
+                end
+
+            ]]&gt;
+        &lt;/rule&gt;
+    &lt;/ruleSet&gt;
+    &lt;operation name=&quot;withDraw&quot;&gt;
+        &lt;input wrapperElementName=&quot;withDraw&quot; namespace=&quot;http://com.test/withDraw&quot;&gt;
+            &lt;fact elementName=&quot;withDraw&quot; namespace=&quot;http://com.test/withDraw&quot; type=&quot;samples.banking.Withdraw&quot;&gt;&lt;/fact&gt;
+        &lt;/input&gt;
+        &lt;output wrapperElementName=&quot;withDrawRespone&quot; namespace=&quot;http://com.test/withDraw&quot;&gt;
+            &lt;fact elementName=&quot;withdrawAccept&quot; namespace=&quot;http://com.test/withDraw&quot; type=&quot;samples.banking.WithdrawAccept&quot;&gt;&lt;/fact&gt;
+            &lt;fact elementName=&quot;withdrawReject&quot; namespace=&quot;http://com.test/withDraw&quot; type=&quot;samples.banking.WithdrawReject&quot;&gt;&lt;/fact&gt;
+        &lt;/output&gt;
+    &lt;/operation&gt;
+    &lt;operation name=&quot;deposit&quot;&gt;
+        &lt;input wrapperElementName=&quot;deposit&quot; namespace=&quot;http://com.test/deposit&quot;&gt;
+            &lt;fact elementName=&quot;deposit&quot; namespace=&quot;http://com.test/deposit&quot; type=&quot;samples.banking.Deposit&quot;&gt;&lt;/fact&gt;
+        &lt;/input&gt;
+        &lt;output wrapperElementName=&quot;depositRespone&quot; namespace=&quot;http://com.test/deposit&quot;&gt;
+            &lt;fact elementName=&quot;depositAccept&quot; namespace=&quot;http://com.test/deposit&quot; type=&quot;samples.banking.DepositAccept&quot;&gt;&lt;/fact&gt;
+        &lt;/output&gt;
+    &lt;/operation&gt;
+&lt;/ruleService&gt;</pre>
+</p>
+
+<h3>Deploying Service </h3>
+
+<p>You can either create an .aar file and upload or create a rule service using
+rule service wizard UI. Please refer User Guide for more information.</p>
+
+<p><h3>Testing Sample</h3>
+You can use Try-it tool with the requests similar to the following. Please as
+the first step do a deposit. Then after you can do withdrawing. </p>
+
+<p>Make a Deposit </p>
+
+<p><pre xml:space="preserve">&lt;amount&gt;2432&lt;/amount&gt;
+&lt;accountNumber&gt;330021vc&lt;/accountNumber&gt;</pre>
+</p>
+
+<p>Make a withdraw </p>
+<pre>&lt;amount&gt;200&lt;/amount&gt;
+&lt;accountNumber&gt;330021vc&lt;/accountNumber&gt;</pre>
+
+<p>You can also use the code generation. There is an option for code generation
+in the services management page. A client using generated stub codes is shown
+bellow. Codes was generated with option - Unpacks the databinding classes.</p>
+<pre>package org.wso2.carbon.samples;
+
+import org.apache.axis2.AxisFault;
+import org.wso2.carbon.samples.bankingService.deposit.Deposit;
+import org.wso2.carbon.samples.bankingService.deposit.DepositAccept;
+import org.wso2.carbon.samples.bankingService.deposit.DepositE;
+import org.wso2.carbon.samples.bankingService.stub.BankingServiceStub;
+import org.wso2.carbon.samples.bankingService.withdraw.*;
+
+import java.rmi.RemoteException;
+public class BankingServiceTestCase {
+
+    public static void main(String[] args) {
+
+        try {
+            BankingServiceStub bankingServiceStub =
+                    new BankingServiceStub("http://localhost:9763/services/BankingService");
+            bankingServiceStub._getServiceClient().getOptions().setManageSession(true);
+
+            DepositE depositRequest = new DepositE();
+            Deposit deposit = new Deposit();
+            deposit.setAccountNumber("070229x");
+            deposit.setAmount(1000);
+            depositRequest.addDeposit(deposit);
+
+            Deposit[] deposits = new Deposit[1];
+            deposits[0] = deposit;
+            depositRequest.setDeposit(deposits);
+
+            DepositAccept[] results = bankingServiceStub.deposit(deposits);
+            String result = results[0].getMessage();
+            System.out.println(result);
+
+            WithDrawE withDrawRequest = new WithDrawE();
+            Withdraw withdraw = new Withdraw();
+            withdraw.setAccountNumber("070229x");
+            withdraw.setAmount(500);
+            Withdraw[] withdraws = new Withdraw[1];
+            withdraws[0] = withdraw;
+            withDrawRequest.setWithDraw(withdraws);
+            WithDrawRespone withDrawRespone = bankingServiceStub.withDraw(withdraws);
+            WithdrawAccept[] withdrawAccepts = withDrawRespone.getWithdrawAccept();
+            WithdrawReject[] withdrawRejects = withDrawRespone.getWithdrawReject();
+            String resultWithDraw = withdrawAccepts[0].getMessage();
+            System.out.println(resultWithDraw);
+
+        } catch (AxisFault axisFault) {
+                axisFault.printStackTrace();
+
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+    }
+}</pre>
+
+<p><h2 id="References">References</h2>
+</p>
+</body>
+</html>

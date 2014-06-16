@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <title>WSO2 BRS - System Administration Guide</title>
+  <link href="css/brs-docs.css" rel="stylesheet" />
+  <link href="styles/dist-docs.css" rel="stylesheet" type="text/css"
+  media="all" />
+</head>
+
+<body>
+<h2>WSO2 BRS - System Administration Guide </h2>
+
+<h4>Contents </h4>
+
+<p>1.0 Introduction<br />
+2.0 Document Conventions<br />
+3.0 Getting WSO2 BRS<br />
+4.0 Installing and Running WSO2 BRS<br />
+4.1 Running the BRS in Standalone Mode<br />
+4.2 Running BRS Samples<br />
+6.0 Using the WSO2 BRS Management Console<br />
+7.0 User Management<br />
+8.0 Setting Up Logging<br />
+9.0 Configuring the Underlying Axis2 Engine<br />
+10.0 Adding External Dependencies to the System<br />
+11.0 Registry Integration<br />
+11.1 Using the Embedded Registry<br />
+11.2 Using a Remote Registry<br />
+12.0 Setting Up Key Stores<br />
+13.0 Setting Up Host Names and Ports<br />
+</p>
+
+<h4>1.0 Introduction </h4>
+
+<p>WSO2 BRS is an open source BRS solution.It is to be your Business Rule
+Management System (BRMS). Our ultimate goal is to provide you with the suitable
+capability of defining, deploying, monitoring, and maintaining your
+organization's decisions.</p>
+
+<p>WSO2 BRS supports exposing business decisions as secure and reliable web
+services and integrating business decisions to the organizations’ application
+integration infrastructure (i.e ESB). </p>
+
+<p>Starting from version 2.0, WSO2 BRS is based on the revolutionary WSO2
+Carbon framework. WSO2 Carbon is an OSGi based middleware framework for SOA.
+Currently all WSO2 Java products are based on WSO2 Carbon including WSO2
+Governance Registry and WSO2 WSAS. Since BRS is OSGi based some knowledge in
+OSGi would be helpful in administrating the WSO2 BRS. </p>
+
+<p>This document explains how to get WSO2 BRS and install it on a server. The
+latter sections of the document illustrates how to setup and configure various
+features of the WSO2 BRS. </p>
+
+<h4>2.0 Document Conventions </h4>
+<ul>
+  <li>The phrase 'BRS_HOME' refers to the directory in the file system where
+    WSO2 BRS is installed</li>
+  <li>The phrase 'BRS_SRC_HOME' refers to the directory in the file system
+    where WSO2 BRS source distribution is installed</li>
+  <li>All file paths follow Unix/Linux conventions but they resemble Windows
+    file paths as well</li>
+</ul>
+
+<h4>3.0 Getting WSO2 BRS </h4>
+
+<p>Binary distributions and source distributions of WSO2 BRS can be downloaded
+free from the <a href="http://wso2.com/products/business-rules-server/">WSO2 BRS project</a> home
+page in the <a href="http://wso2.org">WSO2 Oxygen Tank</a>. Before proceeding
+to the downloads page you will be asked to register on the WSO2 Oxygen Tank.
+Registration is free and optional however it is recommended that you sign up
+for an account right away since registered Oxygen Tank users get exclusive
+access to our support forums and tons of valuable content related to SOA and
+Web Services. </p>
+
+<p>Once you are on the downloads page click on the relevant links to download a
+binary distribution or a source distribution of the latest stable release of
+the WSO2 BRS. If you are interested in an older version of the BRS, scroll down
+in the downloads page to locate the links to previous releases. You will also
+find links to download developer releases and nightly builds of the WSO2 BRS on
+the same page. We recommend that you always download the latest stable release.
+If you want to try out a feature that was added very recently you can try out a
+nightly build. </p>
+
+<p>If you downloaded a source distribution of the BRS you need to build the
+source to get the executable binary. WSO2 BRS uses an <a
+href="http://maven.apache.org">Apache Maven2</a> based build system and
+therefore you need to first download and install Apache Maven2. Please refer
+Maven2 documentation on installing and configuring Apache Maven2. Also note
+that Apache Maven2 requires Java to run. Once Maven2 is properly configured
+extract the downloaded source distribution and change your working directory to
+the directory that is created. Then execute the command mvn clean install to
+run the builder. Once the build process is complete you can find the binary
+distribution archive in BRS_SRC_HOME/modules/distribution/target directory. </p>
+
+<h4>4.0 Installing and Running WSO2 BRS </h4>
+
+<p>To install the WSO2 BRS simply extract the downloaded binary distribution
+archive. If you built WSO2 BRS from source extract the archive created by the
+builder. We recommend installing WSO2 BRS on a Unix/Linux system since that
+will enable you to get the maximum out of the BRS. In order to be able to start
+WSO2 BRS you first need Java 5 or higher. Having installed Java on your system
+please set the JAVA_HOME environment variable to point to the directory in
+which Java is installed. </p>
+
+<h5>4.1 Running WSO2 BRS in Standalone Mode </h5>
+
+<p>Now you are all set to start WSO2 BRS in the standalone mode. Go to
+BRS_HOME/bin directory and if you are on Unix/Linux execute the wso2server.sh
+shell script or if you are on Windows execute the wso2server.bat batch file.
+This will start the BRS and you can see the progress of the startup procedure
+on the console. Please note that server startup may take some time depending on
+the hardware configuration of your system. The first time startup can take up
+few additional seconds since some first time configuration logic is run by the
+BRS. If the server started up cleanly you should get an output similar to the
+following on the console. </p>
+<pre>[2010-03-08 13:04:00,953]  INFO - Main Initializing system...
+[2010-03-08 13:04:07,140]  INFO - CarbonCoreActivator Starting WSO2 Carbon...
+[2010-03-08 13:04:07,140]  INFO - CarbonCoreActivator Operating System : Windows XP 5.1, x86
+[2010-03-08 13:04:07,140]  INFO - CarbonCoreActivator Java Home        : C:\Program Files\Java\jdk1.6.0_14\jre
+[2010-03-08 13:04:07,140]  INFO - CarbonCoreActivator Java Version     : 1.6.0_14
+[2010-03-08 13:04:07,140]  INFO - CarbonCoreActivator Java VM          : Java HotSpot(TM) Client VM 14.0-b16,Sun Microsystems Inc.
+[2010-03-08 13:04:07,140]  INFO - CarbonCoreActivator Carbon Home      : C:\Project\wso2-new\carbon\trucnk\products\brs\modules\DISTRI~1\target\WSO2BR~2.0-S\bin\..
+[2010-03-08 13:04:07,140]  INFO - CarbonCoreActivator Java Temp Dir    : C:\Project\wso2-new\carbon\trucnk\products\brs\modules\DISTRI~1\target\WSO2BR~2.0-S\bin\..\tmp
+[2010-03-08 13:04:07,140]  INFO - CarbonCoreActivator User             : indika kumara, en-US, Asia/Colombo
+[2010-03-08 13:04:09,078]  INFO - RegistryCoreServiceComponent Registry Mode    : READ-WRITE
+[2010-03-08 13:04:10,546]  INFO - CarbonServerManager Starting Carbon initialization...
+[2010-03-08 13:04:10,796]  INFO - ClusterBuilder Clustering has been disabled
+[2010-03-08 13:04:10,875]  INFO - DeploymentInterceptor Deploying Axis2 module : wso2xfer-SNAPSHOT
+[2010-03-08 13:04:10,937]  INFO - DeploymentInterceptor Deploying Axis2 module : sandesha2-SNAPSHOT
+[2010-03-08 13:04:11,062]  INFO - DeploymentInterceptor Deploying Axis2 module : rampart-SNAPSHOT
+[2010-03-08 13:04:11,062]  INFO - DeploymentInterceptor Deploying Axis2 module : rahas-SNAPSHOT
+[2010-03-08 13:04:11,093]  INFO - DeploymentInterceptor Deploying Axis2 module : wso2mex-SNAPSHOT
+[2010-03-08 13:04:11,234]  INFO - DeploymentInterceptor Deploying Axis2 module : wso2caching-SNAPSHOT
+[2010-03-08 13:04:11,250]  INFO - DeploymentInterceptor Deploying Axis2 module : wso2throttle-SNAPSHOT
+[2010-03-08 13:04:11,343]  INFO - DeploymentInterceptor Deploying Axis2 module : addressing-1.5
+[2010-03-08 13:04:11,343]  INFO - ModuleDeployer Deploying module: addressing-1.5 - file:/C:/Project/wso2-new/carbon/trucnk/products/brs/modules/DISTRI~1/target/WSO2BR~2.0-S/bin/../repository/deployment/server/axis2modules/addressing-1.5.
+[2010-03-08 13:04:11,375]  INFO - ModuleDeployer Deploying module: metadataExchange - file:/C:/Project/wso2-new/carbon/trucnk/products/brs/modules/distribution/target/wso2brs-1.2.0/lib/mex-SNAPSHOT-impl.jar
+[2010-03-08 13:04:11,562]  INFO - DeploymentInterceptor Deploying Axis2 service : echo
+[2010-03-08 13:04:11,656]  INFO - DeploymentEngine Deploying Web service: echo - file:/C:/Project/wso2-new/carbon/trucnk/products/brs/modules/DISTRI~1/target/WSO2BR~2.0-S/bin/../repository/deployment/server/axis2services/echo/
+[2010-03-08 13:04:11,796]  INFO - DeploymentInterceptor Deploying Axis2 service : version
+[2010-03-08 13:04:11,828]  INFO - DeploymentEngine Deploying Web service: version - file:/C:/Project/wso2-new/carbon/trucnk/products/brs/modules/DISTRI~1/target/WSO2BR~2.0-S/bin/../repository/deployment/server/axis2services/version/
+[2010-03-08 13:04:12,218]  INFO - ModuleDeployer Deploying module: addressing-1.5 - file:/C:/Project/wso2-new/carbon/trucnk/products/brs/modules/DISTRI~1/target/WSO2BR~2.0-S/bin/../repository/deployment/client/modules/addressing-1.5.mar
+[2010-03-08 13:04:12,234]  INFO - ModuleDeployer Deploying module: metadataExchange - file:/C:/Project/wso2-new/carbon/trucnk/products/brs/modules/distribution/target/wso2brs-1.2.0/lib/mex-SNAPSHOT-impl.jar
+[2010-03-08 13:04:12,875]  INFO - DeploymentEngine Deploying Web service: org.wso2.carbon.identity.authenticator.token - {1}
+[2010-03-08 13:04:12,921]  WARN - DefaultSchemaGenerator We don't support method overloading. Ignoring [getLogs]
+[2010-03-08 13:04:13,906]  INFO - DeploymentInterceptor Deploying Axis2 service : wso2carbon-sts
+[2010-03-08 13:04:13,937]  INFO - DeploymentEngine Deploying Web service: org.wso2.carbon.sts - {1}
+[2010-03-08 13:04:14,312]  INFO - DeploymentEngine Deploying Web service: org.wso2.carbon.tryit - {1}
+[2010-03-08 13:04:14,625]  INFO - DeploymentInterceptor Deploying Axis2 service : XKMS
+[2010-03-08 13:04:14,703]  INFO - DeploymentEngine Deploying Web service: org.wso2.carbon.xkms - {1}
+[2010-03-08 13:04:14,718]  INFO - DeploymentEngine Deploying Web service: org.wso2.carbon.xkms.mgt - {1}
+[2010-03-08 13:04:14,828]  INFO - CarbonServerManager Repository       : C:\Project\wso2-new\carbon\trucnk\products\brs\modules\DISTRI~1\target\WSO2BR~2.0-S\bin\..\repository\deployment\server/
+[2010-03-08 13:04:15,328]  INFO - HttpsTransportListener HTTPS port       : 9443
+[2010-03-08 13:04:15,328]  INFO - HttpTransportListener HTTP port        : 9763
+[2010-03-08 13:04:16,796]  INFO - CarbonUIServiceComponent Mgt Console URL  : https://10.100.1.100:9443/carbon/
+[2010-03-08 13:04:16,796]  INFO - StartupFinalizerServiceComponent Started Transport Listener Manager
+[2010-03-08 13:04:16,796]  INFO - StartupFinalizerServiceComponent Server           :  WSO2 BRS-1.2.0
+[2010-03-08 13:04:16,796]  INFO - StartupFinalizerServiceComponent WSO2 Carbon started in 15 sec
+
+</pre>
+
+<p>To verify that the BRS is up and running fire off your Web browser and go to
+https://localhost:9443/carbon. This will take you to the WSO2 BRS on-line
+management console. </p>
+<img src="images/login.PNG" alt="Log-in" /> 
+
+<p>You can login to the console using the default user credentials given below.
+</p>
+<ul>
+  <li>Username: admin</li>
+  <li>Password: admin</li>
+</ul>
+
+<p>If you can get that far then the BRS is properly installed and running. </p>
+
+<p>WSO2 BRS startup scripts stated above accept a few useful arguments. </p>
+
+<p>--cleanRegistry<br />
+  This argument forces the embedded Registry instance to be cleaned before
+starting the BRS. Note that this will clean the internal database therefore any
+configurations you saved previously will be permanently lost. </p>
+
+<p>--restart<br />
+   Restart the Carbon Unix daemon.</p>
+
+<p>-debug &lt;port&gt;<br />
+   Enables remote debugging on the BRS through the specified port. </p>
+
+<p>-dump<br />
+   Print a thread dump of the Carbon Unix daemon.</p>
+
+
+<p>In addition to the above mentioned arguments the BRS startup scripts accept
+the following VM arguments. </p>
+
+<p>-DosgiConsole<br />
+   Starts the OSGi console from which you can directly interact with the
+underlying OSGi runtime. </p>
+
+<h4>4.2 Running BRS Samples </h4>
+
+<p>WSO2 BRS ships with a set of sample configurations which enables you to get
+familiar with the product quickly and easily. Please refer the WSO2 BRS samples
+guide for sample configuration and details on how to run them. </p>
+
+<h4>5.0 WSO2 BRS Directory Hierarchy </h4>
+
+<p>When you extract a WSO2 BRS binary distribution archive you will find the
+following directories in the top level that is created. </p>
+
+<p>bin -<br />
+Contains all the necessary scripts to interact with the WSO2 BRS instance.
+There are shell scripts (with .sh extension) for Unix/Linux users and batch
+files (with .bat extension) for Windows users. In general you will find the
+following scripts in this directory.<br />
+<br />
+<ul>
+  <li>wso2server.sh/wso2server.bat - Launches WSO2 BRS </li>
+  <li>wsdl2java.sh/wsdl2java.bat - Launches the Java stub generation tool for
+    Web Services </li>
+  <li>java2wsdl.sh/java2wsdl.bat - Launches the WSDL generation tool for Java
+    Web Services </li>
+  <li>tcpmon.sh/tcpmon.bat - Launches TCPMon, the TCP connection monitor </li>
+  <li>chpasswd.sh/chpasswd.bat -Use this script to change the administrator
+    password without signing in to the server<br />
+  </li>
+  <li>daemon.sh -Start WSO2 BRS as a daemon on Unix/Linux systems<br />
+  </li>
+  <li>install.bat - Install WSO2 BRS as a background service on Windows<br />
+  </li>
+  <li>repowriter.sh/repowriter.bat </li>
+</ul>
+<br />
+In addition to the above mentioned scripts you will find a sub-directory named
+'native' in the bin directory.<br />
+</p>
+
+<p>repository/deployment -<br />
+This directory houses all the OSGi bundles, service artifacts, modules and
+related resources used by the WSO2 BRS instance. The repository/components/plugins 
+directory will contain all the necessary OSGi bundles at server runtime.</p>
+
+<p>repository/conf -<br />
+All the global configuration files (eg: axis2.xml, transports-mgt.xml,
+carbon.xml , rule-component.conf) used by the BRS are stored in this directory.
+</p>
+
+<p>lib -<br />
+The lib directory houses all the jar files and OSGi bundles required by the
+embedded Tomcat instance. Starting from Carbon 2.0 the log4j.properties file
+used by the BRS is also stored here. </p>
+
+<p>resources -<br />
+Contains additional resources required by WSO2 BRS. This includes security
+related resources such as keystores. </p>
+
+<p>repository/logs -<br />
+All the server logs created during server runtime will be stored here. </p>
+
+<p>dbscripts -<br />
+Contains a collection of database scripts required to create the Carbon
+database on a variety of database management systems.<br />
+</p>
+
+<h4>6.0 Using the WSO2 BRS Management Console </h4>
+
+<p>WSO2 BRS management console is a Web based control panel powered by JSP and
+AJAX which enables system administrators to interact with a running BRS
+instance, without having to touch any underlying configuration files. The
+management console allows the users to command and control proxy services,
+sequences, transports, local entries, registry, modules, endpoints and much
+more. BRS management console is a great way to try things out without having to
+edit the actual configuration files or without having to restart the BRS for
+changes to take effect. </p>
+
+<p>We recommend using Mozilla Firefox 3 or Internet Explorer 7 to access the
+WSO2 BRS management console. Please note that your browser must be JavaScript
+enabled to take the full advantage of the management console. To access the BRS
+management console fire off you Web browser and navigate to https://&lt;Server
+Host&gt;:&lt;Server Port&gt;/&lt;Context&gt;. If you are running the Web
+browser on the same machine as the BRS you may use 'localhost' as the server
+host. The default port and the context for the BRS management console are
+'9443' and 'carbon' respectively. If you entered the URL correctly you will be
+taken to the management console's login page. </p>
+
+<p>On the login page enter 'admin' as the username and the password to login to
+the system. You can change user credentials and even add new users once you
+login. Controls and wizards in the BRS management console are pretty much self
+explanatory. However if you are having trouble finishing your way in the
+management console, click on the 'Help' link at the top right corner of any
+page to access context sensitive help. </p>
+
+<p>Please note that the BRS management console makes use of the default HTTPS
+servlet transport which is configured in the BRS_HOME/conf/transports.xml file.
+It is important that this transport is always properly configured in the
+mentioned file. Otherwise the management console might be inaccessible to the
+users. </p>
+
+<h4>7.0 User Management </h4>
+
+<p>To access the WSO2 BRS user management features, first sign in to the BRS
+management console and click on 'User Management' under the 'Configure' menu in
+the left navigation bar. This will take you to the User Management home page
+which contains the controls illustrated below. </p>
+<img src="images/user-mgt.PNG" alt="User Mgt" />
+
+<p>From here you can manage users and roles. A user is associated with zero or
+more roles (generally specified at user creation time) and each role is
+associated with zero or more permissions (generally specified at role creation
+time). Therefore the set of permissions owned by a user is determined by the
+roles assigned to that user. A user owns the union of all the permissions
+associated with the roles assigned to that user. By default BRS comes with only
+one role, the 'admin' role. This role is associated with the following set of
+permissions. (In fact all the BRS related permissions are listed here, meaning
+that users with admin role gets all the permissions over the system) </p>
+<ul>
+  <li>login </li>
+  <li>manage-configuration </li>
+  <li>manage-security </li>
+  <li>upload-services </li>
+  <li>manage-services </li>
+  <li>monitor-system </li>
+  <li>delegate-identity </li>
+</ul>
+
+<p>By default the admin user is associated with the admin role and hence the
+admin user is entitled to all the above permissions. </p>
+
+<p>To add a new role to the system click on 'Roles' in the User Management home
+page and on the page that appears click the 'Add New Role' link. This will
+start the 'Add Role' wizard. The wizard will guide you though the process of
+creating a role by specifying a unique name for the role and adding the
+relevant permissions to the new role. Similarly to create a new user, click on
+'Users' in the User Management home page. Then from the next page that appears
+select 'Create New User' link. This will launch the 'Add User' wizard which
+will enable you to create a new user account with login credentials and
+associate the account with one or more existing roles. The BRS management
+console also enables you to search for and modify existing users and roles. </p>
+
+<p>WSO2 BRS can be easily configured to use an external user store in addition
+to the built-in system user store. An external user store is an external
+database which stores user data. It could be as simple as a relational database
+or as sophisticated as an LDAP instance. Most organizations maintain such
+centralized databases and it would be productive from the organization's point
+of view to have the BRS pick up user data from the existing centralized user
+database. To connect the BRS to an external user store simply click on the 'Add
+External User Store' link on the User Management home page. Then on the page
+that appears select the type of user store that will be plugged into the BRS.
+Currently the following types of user stores are supported. </p>
+<ul>
+  <li>JDBC </li>
+  <li>LDAP </li>
+  <li>Active Directory </li>
+</ul>
+
+<p>Having selected the type of the user store you need to provide additional
+information required by the BRS to connect to and retrieve user data from the
+external user store. If all the required parameters were specified accurately
+the BRS will pick up user data from the external user store and users
+registered on the external store will be able to access the BRS as if their
+accounts were created in the built-in system user store. </p>
+
+<h4>8.0 Setting Up Logging </h4>
+
+<p>Logging is one of the most important aspects of a production grade server. A
+properly configured logging system is vital in identifying errors, security
+threats and usage patterns. WSO2 BRS uses a log4j based logging mechanism
+through Apache Commons Logging facade library. The log4j.properties file which
+governs how logging is performed by the server can be found in BRS_HOME/lib
+directory. However it is recommended not to make any alterations to the default
+log4j.properties file. The recommended way of setting up logging is by using
+the BRS management console. Simply login to the management console and click on
+'Logging' under the 'Configure' menu in the left navigation bar. From here you
+can setup various appenders and configure log levels for various loggers. Any
+changes to the logging configuration you make from the management console will
+get priority over what is defined in the actual log4j.properties file. </p>
+
+<p>By default WSO2 BRS comes with the following log appenders configured. </p>
+<ul>
+  <li>CARBON_CONSOLE (Logs to the console when the server is running) </li>
+  <li>CARBON_LOGFILE (Writes the logs to BRS_HOME/logs/wso2-BRS.log) </li>
+  <li>CARBON_MEMORY </li>
+  <li>CARBON_SYS_LOG </li>
+  <li>SERVICE_APPENDER (Writes mediation time audit messages to
+    BRS_HOME/logs/wso2-BRS-service.log) </li>
+  <li>TRACE_APPENDER (Writes mediation time tracing/debug messages to the
+    BRS_HOME/logs/wso2-BRS-trace.log for tracing enabled services) </li>
+  <li>TRACE_MEMORYAPPENDER </li>
+</ul>
+
+<p>Tracing can be enabled for individual mediation sequences and proxy services
+from the 'Mediation Sequences' home page and the 'Service Dashboard' page
+respectively. Click on the 'Sequences' link under 'Mediation' in the 'Manage'
+menu of the left navigation bar to access the 'Mediation Sequences' page. This
+page lists all the deployed sequences. Each sequence gives you the options to
+enable/disable tracing. To access the service dashboard for a proxy service go
+to the Services List page and click on the proxy service that you are
+interested in. Once a sequence or a proxy service is tracing enabled you can
+view the generated log messages by visiting the 'Mediation Tracer' page under
+the 'Monitor' menu. The 'Monitor' menu also gives you access to the system logs
+and the SOAP tracer logs all through the Web interface itself. </p>
+<img src="images/logs.PNG" alt="Logs" />
+ </body>
+</html>
