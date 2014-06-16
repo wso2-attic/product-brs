@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!--
+~ Copyright (c) 2009, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+~
+~ WSO2 Inc. licenses this file to you under the Apache License,
+~ Version 2.0 (the "License"); you may not use this file except
+~ in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing,
+~ software distributed under the License is distributed on an
+~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+~ KIND, either express or implied. See the License for the
+~ specific language governing permissions and limitations
+~ under the License.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <title>WSO2 BRS - Car Rental Service</title>
+  <link href="../css/brs-docs.css" rel="stylesheet" />
+  <link href="../styles/dist-docs.css" rel="stylesheet" type="text/css"
+  media="all" />
+</head>
+
+<body>
+<p>[<a href="../docs_index.html">Documentation Index</a>] 
+<h1>WSO2 BRS - Samples : Car Rental Service</h1>
+
+<p>This guide demonstrates a part of a Car Rental Service which uses business
+rules.</p>
+
+<p>Please follow the <a href="../user_guide.html">User Guide</a> before proceeding with this sample, if you have
+not already followed the <a href="../user_guide.html">User Guide</a>. </p>
+
+<h2>Contents</h2>
+
+<div class="toc">
+<ul>
+  <li><a href="#CarRentalService">Car Rental Service</a> </li>
+  <li><a href="#References">References</a> </li>
+</ul>
+</div>
+
+<h2 id="CarRentalService">Car Rental Service</h2>
+
+<h3>Rules</h3>
+
+<p>Rule 1: The amount of 3 dollar a per mile fee will be charged for any
+additional miles.</p>
+
+<p>Rule 2 : If the car reservation is daily, then the charge for a mile is 3
+dollars.</p>
+
+<p>Rule 3 : If the car reservation is weekly, then the charge for a mile is 2.5
+dollars.</p>
+
+<p>Rule 4 : If the car reservation is unlimited, then the charge for a mile is
+2 dollars.</p>
+
+<h3>Facts</h3>
+
+<p>There are two facts - Reservation and Charge.</p>
+<pre xml:space="preserve">package samples.carrental;
+
+/**
+ * Reservation
+ */
+public class Reservation {
+
+    private double MPD;
+
+    private String type;
+
+    public double getMPD() {
+        return MPD;
+    }
+
+    public void setMPD(double MPD) {
+        this.MPD = MPD;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+}
+
+package samples.carrental;
+
+/**
+ * Charge
+ */
+public class Charge {
+    
+    private String message;
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+}</pre>
+
+<h3>Rule Service Configuration - service.rsl</h3>
+<pre xml:space="preserve">&lt;ruleService
+        name=&quot;CarRentalService&quot;
+        xmlns=&quot;http://wso2.org/carbon/rules&quot;
+        targetNamespace=&quot;http://com.test/carrental&quot;&gt;
+    &lt;ruleSet&gt;
+        &lt;rule resourceType=&quot;regular&quot; sourceType=&quot;inline&quot;&gt;
+            &lt;![CDATA[
+                package carrental
+
+                import samples.carrental.Reservation;
+                import samples.carrental.Charge;
+
+                rule &quot;Daily Reservation&quot;
+                when
+                      r : Reservation( ( type == &quot;daily&quot; ) &amp;&amp;  ( MPD &lt;= 18 ) )
+                then
+                      Charge charge = new Charge();
+                           double total = r.getMPD() * 3;
+                           charge.setMessage(&quot;The charge for a mile is 3 dollars. The total charge is &quot; + total );
+                           insertLogical(charge);
+                end
+
+                rule &quot;Daily Reservation with additional miles&quot;
+                when
+                      r : Reservation( (type == &quot;daily&quot;) &amp;&amp;  ( MPD &gt; 18 ) )
+                then
+                      Charge charge = new Charge();
+                           double total = (r.getMPD() - 18) * 3 + r.getMPD() * 3;
+                           charge.setMessage(&quot;The charge for a mile is 3 dollars and the amount of 3 dollar a per mile fee will be charged for any additional miles. The total charge is &quot; + total );
+                           insertLogical(charge);
+                end
+
+                rule &quot;Weekly Reservation&quot;
+                when
+                      r : Reservation( (type == &quot;weekly&quot;) &amp;&amp;  ( MPD &lt;= 18 ) )
+                then
+                      Charge charge = new Charge();
+                           double total = r.getMPD() * 2.5;
+                           charge.setMessage(&quot;The charge for a mile is 2.5 dollars. The total charge is &quot; + total );
+                           insertLogical(charge);
+                end
+
+                rule &quot;Weekly Reservation with additional miles&quot;
+                when
+                      r : Reservation( (type == &quot;weekly&quot;) &amp;&amp;  ( MPD &gt; 18 ) )
+                then
+                      Charge charge = new Charge();
+                           double total = (r.getMPD() - 18) * 3 + r.getMPD() * 2.5;
+                           charge.setMessage(&quot;The charge for a mile is 2.5 dollars and the amount of 3 dollar a per mile fee will be charged for any additional miles. The total charge is &quot; + total );
+                           insertLogical(charge);
+                end
+
+                rule &quot;Unlimited Reservation&quot;
+                when
+                      r : Reservation( (type == &quot;unlimited&quot;) &amp;&amp;  ( MPD &lt;= 18 ) )
+                then
+                      Charge charge = new Charge();
+                           double total = r.getMPD() * 2;
+                           charge.setMessage(&quot;The charge for a mile is 2 dollars. The total charge is &quot; + total );
+                           insertLogical(charge);
+                end
+
+                rule &quot;Unlimited Reservation with additional miles&quot;
+                when
+                      r : Reservation( (type == &quot;unlimited&quot;) &amp;&amp;  ( MPD &gt; 18 ) )
+                then
+                      Charge charge = new Charge();
+                           double total = (r.getMPD() - 18) * 3 + r.getMPD() * 2;
+                           charge.setMessage(&quot;The charge for a mile is 2 dollars and the amount of 3 dollar a per mile fee will be charged for any additional miles. The total charge is &quot; + total );
+                           insertLogical(charge);
+                end
+
+
+            ]]&gt;
+        &lt;/rule&gt;
+    &lt;/ruleSet&gt;
+    &lt;operation name=&quot;rent&quot;&gt;
+        &lt;input wrapperElementName=&quot;carReservation&quot; namespace=&quot;http://com.test/carReservation&quot;&gt;
+            &lt;fact elementName=&quot;reserve&quot; namespace=&quot;http://com.test/carReservation&quot; type=&quot;samples.carrental.Reservation&quot;&gt;&lt;/fact&gt;
+        &lt;/input&gt;
+        &lt;output wrapperElementName=&quot;carReservationRespone&quot; namespace=&quot;http://com.test/carReservation&quot;&gt;
+            &lt;fact elementName=&quot;charge&quot; namespace=&quot;http://com.test/carReservation&quot; type=&quot;samples.carrental.Charge&quot;&gt;&lt;/fact&gt;
+        &lt;/output&gt;
+    &lt;/operation&gt;
+&lt;/ruleService&gt;</pre>
+</p>
+
+<h3>Deploying Service </h3>
+
+<p>You can either create an .aar file and upload or create a rule service using
+rule service wizard UI. Please refer the <a href="../user_guide.html">User Guide</a> for more information.</p>
+
+<p><h3>Testing Sample</h3>
+You can use Try-it tool with the requests similar to the following. </p>
+
+<p><pre xml:space="preserve">&lt;type&gt;unlimited&lt;/type&gt;
+&lt;MPD&gt;18.5&lt;/MPD&gt;</pre>
+</p>
+
+<p>Another request </p>
+<pre>&lt;type&gt;daily&lt;/type&gt;
+&lt;MPD&gt;18&lt;/MPD&gt;</pre>
+
+<p>You can also use the code generation. There is an option for code generation
+in the services management page. A client using generated stub codes is shown
+bellow. Codes was generated with option - Unpacks the databinding classes.</p>
+<pre>package org.wso2.carbon.samples;
+
+import org.apache.axis2.AxisFault;
+import org.wso2.carbon.samples.carRentalService.reservation.CarReservation;
+import org.wso2.carbon.samples.carRentalService.reservation.Charge;
+import org.wso2.carbon.samples.carRentalService.reservation.Reservation;
+import org.wso2.carbon.samples.carRentalService.stub.CarRentalServiceStub;
+import java.rmi.RemoteException;
+
+public class CarRentalTestCase {
+
+    public static void main(String[] args) {
+
+        try {
+            CarRentalServiceStub carRentalServiceStub =
+                    new CarRentalServiceStub("http://localhost:9763/services/CarRentalService");
+            CarReservation carReservation = new CarReservation();
+            Reservation reservation = new Reservation();
+            reservation.setMPD(18.5);
+            reservation.setType("weekly");
+            Reservation[] reservations = new Reservation[1];
+            reservations[0] = reservation;
+            carReservation.setReserve(reservations);
+
+            Charge[] charges = carRentalServiceStub.rent(reservations);
+            String result = charges[0].getMessage();
+            System.out.println(result);
+
+        } catch (AxisFault axisFault) {
+            axisFault.printStackTrace();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+}</pre>
+
+<p><h2 id="References">References</h2>
+</p>
+</body>
+</html>
