@@ -1,0 +1,65 @@
+<ruleService
+        name="CallChargingService"
+        xmlns="http://wso2.org/carbon/rules"
+        targetNamespace="http://com.test/callcharging">
+    <ruleSet>
+        <rule resourceType="regular" sourceType="inline">
+            <![CDATA[
+                package callcharging
+
+                import samples.callcharging.CallLog;
+                import samples.callcharging.CallCharge;
+
+                rule "Local Call During Daytime"
+                when
+                      callLog : CallLog( type == "local")
+                           eval((6 < callLog.now()) && (callLog.now()< 18))
+                then
+                           CallCharge c = new CallCharge();
+                           c.setAmount(callLog.getPeriod() * 2);
+                           insertLogical(c);
+                end
+
+                rule "Local Call During Night"
+                when
+                      callLog : CallLog( type == "local")
+                           eval((18 < callLog.now()) || (callLog.now()< 5))
+                then
+                           CallCharge c = new CallCharge();
+                           c.setAmount(callLog.getPeriod() * 1);
+                           insertLogical(c);
+                end
+
+                rule "IDD Call During Daytime"
+                when
+                      callLog : CallLog( type == "idd")
+                           eval((6 < callLog.now()) && (callLog.now()< 18))
+                then
+                           CallCharge c = new CallCharge();
+                           c.setAmount(callLog.getPeriod() * 6);
+                           insertLogical(c);
+                end
+
+                rule "IDD Call During Night"
+                when
+                      callLog : CallLog( type == "idd")
+                           eval((18 < callLog.now()) || (callLog.now()< 5))
+                then
+                           CallCharge c = new CallCharge();
+                           c.setAmount(callLog.getPeriod() * 4);
+                           insertLogical(c);
+                end
+
+            ]]>
+        </rule>
+    </ruleSet>
+    <operation name="charge">
+        <input wrapperElementName="callCharge" namespace="http://com.test/callCharge">
+            <fact elementName="callLog" namespace="http://com.test/callCharge" type="samples.callcharging.CallLog"></fact>
+        </input>
+        <output wrapperElementName="callChargeRespone" namespace="http://com.test/callCharge">
+            <fact elementName="callCharge" namespace="http://com.test/callCharge" type="samples.callcharging.CallCharge"></fact>
+        </output>
+    </operation>
+</ruleService>
+

@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!--
+~ Copyright (c) 2009, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+~
+~ WSO2 Inc. licenses this file to you under the Apache License,
+~ Version 2.0 (the "License"); you may not use this file except
+~ in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing,
+~ software distributed under the License is distributed on an
+~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+~ KIND, either express or implied. See the License for the
+~ specific language governing permissions and limitations
+~ under the License.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <title>WSO2 BRS - HealthCare Service</title>
+  <link href="../css/brs-docs.css" rel="stylesheet" />
+  <link href="../styles/dist-docs.css" rel="stylesheet" type="text/css"
+  media="all" />
+</head>
+
+<body>
+<p>[<a href="../docs_index.html">Documentation Index</a>] 
+<h1>WSO2 BRS - Samples : HealthCare Service </h1>
+
+<p>This guide demonstrates a service for recommending dose for a patient . This
+service uses business rules.</p>
+
+<p>Please follow the <a href="../user_guide.html">User Guide</a> before proceeding with this sample, if you have
+not already followed the <a href="../user_guide.html">User Guide</a>. </p>
+
+<h2>Contents</h2>
+
+<div class="toc">
+<ul>
+  <li><a href="#HealthCareService">HealthCare Service </a> </li>
+  <li><a href="#References">References</a> </li>
+</ul>
+</div>
+
+<h2 id="HealthCareService">HealthCare Service</h2>
+
+<h3>Rules</h3>
+
+<p>Rule 1 : If the recommended medication is one of Amoxicillin, Cefuroxime,
+and Levofloxacin, and If the patient is older than 15 or If patient is younger
+than 60, 500mg every 24 hours for 14 days.</p>
+
+<p>Rule 2 : If the recommended medication is one of Amoxicillin, Cefuroxime,
+and Levofloxacin, If the patient is older than 15 or If patient is younger than
+60 and If patient's Creatinine Level 1.5, 250 mg every 24 hours for 14 days.</p>
+
+<h3>Facts</h3>
+
+<p>There are one fact and one result - patient and dose.</p>
+<pre xml:space="preserve">              </pre>
+<pre xml:space="preserve">package samples.heathcare;
+
+/**
+ * Patient
+ */
+public class Patient {
+
+    private String medication;
+
+    private int age;
+
+    private double creatinineLevel;
+
+    public String getMedication() {
+        return medication;
+    }
+
+    public void setMedication(String medication) {
+        this.medication = medication;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public double getCreatinineLevel() {
+        return creatinineLevel;
+    }
+
+    public void setCreatinineLevel(double creatinineLevel) {
+        this.creatinineLevel = creatinineLevel;
+    }
+}
+
+package samples.heathcare;
+
+/**
+ * Dose
+ */
+public class Dose {
+
+    private String message;
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+}
+     </pre>
+
+<h3>Rule Service Configuration - service.rsl</h3>
+<pre xml:space="preserve">&lt;ruleService
+        name=&quot;HealthCareService&quot;
+        xmlns=&quot;http://wso2.org/carbon/rules&quot;
+        targetNamespace=&quot;http://com.test/HeathCareService&quot;&gt;
+    &lt;ruleSet&gt;
+        &lt;rule resourceType=&quot;regular&quot; sourceType=&quot;inline&quot;&gt;
+            &lt;![CDATA[
+                package HeathCareService
+
+                import samples.heathcare.Patient;
+                import samples.heathcare.Dose;
+
+                rule &quot;Rule one&quot; no-loop true
+                when
+                    Patient( ( medication in ( &quot;Amoxicillin&quot;, &quot;Cefuroxime&quot;, &quot;Levofloxacin&quot; ) ) &amp;&amp; ( ( age  &gt; 16 ) &amp;&amp; ( age &lt; 60 ) ) &amp;&amp; ( creatinineLevel == 0 )  )
+                then
+                    Dose msg = new Dose();
+                    msg.setMessage(&quot;500 mg every 24 hours for 14 days&quot;);
+                    insertLogical(msg);
+                end
+
+                rule &quot;Rule two&quot; no-loop true
+                when
+                    Patient( ( medication in ( &quot;Amoxicillin&quot;, &quot;Cefuroxime&quot;, &quot;Levofloxacin&quot; ) ) &amp;&amp; ( ( age  &gt; 16) &amp;&amp; ( age &lt; 60 ) ) &amp;&amp; ( ( creatinineLevel &gt; 0 ) &amp;&amp;  ( creatinineLevel &lt; 1.5 ) ) )
+                then
+                    Dose msg = new Dose();
+                    msg.setMessage(&quot;250 mg every 24 hours for 14 days&quot;);
+                    insertLogical(msg);
+                end
+            ]]&gt;
+        &lt;/rule&gt;
+    &lt;/ruleSet&gt;
+    &lt;operation name=&quot;recommendDose&quot;&gt;
+        &lt;input wrapperElementName=&quot;patientDetail&quot; namespace=&quot;http://com.test/patientDetail&quot;&gt;
+            &lt;fact elementName=&quot;patientDetail&quot; namespace=&quot;http://com.test/patientDetail&quot; type=&quot;samples.heathcare.Patient&quot;&gt;&lt;/fact&gt;
+        &lt;/input&gt;
+        &lt;output wrapperElementName=&quot;patientDetailRespone&quot; namespace=&quot;http://com.test/patientDetail&quot;&gt;
+            &lt;fact elementName=&quot;recommendDose&quot; namespace=&quot;http://com.test/patientDetail&quot; type=&quot;samples.heathcare.Dose&quot;&gt;&lt;/fact&gt;
+        &lt;/output&gt;
+    &lt;/operation&gt;
+&lt;/ruleService&gt;</pre>
+</p>
+
+<h3>Deploying Service </h3>
+
+<p>You can either create an .aar file and upload or create a rule service using
+rule service wizard UI. Please refer the <a href="../user_guide.html">User Guide</a> for more information.</p>
+
+<p><h3>Testing Sample</h3>
+You can use Try-it tool with the requests similar to the following. </p>
+
+<p><pre xml:space="preserve">&lt;medication&gt;Cefuroxime&lt;/medication&gt;
+&lt;age&gt;54&lt;/age&gt;
+&lt;creatinineLevel&gt;1.2&lt;/creatinineLevel&gt;</pre>
+</p>
+
+<p>Another request </p>
+<pre>&lt;medication&gt;Amoxicillin&lt;/medication&gt;
+&lt;age&gt;20&lt;/age&gt;</pre>
+
+<p>You can also use the code generation. There is an option for code generation
+in the services management page. A client using generated stub codes is shown
+bellow. Codes was generated with option - Unpacks the databinding classes.</p>
+<pre>package org.wso2.carbon.samples;
+
+import org.apache.axis2.AxisFault;
+import org.wso2.carbon.samples.healthCareService.patientDetail.Dose;
+import org.wso2.carbon.samples.healthCareService.patientDetail.Patient;
+import org.wso2.carbon.samples.healthCareService.patientDetail.PatientDetail;
+import org.wso2.carbon.samples.healthCareService.stub.HealthCareServiceStub;
+import java.rmi.RemoteException;
+
+public class HealthCareServiceTestCase {
+
+    public static void main(String[] args) {
+
+        try {
+            HealthCareServiceStub healthCareServiceStub =
+                    new HealthCareServiceStub("http://localhost:9763/services/HealthCareService");
+
+            PatientDetail patientDetail = new PatientDetail();
+            Patient patient = new Patient();
+            patient.setAge(43);
+            patient.setCreatinineLevel(1.0);
+            patient.setMedication("Levofloxacin");
+
+            Patient[] patients = new Patient[1];
+            patients[0] = patient;
+            patientDetail.setPatientDetail(patients);
+
+            Dose[] doses = healthCareServiceStub.recommendDose(patients);
+            String result = doses[0].getMessage();
+            System.out.println(result);
+
+        } catch (AxisFault axisFault) {
+            axisFault.printStackTrace();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }</pre>
+
+<p><h2 id="References">References</h2>
+</p>
+</body>
+</html>

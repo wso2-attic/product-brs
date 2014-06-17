@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>integration</artifactId>
+        <groupId>org.wso2.brs</groupId>
+        <version>2.2.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.wso2.brs</groupId>
+    <version>2.2.0-SNAPSHOT</version>
+    <artifactId>org.wso2.carbon.brs.integration.services</artifactId>
+    <name>WSO2 BRS - Integration Service Module</name>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>banking.service</module>
+        <module>callcharging.service</module>
+        <module>carrental.service</module>
+        <module>greeting.service</module>
+        <module>healthcare.service</module>
+        <module>insurance.service</module>
+        <module>MIPCalculate.service</module>
+        <module>orderApproval.service</module>
+        <module>quotation.service</module>
+        <module>shopping.service</module>
+    </modules>
+
+</project>
