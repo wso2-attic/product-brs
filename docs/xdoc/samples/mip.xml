@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!--
+~ Copyright (c) 2009, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+~
+~ WSO2 Inc. licenses this file to you under the Apache License,
+~ Version 2.0 (the "License"); you may not use this file except
+~ in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing,
+~ software distributed under the License is distributed on an
+~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+~ KIND, either express or implied. See the License for the
+~ specific language governing permissions and limitations
+~ under the License.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <title>WSO2 BRS - Calculating Mortgage Insurance Premium</title>
+  <link href="../css/brs-docs.css" rel="stylesheet" />
+  <link href="../styles/dist-docs.css" rel="stylesheet" type="text/css"
+  media="all" />
+</head>
+
+<body>
+<p>[<a href="../docs_index.html">Documentation Index</a>] 
+<h1>WSO2 BRS - Samples : Calculating Mortgage Insurance Premium </h1>
+
+<p>This guide demonstrates a service for calculating Mortgage Insurance Premium
+(PMI) using business rules.</p>
+
+<p>Please follow the <a href="../user_guide.html">User Guide</a> before proceeding with this sample, if you have
+not already followed the <a href="../user_guide.html">User Guide</a>. </p>
+
+<h2>Contents</h2>
+
+<div class="toc">
+<ul>
+  <li><a href="#MIPService">Calculating Mortgage Insurance Premium </a> </li>
+  <li><a href="#References">References</a> </li>
+</ul>
+</div>
+
+<h2 id="MIPService">Calculating Mortgage Insurance Premium </h2>
+
+<h3>Rules</h3>
+
+<p>Rule 1 : The mortgage insurance rate for PMI insurance is 0.5 and for FHA
+loans, it is 1.5.</p>
+
+<h3>Facts</h3>
+
+<p>There are one fact and one result - Client and Mortgage Insurance
+Premium.</p>
+<pre xml:space="preserve">              </pre>
+<pre xml:space="preserve">package samples.MIPCalculate;
+
+/**
+ * Client fact
+ */
+public class Client {
+
+    private String loanType;
+
+    private double mortgageValue;
+
+    private double downPayment;
+
+    public String getLoanType() {
+        return loanType;
+    }
+
+    public void setLoanType(String loanType) {
+        this.loanType = loanType;
+    }
+
+    public double getMortgageValue() {
+        return mortgageValue;
+    }
+
+    public void setMortgageValue(double mortgageValue) {
+        this.mortgageValue = mortgageValue;
+    }
+
+    public double getDownPayment() {
+        return downPayment;
+    }
+
+    public void setDownPayment(double downPayment) {
+        this.downPayment = downPayment;
+    }
+}
+
+package samples.MIPCalculate;
+
+/**
+ * MIP - Mortgage Insurance Premium
+ */
+public class MIP {
+
+    private double annualMIP;
+
+    public double getAnnualMIP() {
+        return annualMIP;
+    }
+
+    public void setAnnualMIP(double annualMIP) {
+        this.annualMIP = annualMIP;
+    }
+}
+
+            </pre>
+
+<h3>Rule Service Configuration - service.rsl</h3>
+<pre xml:space="preserve">&lt;ruleService
+        name=&quot;MIPCalculateService&quot;
+        xmlns=&quot;http://wso2.org/carbon/rules&quot;
+        targetNamespace=&quot;http://com.test/MIPCalculateService&quot;&gt;
+    &lt;ruleSet&gt;
+        &lt;rule resourceType=&quot;regular&quot; sourceType=&quot;inline&quot;&gt;
+            &lt;![CDATA[
+                package MIPCalculateService
+
+                import samples.MIPCalculate.Client;
+                import samples.MIPCalculate.MIP;
+
+                rule &quot;Calculate the MIP for PMI &quot; no-loop true
+                when
+                    user : Client(loanType == &quot;PMI&quot;)
+                then
+                    MIP mip = new MIP();
+                    double loanAmount = user.getMortgageValue() - user.getDownPayment();
+                    double lvt = loanAmount / user.getMortgageValue();
+                    double lvtAmount = lvt * user.getMortgageValue();
+                    mip.setAnnualMIP(lvtAmount * 0.05);
+                    insertLogical(mip);
+
+                end
+
+                rule &quot;Calculate the MIP for FHA loan&quot; no-loop true
+                when
+                    user : Client(loanType == &quot;FHA&quot;)
+                then
+                    MIP mip = new MIP();
+                    double loanAmount = user.getMortgageValue() - user.getDownPayment();
+                    double lvt = loanAmount / user.getMortgageValue();
+                    double lvtAmount = lvt * user.getMortgageValue();
+                    mip.setAnnualMIP(lvtAmount * 0.15);
+                    insertLogical(mip);
+                end
+            ]]&gt;
+        &lt;/rule&gt;
+    &lt;/ruleSet&gt;
+    &lt;operation name=&quot;calculate&quot;&gt;
+        &lt;input wrapperElementName=&quot;placeClientDetail&quot; namespace=&quot;http://com.test/placeClientDetail&quot;&gt;
+            &lt;fact elementName=&quot;clientDetail&quot; namespace=&quot;http://com.test/placeClientDetail&quot; type=&quot;samples.MIPCalculate.Client&quot;&gt;&lt;/fact&gt;
+        &lt;/input&gt;
+        &lt;output wrapperElementName=&quot;placeClientDetailRespone&quot; namespace=&quot;http://com.test/placeClientDetail&quot;&gt;
+            &lt;fact elementName=&quot;MIP&quot; namespace=&quot;http://com.test/placeClientDetail&quot; type=&quot;samples.MIPCalculate.MIP&quot;&gt;&lt;/fact&gt;
+        &lt;/output&gt;
+    &lt;/operation&gt;
+&lt;/ruleService&gt;</pre>
+</p>
+
+<h3>Deploying Service </h3>
+
+<p>You can either create an .aar file and upload or create a rule service using
+rule service wizard UI. Please refer the <a href="../user_guide.html">User Guide</a> for more information.</p>
+
+<p><h3>Testing Sample</h3>
+You can use Try-it tool with the requests similar to the following. </p>
+
+<p><pre xml:space="preserve">&lt;loanType&gt;FHA&lt;/loanType&gt;
+&lt;mortgageValue&gt;100000&lt;/mortgageValue&gt;
+&lt;downPayment&gt;90000&lt;/downPayment&gt;</pre>
+</p>
+
+<p>Another request </p>
+<pre>&lt;loanType&gt;PMI&lt;/loanType&gt;
+&lt;mortgageValue&gt;100000&lt;/mortgageValue&gt;
+&lt;downPayment&gt;90000&lt;/downPayment&gt;</pre>
+
+<p>You can also use the code generation. There is an option for code generation
+in the services management page. A client using generated stub codes is shown
+bellow. Codes was generated with option - Unpacks the databinding classes.</p>
+<pre>package org.wso2.carbon.samples;
+
+import org.apache.axis2.AxisFault;
+import org.wso2.carbon.samples.mipCalculateService.clientDetail.Client;
+import org.wso2.carbon.samples.mipCalculateService.clientDetail.MIP;
+import org.wso2.carbon.samples.mipCalculateService.clientDetail.PlaceClientDetail;
+import org.wso2.carbon.samples.mipCalculateService.stub.MIPCalculateServiceStub;
+import java.rmi.RemoteException;
+
+public class MIPCalculateServiceTestCase {
+
+    public static void main(String[] args) {
+
+        try {
+            MIPCalculateServiceStub mipCalculateServiceStub =
+                    new MIPCalculateServiceStub("http://localhost:9763/services/MIPCalculateService");
+            PlaceClientDetail placeClientDetail = new PlaceClientDetail();
+
+            Client client = new Client();
+            client.setLoanType("FHA");
+            client.setDownPayment(8000);
+            client.setMortgageValue(90000);
+            Client[] clients = new Client[1];
+            clients[0] = client;
+
+            MIP[] mips = mipCalculateServiceStub.calculate(clients);
+            double result = mips[0].getAnnualMIP();
+            System.out.println(result);
+
+        } catch (AxisFault axisFault) {
+            axisFault.printStackTrace();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+}</pre>
+
+<p><h2 id="References">References</h2>
+</p>
+</body>
+</html>

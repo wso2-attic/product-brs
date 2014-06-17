@@ -1,0 +1,85 @@
+<ruleService
+        name="CarRentalService"
+        xmlns="http://wso2.org/carbon/rules"
+        targetNamespace="http://com.test/carrental">
+    <ruleSet>
+        <rule resourceType="regular" sourceType="inline">
+            <![CDATA[
+                package carrental
+
+                import samples.carrental.Reservation;
+                import samples.carrental.Charge;
+
+                rule "Daily Reservation"
+                when
+                      r : Reservation( ( type == "daily" ) &&  ( MPD <= 18 ) )
+                then
+                      Charge charge = new Charge();
+                           double total = r.getMPD() * 3;
+                           charge.setMessage("The charge for a mile is 3 dollars. The total charge is " + total );
+                           insertLogical(charge);
+                end
+
+                rule "Daily Reservation with additional miles"
+                when
+                      r : Reservation( (type == "daily") &&  ( MPD > 18 ) )
+                then
+                      Charge charge = new Charge();
+                           double total = (r.getMPD() - 18) * 3 + r.getMPD() * 3;
+                           charge.setMessage("The charge for a mile is 3 dollars and the amount of 3 dollar a per mile fee will be charged for any additional miles. The total charge is " + total );
+                           insertLogical(charge);
+                end
+
+                rule "Weekly Reservation"
+                when
+                      r : Reservation( (type == "weekly") &&  ( MPD <= 18 ) )
+                then
+                      Charge charge = new Charge();
+                           double total = r.getMPD() * 2.5;
+                           charge.setMessage("The charge for a mile is 2.5 dollars. The total charge is " + total );
+                           insertLogical(charge);
+                end
+
+                rule "Weekly Reservation with additional miles"
+                when
+                      r : Reservation( (type == "weekly") &&  ( MPD > 18 ) )
+                then
+                      Charge charge = new Charge();
+                           double total = (r.getMPD() - 18) * 3 + r.getMPD() * 2.5;
+                           charge.setMessage("The charge for a mile is 2.5 dollars and the amount of 3 dollar a per mile fee will be charged for any additional miles. The total charge is " + total );
+                           insertLogical(charge);
+                end
+
+                rule "Unlimited Reservation"
+                when
+                      r : Reservation( (type == "unlimited") &&  ( MPD <= 18 ) )
+                then
+                      Charge charge = new Charge();
+                           double total = r.getMPD() * 2;
+                           charge.setMessage("The charge for a mile is 2 dollars. The total charge is " + total );
+                           insertLogical(charge);
+                end
+
+                rule "Unlimited Reservation with additional miles"
+                when
+                      r : Reservation( (type == "unlimited") &&  ( MPD > 18 ) )
+                then
+                      Charge charge = new Charge();
+                           double total = (r.getMPD() - 18) * 3 + r.getMPD() * 2;
+                           charge.setMessage("The charge for a mile is 2 dollars and the amount of 3 dollar a per mile fee will be charged for any additional miles. The total charge is " + total );
+                           insertLogical(charge);
+                end
+
+
+            ]]>
+        </rule>
+    </ruleSet>
+    <operation name="rent">
+        <input wrapperElementName="carReservation" namespace="http://com.test/carReservation">
+            <fact elementName="reserve" namespace="http://com.test/carReservation" type="samples.carrental.Reservation"></fact>
+        </input>
+        <output wrapperElementName="carReservationRespone" namespace="http://com.test/carReservation">
+            <fact elementName="charge" namespace="http://com.test/carReservation" type="samples.carrental.Charge"></fact>
+        </output>
+    </operation>
+</ruleService>

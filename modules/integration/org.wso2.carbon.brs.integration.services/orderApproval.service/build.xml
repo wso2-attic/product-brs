@@ -1,0 +1,40 @@
+<project name="OrderApprovalService" basedir="." default="main">
+    <property name="BRS_HOME" value="../../"/>
+    <property name="build.dir" value="build"/>
+
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+    </target>
+    <target name="compile.facts">
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${build.dir}/classes"/>
+        <mkdir dir="${build.dir}/lib"/>
+
+        <javac debug="on"
+               destdir="${build.dir}/classes"
+               srcdir="${basedir}/facts/src">
+        </javac>
+        <jar destfile="${build.dir}/lib/orderApprovalService.jar">
+            <fileset dir="${build.dir}/classes">
+                <include name="samples/**"/>
+            </fileset>
+        </jar>
+    </target>
+    <target name="generate.service" depends="compile.facts">
+        <jar destfile="${build.dir}/OrderApprovalService.aar">
+            <fileset dir="${build.dir}">
+                <include name="lib/**"/>
+            </fileset>
+            <fileset dir="${basedir}/service">
+                <include name="META-INF/**"/>
+                <include name="conf/**"/>
+            </fileset>
+        </jar>
+    </target>
+    <target name="deploy.service" depends="generate.service">
+        <copy file="${build.dir}/OrderApprovalService.aar"
+              todir="${BRS_HOME}/repository/deployment/server/ruleservices/"
+              overwrite="yes"/>
+    </target>
+    <target name="main" depends="clean,generate.service,deploy.service"/>
+</project>

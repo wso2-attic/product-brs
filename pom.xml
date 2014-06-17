@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ ~ Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.wso2.brs</groupId>
+    <artifactId>wso2brs-parent</artifactId>
+    <packaging>pom</packaging>
+    <version>2.2.0-SNAPSHOT</version>
+    <name>WSO2 BRS</name>
+    <url>http://wso2.org/projects/brs/java</url>
+    <description>WSO2 Business Rules Server </description>
+
+    <licenses>
+        <license>
+            <name>Apache License Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
+
+    <modules>
+        <module>modules/styles</module>
+        <module>modules/features</module>
+        <module>modules/p2-profile-gen</module>
+        <module>modules/org.wso2.brs.dashboard.ui</module>
+	<module>modules/org.wso2.stratos.brs.login.ui</module>
+        <module>modules/distribution</module>
+        <!--module>modules/integration</module-->
+    </modules>
+ 
+    <dependencyManagement>
+        <dependencies>
+	    <dependency>
+		<groupId>org.apache.axis2.wso2</groupId>
+		<artifactId>axis2</artifactId>
+		<version>${axis2.wso2.version}</version>
+	    </dependency>
+	    <dependency>
+		<groupId>log4j</groupId>
+		<artifactId>log4j</artifactId>
+		<version>${log4j.version}</version>
+	    </dependency>
+	    <dependency>
+		<groupId>commons-logging</groupId>
+		<artifactId>commons-logging</artifactId>
+		<version>${commons.logging.version}</version>
+	    </dependency>
+	    <!-- Dependencies for login ui -->
+	    <dependency>
+		<groupId>javax.servlet</groupId>
+		<artifactId>servlet-api</artifactId>
+		<version>${servlet-api.version}</version>
+	    </dependency>
+	    <dependency>
+		<groupId>org.apache.ws.commons.axiom.wso2</groupId>
+		<artifactId>axiom</artifactId>
+		<version>${axiom.wso2.version}</version>
+	    </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <scm>
+        <connection>scm:svn:http://wso2.org/repos/wso2/trunk/brs/java</connection>
+        <developerConnection>scm:svn:https://wso2.org/repos/wso2/trunk/brs/java</developerConnection>
+        <url>https://wso2.org/repos/wso2/trunk/brs/java/</url>
+    </scm>
+
+    <repositories>
+        <!-- Before adding ANYTHING in here, please start a discussion on the dev list.
+             Ideally the Axis2 build should only use Maven central (which is available
+             by default) and nothing else. We had troubles with other repositories in
+             the past. Therefore configuring additional repositories here should be
+             considered very carefully. -->
+        <repository>
+            <id>wso2-nexus</id>
+            <name>WSO2 internal Repository</name>
+            <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+        </repository>
+
+        <repository>
+            <id>wso2.releases</id>
+            <name>WSO2 internal Repository</name>
+            <url>http://maven.wso2.org/nexus/content/repositories/releases/</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+        </repository>
+
+        <repository>
+            <id>wso2.snapshots</id>
+            <name>WSO2 Snapshot Repository</name>
+            <url>http://maven.wso2.org/nexus/content/repositories/snapshots/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>wso2.releases</id>
+            <name>WSO2 internal Repository</name>
+            <url>http://maven.wso2.org/nexus/content/repositories/releases/</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+        </pluginRepository>
+
+        <pluginRepository>
+            <id>wso2.snapshots</id>
+            <name>Apache Snapshot Repository</name>
+            <url>http://maven.wso2.org/nexus/content/repositories/snapshots/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </pluginRepository>
+        <pluginRepository>
+            <id>wso2-nexus</id>
+            <name>WSO2 internal Repository</name>
+            <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <distributionManagement>
+        <repository>
+            <id>wso2.releases</id>
+            <name>WSO2 internal Repository</name>
+            <url>http://maven.wso2.org/nexus/content/repositories/releases/</url>
+        </repository>
+
+        <snapshotRepository>
+            <id>wso2.snapshots</id>
+            <name>WSO2 Snapshot Repository</name>
+            <url>http://maven.wso2.org/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <profiles>
+        <profile>
+            <id>signed-build</id>
+            <activation>
+                <property>
+                    <name>sign</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.0-alpha-3</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <organization>
+        <name>WSO2 Inc</name>
+        <url>http://wso2.com</url>
+    </organization>
+
+    <issueManagement>
+        <system>JIRA</system>
+        <url>http://wso2.org/jira/browse/CARBON</url>
+    </issueManagement>
+
+    <mailingLists>
+        <mailingList>
+            <name>WSO2 BRS Users' list</name>
+            <post>mailto:carbon-user@wso2.org</post>
+            <archive>http://wso2.org/mailarchive/carbon-user/</archive>
+            <subscribe>mailto:carbon-user-request@wso2.org?subject=subscribe</subscribe>
+            <unsubscribe>mailto:carbon-user-request@wso2.org?subject=unsubscribe</unsubscribe>
+        </mailingList>
+        <mailingList>
+            <name>WSO2 BRS Developers' List</name>
+            <post>mailto:carbon-dev@wso2.org</post>
+            <archive>http://wso2.org/mailarchive/carbon-dev/</archive>
+            <subscribe>mailto:carbon-request@wso2.org?subject=subscribe</subscribe>
+            <unsubscribe>mailto:carbon-request@wso2.org?subject=unsubscribe</unsubscribe>
+        </mailingList>
+    </mailingLists>
+
+    <properties>
+	<carbon.platform.version>4.3.0-SNAPSHOT</carbon.platform.version>
+        <carbon.kernel.version>4.3.0-SNAPSHOT</carbon.kernel.version>
+        <carbon.version>4.3.0</carbon.version>
+        <brs.version>2.2.0-SNAPSHOT</brs.version>
+        <log4j.version>1.2.13</log4j.version>
+        <commons.logging.version>1.1.1</commons.logging.version>
+        <opencsv.version>1.8</opencsv.version>
+        <poi.version>3.0-FINAL</poi.version>
+        <stratos.version>2.2.0</stratos.version>
+	<servlet-api.version>2.4</servlet-api.version>
+        <rampart.mar.version>1.6.1-wso2v12</rampart.mar.version>
+        <carbon.p2.plugin.version>1.5.3</carbon.p2.plugin.version>
+        
+	<!-- Apache Axis2 -->
+	<orbit.version.axis2>1.6.1.wso2v11-SNAPSHOT</orbit.version.axis2>
+        <axis2.wso2.version>1.6.1.wso2v11-SNAPSHOT</axis2.wso2.version>
+	
+	<!-- Apache Axiom -->
+        <orbit.version.axiom>1.2.11.wso2v5-SNAPSHOT</orbit.version.axiom>
+	<axiom.wso2.version>1.2.11.wso2v5-SNAPSHOT</axiom.wso2.version>
+
+    </properties>
+
+</project>

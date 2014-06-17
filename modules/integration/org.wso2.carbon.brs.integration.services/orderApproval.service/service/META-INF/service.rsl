@@ -1,0 +1,19 @@
+<ruleService
+        name="OrderApprovalService"
+        xmlns="http://wso2.org/carbon/rules"
+        targetNamespace="http://com.test/orderApproval">
+  <ruleSet>
+        <rule resourceType="regular" sourceType="file">orderApprovalRules.drl</rule>
+    </ruleSet>
+    <operation name="placeOrder">
+        <input wrapperElementName="placeOrder" namespace="http://com.test/placeorder">
+            <fact elementName="order" namespace="http://com.test/placeorder" type="samples.userguide.PlaceOrder"></fact>
+        </input>
+        <output wrapperElementName="placeOrderRespone" namespace="http://com.test/placeorder">
+            <fact elementName="orderAccept" namespace="http://com.test/placeorder" type="samples.userguide.OrderAccept"></fact>
+            <fact elementName="orderReject" namespace="http://com.test/placeorder" type="samples.userguide.OrderReject"></fact>
+        </output>
+    </operation>
+</ruleService>
+
+

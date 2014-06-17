@@ -1,0 +1,168 @@
+<project name="SampleClients" basedir="." default="compile.clients">
+
+    <property name="build" value="${basedir}/build"/>
+    <property name="generated-code" value="${build}/generated-code"/>
+    <property name="classes" value="${build}/classes"/>
+    <property name="BRS_HOME" value="${basedir}/../.."/>
+
+    <path id="brs.classpath">
+        <pathelement location="${classes}"/>
+        <fileset dir="${basedir}/../../repository/lib">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+    <target name="init">
+        <echo message="${BRS_HOME}/repository/lib/*.jar"/>
+        <mkdir dir="${build}"/>
+        <mkdir dir="${generated-code}"/>
+        <mkdir dir="${classes}"/>
+        <ant antfile="${BRS_HOME}/bin/build.xml">
+            <property name="basedir" value=".."/>
+        </ant>
+    </target>
+
+    <target name="generate.stubs" depends="init">
+<!--        <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
+            <arg line="-uri src/resources/wsdl/GreetingService.wsdl -u -uw
+                                     -o build/generated-code
+                                     -ns2p http://com.test/greeting=org.wso2.carbon.samples.greetingService.greeting"/>
+            <classpath refid="brs.classpath"/>
+        </java>-->
+        <!--All samples-->
+
+        <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
+            <arg line="-uri http://localhost:9763/services/OrderApprovalService?wsdl -u -uw
+                                     -o build/generated-code
+                                     -ns2p http://com.test/orderApproval=org.wso2.carbon.samples.orderApprovalService.stub,http://com.test/placeorder=org.wso2.carbon.samples.orderApprovalService.order"/>
+            <classpath refid="brs.classpath"/>
+        </java>
+
+        <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
+            <arg line="-uri http://localhost:9763/services/BankingService?wsdl -u -uw
+                                     -o build/generated-code
+                                     -ns2p http://com.test/Banking=org.wso2.carbon.samples.bankingService.stub,http://com.test/deposit=org.wso2.carbon.samples.bankingService.deposit,http://com.test/withDraw=org.wso2.carbon.samples.bankingService.withdraw"/>
+            <classpath refid="brs.classpath"/>
+        </java>
+
+    <!--    hh<java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
+            <arg line="-uri src/resources/wsdl/CallChargingService.wsdl -u -uw
+                                     -o build/generated-code
+                                     -ns2p http://com.test/callCharge=org.wso2.carbon.samples.callChargingService.charges,http://com.test/callcharging=org.wso2.carbon.samples.callChargingService.stub"/>
+            <classpath refid="brs.classpath"/>
+        </java>-->
+
+        <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
+            <arg line="-uri http://localhost:9763/services/CarRentalService?wsdl -u -uw
+                                     -o build/generated-code
+                                     -ns2p http://com.test/carrental=org.wso2.carbon.samples.carRentalService.stub,http://com.test/carReservation=org.wso2.carbon.samples.carRentalService.reservation"/>
+            <classpath refid="brs.classpath"/>
+        </java>
+
+        <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
+            <arg line="-uri http://localhost:9763/services/GetQuoteService?wsdl -u -uw
+                                     -o build/generated-code
+                                     -ns2p http://com.test/placeCustomerDetail=org.wso2.carbon.samples.quoteService.customerDetail,http://com.test/quotation=org.wso2.carbon.samples.quoteService.stub"/>
+            <classpath refid="brs.classpath"/>
+        </java>
+
+        <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
+            <arg line="-uri http://localhost:9763/services/GreetingService?wsdl -u -uw
+                                     -o build/generated-code
+                                     -ns2p http://com.test/greeting=org.wso2.carbon.samples.greetingService.greeting"/>
+            <classpath refid="brs.classpath"/>
+        </java>
+
+        <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
+            <arg line="-uri http://localhost:9763/services/HealthCareService?wsdl -u -uw
+                                     -o build/generated-code
+                                     -ns2p http://com.test/HeathCareService=org.wso2.carbon.samples.healthCareService.stub,http://com.test/patientDetail=org.wso2.carbon.samples.healthCareService.patientDetail"/>
+            <classpath refid="brs.classpath"/>
+
+        </java>
+
+        <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
+            <arg line="-uri http://localhost:9763/services/InsuranceService?wsdl -u -uw
+                                     -o build/generated-code
+                                     -ns2p http://com.test/applyForInsurance=org.wso2.carbon.samples.insuranceService.insurance,http://com.test/insurance=org.wso2.carbon.samples.insuranceService.stub"/>
+            <classpath refid="brs.classpath"/>
+        </java>
+
+        <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
+            <arg line="-uri http://localhost:9763/services/MIPCalculateService?wsdl -u -uw
+                                     -o build/generated-code
+                                     -ns2p http://com.test/MIPCalculateService=org.wso2.carbon.samples.mipCalculateService.stub,http://com.test/placeClientDetail=org.wso2.carbon.samples.mipCalculateService.clientDetail"/>
+            <classpath refid="brs.classpath"/>
+        </java>
+
+        <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
+            <arg line="-uri http://localhost:9763/services/ShoppingService?wsdl -u -uw
+                                     -o build/generated-code
+                                     -ns2p http://com.test/addProduct=org.wso2.carbon.samples.shoppingService.product,http://com.test/purchaseOrder=org.wso2.carbon.samples.shoppingService.purchaseOrder,http://com.test/shopping=org.wso2.carbon.samples.shoppingService.stub"/>
+            <classpath refid="brs.classpath"/>
+
+
+        </java>
+
+
+        <!--All samples-->
+
+
+    </target>
+
+    <target name="compile.clients" depends="generate.stubs">
+        <javac srcdir="build/generated-code" destdir="build/classes" classpathref="brs.classpath"/>
+        <javac srcdir="src" destdir="build/classes" classpathref="brs.classpath"/>
+    </target>
+
+    <!--<target name="run.client.test" depends=" compile.clients">-->
+        <!--<java classname="org.wso2.carbon.samples.GreetingServiceTestCase" classpathref="brs.classpath"-->
+              <!--fork="true"/>-->
+    <!--</target>-->
+
+    <target name="run.client.all" depends="compile.clients,run.client.bankingService,run.client.carRentalService,
+                                            run.client.getQuoteService,run.client.greetingService,run.client.healthCareService,
+                                            run.client.insuranceService,run.client.MIPCalculateService,run.client.placeOrderService,
+                                            run.client.shoppingService"/>
+
+     <target name="run.client.bankingService" depends=" compile.clients">
+        <java classname="org.wso2.carbon.samples.BankingServiceTestCase" classpathref="brs.classpath"
+              fork="true"/>
+    </target>
+     <target name="run.client.carRentalService" depends=" compile.clients">
+        <java classname="org.wso2.carbon.samples.CarRentalTestCase" classpathref="brs.classpath"
+              fork="true"/>
+    </target>
+     <target name="run.client.getQuoteService" depends=" compile.clients">
+        <java classname="org.wso2.carbon.samples.GetQuoteServiceTestCase" classpathref="brs.classpath"
+              fork="true"/>
+    </target>
+     <target name="run.client.greetingService" depends=" compile.clients">
+        <java classname="org.wso2.carbon.samples.GreetingServiceTestCase" classpathref="brs.classpath"
+              fork="true"/>
+    </target>
+     <target name="run.client.healthCareService" depends=" compile.clients">
+        <java classname="org.wso2.carbon.samples.HealthCareServiceTestCase" classpathref="brs.classpath"
+              fork="true"/>
+    </target>
+     <target name="run.client.insuranceService" depends=" compile.clients">
+        <java classname="org.wso2.carbon.samples.InsuranceServiceTestCase" classpathref="brs.classpath"
+              fork="true"/>
+    </target>
+     <target name="run.client.MIPCalculateService" depends=" compile.clients">
+        <java classname="org.wso2.carbon.samples.MIPCalculateServiceTestCase" classpathref="brs.classpath"
+              fork="true"/>
+    </target>
+     <target name="run.client.placeOrderService" depends=" compile.clients">
+        <java classname="org.wso2.carbon.samples.PlaceOrderTestCase" classpathref="brs.classpath"
+              fork="true"/>
+    </target>
+     <target name="run.client.shoppingService" depends=" compile.clients">
+        <java classname="org.wso2.carbon.samples.ShoppingServiceTestCase" classpathref="brs.classpath"
+              fork="true"/>
+    </target>
+
+
+</project>
+
+ 

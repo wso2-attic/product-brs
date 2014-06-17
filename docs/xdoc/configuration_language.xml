@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!--
+~ Copyright (c) 2009, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+~
+~ WSO2 Inc. licenses this file to you under the Apache License,
+~ Version 2.0 (the "License"); you may not use this file except
+~ in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing,
+~ software distributed under the License is distributed on an
+~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+~ KIND, either express or implied. See the License for the
+~ specific language governing permissions and limitations
+~ under the License.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <title>WSO2 BRS - Configuration Language</title>
+  <link href="css/brs-docs.css" rel="stylesheet" />
+  <link href="styles/dist-docs.css" rel="stylesheet" type="text/css"
+  media="all" />
+</head>
+
+<body>
+<p>[<a href="docs_index.html">Documentation Index</a>] 
+<h1>WSO2 Business Rules Server (BRS) Configuration Language</h1>
+
+<p>The goal of this guide is to provide a detailed description about the
+configurations specific to the BRS. There are two types of configurations:
+rule-engine-config.xml and services.xml and next sections discuss those in detail.
+</p>
+
+<h2>Contents</h2>
+
+<div class="toc">
+<ul>
+  <li><a href="#rule-engine-config.xml">Rule Engine Configuration</a> </li>
+  <li><a href="#rule-service.conf">Rule Service Configuration</a> </li>
+</ul>
+</div>
+
+<h2 id="rule-engine-config.xml">Rule Engine Configuration</h2>
+
+<p>Rule engine configuration is to provide the capability to define the
+Rule engine information. The configuration for the rule-engine-config.xml
+is shown bellow. </p>
+
+<pre xml:space="preserve"> &lt;ruleEngineConfig xmlns=&quot;xs:string&quot;&gt;
+   &lt;ruleEngineProvider className=&quot;xs:string&quot;&gt;
+       &lt;property name=&quot;xs:string&quot;
+                 value=&quot;xs:string&quot;/&gt;*
+   &lt;/ruleEngineProvider&gt;
+&lt;/ruleEngineConfig&gt;</pre>
+
+<p>RuleEngineProvider : The <i>className</i> is to specify the rule service
+provider implementation. The default one is
+<i>org.wso2.carbon.rule.engine.jsr94.JSR94BackendRuntimeFactory</i>. The
+default JSR94 API provider is the open source Drools rule engine.
+<strong>Properties</strong> are to be used to specify configuration information
+for the rule service provider. For example, for the
+<em>JSR94BackendRuntimeFactory</em> , there are two important properties :
+<i>class</i> and <i>uri</i>. The <i>class</i> is to provide the JSR 94 rule
+service provider and the default value for it is
+<i>org.drools.jsr94.rules.RuleServiceProviderImpl</i>. The <i>uri</i> is to
+provide the JSR 94 rule service provider URI and the default value of it is
+<i>http://drools.org/</i>.Another import property is
+<i>default.properties.provider</i>, which can be used to provide default
+properties to be used when creating rule execution sets and loading rule
+service provider. </p>
+
+<p>A example rule-engine-config.xml is shown bellow.</p>
+<pre xml:space="preserve">&lt;ruleEngineConfig xmlns=&quot;http://wso2.org/carbon/rules/conf&quot;&gt;
+    &lt;ruleEngineProvider className=&quot;org.wso2.carbon.rule.backend.drools.DroolsBackendRuntimeFactory&quot;/&gt;
+&lt;/ruleEngineConfig&gt;</pre>
+
+<p>The configuration to be used to provide information required to expose a
+rule script as a web service. There are two important parts in the services.xml
+of a rule service: rule set definition and  input/output facts definitions. </p>
+</p>
+
+<h3>Rule Service Configuration (service.rsl) </h3>
+<pre>&lt;ruleService
+        name=&quot;xs:string&quot;
+        xmlns=&quot;xs:string&quot;
+        targetNamespace=&quot;xs:string&quot;&gt;
+  &lt;ruleSet&gt;
+        &lt;rule resourceType=&quot;regular|dtable&quot; sourceType=&quot;inline|registry|file|url&quot;&quot;&gt;        &lt;/rule&gt;
+    &lt;/ruleSet&gt;
+            &lt;properties&gt;
+            &lt;property&gt;&lt;/property&gt;*
+        &lt;/properties&gt;
+    &lt;operation name=&quot;xs:string&quot;&gt;
+        &lt;input wrapperElementName=&quot;xs:string&quot; namespace=&quot;xs:string&quot;&gt;
+            &lt;fact elementName=&quot;xs:string&quot; namespace=&quot;xs:string&quot; type=&quot;xs:string&quot;&gt;&lt;/fact&gt;*
+        &lt;/input&gt;
+        &lt;output wrapperElementName=&quot;xs:string&quot; namespace=&quot;xs:string&quot;&gt;
+            &lt;fact elementName=&quot;xs:string&quot; namespace=&quot;xs:string&quot; type=&quot;xs:string&quot;&gt;&lt;/fact&gt;*
+        &lt;/output&gt;
+    &lt;/operation&gt;
+&lt;/ruleService&gt;</pre>
+
+<p><p>RuleSet definition </p>
+
+<p>ruleset configuration is to specify the rule script which can be in the
+classpath, registry, or in-lined. </p>
+
+<p>Facts/Results definitions </p>
+
+<p>Facts/results configuration is should be specified per operation. Facts are
+used for formulating the facts to be inserted into the rule engine from the
+incoming message. These also are used in constructing in-message of the WSDL
+for a rule service. Results are used to extract the results of a rule engine
+execution and used in constructing out-message of the WSDL for a rule service.
+</p>
+
+<p>An example for a .drl for a rule service is shown bellow.</p>
+</p>
+
+<p>OrderApprovalService Rule Service Configuration -
+<strong>OrderApprovalService.drl</strong></p>
+<pre>&lt;ruleService
+        name=&quot;OrderApprovalService&quot;
+        xmlns=&quot;http://wso2.org/carbon/rules&quot;
+        targetNamespace=&quot;http://com.test/orderApproval&quot;&gt;
+  &lt;ruleSet&gt;
+        &lt;rule resourceType=&quot;regular&quot; sourceType=&quot;file&quot;&gt;orderApprovalRules.drl&lt;/rule&gt;
+    &lt;/ruleSet&gt;
+    &lt;operation name=&quot;placeOrder&quot;&gt;
+        &lt;input wrapperElementName=&quot;placeOrder&quot; namespace=&quot;http://com.test/placeorder&quot;&gt;
+            &lt;fact elementName=&quot;order&quot; namespace=&quot;http://com.test/placeorder&quot; type=&quot;samples.userguide.PlaceOrder&quot;&gt;&lt;/fact&gt;
+        &lt;/input&gt;
+        &lt;output wrapperElementName=&quot;placeOrderRespone&quot; namespace=&quot;http://com.test/placeorder&quot;&gt;
+            &lt;fact elementName=&quot;orderAccept&quot; namespace=&quot;http://com.test/placeorder&quot; type=&quot;samples.userguide.OrderAccept&quot;&gt;&lt;/fact&gt;
+            &lt;fact elementName=&quot;orderReject&quot; namespace=&quot;http://com.test/placeorder&quot; type=&quot;samples.userguide.OrderReject&quot;&gt;&lt;/fact&gt;
+        &lt;/output&gt;
+    &lt;/operation&gt;
+&lt;/ruleService&gt;</pre>
+
+<p><h2 id="References">References</h2>
+
+</p>
+</body>
+</html>
