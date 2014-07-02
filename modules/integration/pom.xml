@@ -14,9 +14,10 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>tests-common/admin-clients</module>
+        <module>tests-common/integration-test-utils</module>
         <module>org.wso2.carbon.brs.integration.services</module>
-        <module>org.wso2.carbon.brs.integration.sample.test</module>
-        <module>org.wso2.carbon.brs.integration.test</module>
+        <module>tests-integration/rules</module>
     </modules>
     <build>
         <plugins>
