@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>integration</artifactId>
+        <groupId>org.wso2.brs</groupId>
+        <version>2.2.0-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>org.wso2.carbon.brs.rule.test</artifactId>
+    <name>WSO2 BRS - Integration Test Module</name>
+    <packaging>jar</packaging>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.1</version>
+                <executions>
+                    <execution>
+                        <id>source-code-generation</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <path id="wsdl2java.classpath">
+                                    <pathelement
+                                            location="${settings.localRepository}/org/apache/ws/commons/axiom/wso2/axiom/${orbit.version.axiom}/axiom-${orbit.version.axiom}.jar"/>
+                                    <pathelement
+                                            location="${settings.localRepository}/org/apache/axis2/wso2/axis2-client/${orbit.version.axis2}/axis2-client-${orbit.version.axis2}.jar"/>
+                                    <pathelement
+                                            location="${settings.localRepository}/org/apache/axis2/wso2/axis2/${orbit.version.axis2}/axis2-${orbit.version.axis2}.jar"/>
+                                </path>
+                                <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
+                                    <arg line="-uri src/test/resources/wsdl/OrderApprovalService.wsdl -u -uw
+                                     -o target/generated-code
+                                     -ns2p http://com.test/orderApproval=org.wso2.carbon.samples.test.orderApprovalService.stub,http://com.test/placeorder=org.wso2.carbon.samples.test.orderApprovalService.order"/>
+                                    <classpath refid="wsdl2java.classpath"/>
+                                </java>
+
+                                <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
+                                    <arg line="-uri src/test/resources/wsdl/BankingService.wsdl -u -uw
+                                     -o target/generated-code
+                                     -ns2p http://com.test/Banking=org.wso2.carbon.samples.test.bankingService.stub,http://com.test/deposit=org.wso2.carbon.samples.test.bankingService.deposit,http://com.test/withDraw=org.wso2.carbon.samples.test.bankingService.withdraw"/>
+                                    <classpath refid="wsdl2java.classpath"/>
+                                </java>
+
+                                <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
+                                    <arg line="-uri src/test/resources/wsdl/CallChargingService.wsdl -u -uw
+                                     -o target/generated-code
+                                     -ns2p http://com.test/callCharge=org.wso2.carbon.samples.test.callChargingService.charges,http://com.test/callcharging=org.wso2.carbon.samples.test.callChargingService.stub"/>
+                                    <classpath refid="wsdl2java.classpath"/>
+                                </java>
+
+                                <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
+                                    <arg line="-uri src/test/resources/wsdl/CarRentalService.wsdl -u -uw
+                                     -o target/generated-code
+                                     -ns2p http://com.test/carrental=org.wso2.carbon.samples.test.carRentalService.stub,http://com.test/carReservation=org.wso2.carbon.samples.test.carRentalService.reservation"/>
+                                    <classpath refid="wsdl2java.classpath"/>
+                                </java>
+
+                                <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
+                                    <arg line="-uri src/test/resources/wsdl/GetQuoteService.wsdl -u -uw
+                                     -o target/generated-code
+                                     -ns2p http://com.test/placeCustomerDetail=org.wso2.carbon.samples.test.quoteService.customerDetail,http://com.test/quotation=org.wso2.carbon.samples.test.quoteService.stub"/>
+                                    <classpath refid="wsdl2java.classpath"/>
+                                </java>
+
+                                <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
+                                    <arg line="-uri src/test/resources/wsdl/GreetingService.wsdl -u -uw
+                                     -o target/generated-code
+                                     -ns2p http://com.test/greeting=org.wso2.carbon.samples.test.greetingService.greeting"/>
+                                    <classpath refid="wsdl2java.classpath"/>
+                                </java>
+
+                                <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
+                                    <arg line="-uri src/test/resources/wsdl/HealthCareService.wsdl -u -uw
+                                     -o target/generated-code
+                                     -ns2p http://com.test/HeathCareService=org.wso2.carbon.samples.test.healthCareService.stub,http://com.test/patientDetail=org.wso2.carbon.samples.test.healthCareService.patientDetail"/>
+                                    <classpath refid="wsdl2java.classpath"/>
+
+                                </java>
+
+                                <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
+                                    <arg line="-uri src/test/resources/wsdl/InsuranceService.wsdl -u -uw
+                                     -o target/generated-code
+                                     -ns2p http://com.test/applyForInsurance=org.wso2.carbon.samples.test.insuranceService.insurance,http://com.test/insurance=org.wso2.carbon.samples.test.insuranceService.stub"/>
+                                    <classpath refid="wsdl2java.classpath"/>
+                                </java>
+
+                                <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
+                                    <arg line="-uri src/test/resources/wsdl/MIPCalculateService.wsdl -u -uw
+                                     -o target/generated-code
+                                     -ns2p http://com.test/MIPCalculateService=org.wso2.carbon.samples.test.mipCalculateService.stub,http://com.test/placeClientDetail=org.wso2.carbon.samples.test.mipCalculateService.clientDetail"/>
+                                    <classpath refid="wsdl2java.classpath"/>
+                                </java>
+
+                                <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
+                                    <arg line="-uri src/test/resources/wsdl/ShoppingService.wsdl -u -uw
+                                     -o target/generated-code
+                                     -ns2p http://com.test/addProduct=org.wso2.carbon.samples.test.shoppingService.product,http://com.test/purchaseOrder=org.wso2.carbon.samples.test.shoppingService.purchaseOrder,http://com.test/shopping=org.wso2.carbon.samples.test.shoppingService.stub"/>
+                                    <classpath refid="wsdl2java.classpath"/>
+
+                                </java>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>
+                                    target/generated-code/src
+                                </source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.12.4</version>
+                <inherited>false</inherited>
+                <configuration>
+<!--                    <argLine>-Xms512m -Xmx1024m -XX:MaxPermSize=128m -Xmx1024m -XX:PermSize=256m
+                    -XX:MaxPermSize=512m -Xdebug -Xnoagent -Djava.compiler=NONE
+                    -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005
+                    </argLine>-->
+                    <argLine>-Xms512m -Xmx1024m -XX:MaxPermSize=128m</argLine>
+
+                    <suiteXmlFiles>
+                        <suiteXmlFile>src/test/resources/testng-server-mgt.xml</suiteXmlFile>
+                        <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
+                    </suiteXmlFiles>
+
+                    <systemProperties>
+                        <property>
+                            <name>samples.dir</name>
+                            <value>
+                                ${basedir}/../../org.wso2.carbon.brs.integration.services
+                            </value>
+                        </property>
+                        <property>
+                            <name>maven.test.haltafterfailure</name>
+                            <value>false</value>
+                        </property>
+                        <property>
+                            <name>java.io.tmpdir</name>
+                            <value>${basedir}/target/</value>
+                        </property>
+                        <property>
+                            <name>carbon.zip</name>
+                            <value>
+                                ${basedir}/../../../distribution/target/wso2brs-${project.version}.zip
+                            </value>
+                        </property>
+                        <property>
+                            <name>framework.resource.location</name>
+                            <value>
+                                ${basedir}/src/test/resources/
+                            </value>
+                        </property>
+                        <property>
+                            <name>usedefaultlisteners</name>
+                            <value>false</value>
+                        </property>
+                        <sec.verifier.dir>${basedir}/target/security-verifier/</sec.verifier.dir>
+                        <emma.home>${basedir}/target/emma</emma.home>
+                        <instr.file>${basedir}/src/test/resources/instrumentation.txt</instr.file>
+                        <filters.file>${basedir}/src/test/resources/filters.txt</filters.file>
+                        <emma.output>${basedir}/target/emma</emma.output>
+                    </systemProperties>
+                    <workingDirectory>${basedir}/target</workingDirectory>
+
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-emma-dependencies</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/emma</outputDirectory>
+                            <includeTypes>jar</includeTypes>
+                            <includeArtifactIds>emma
+                            </includeArtifactIds>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>copy-secVerifier</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/security-verifier</outputDirectory>
+                            <includeTypes>aar</includeTypes>
+                            <includeArtifactIds>SecVerifier</includeArtifactIds>
+                            <stripVersion>true</stripVersion>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>unpack-mar-jks</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.brs</groupId>
+                                    <artifactId>wso2brs</artifactId>
+                                    <version>${project.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${basedir}/target/tobeCopied/</outputDirectory>
+                                    <includes>**/*.jks,**/*.mar,**/axis2_client.xml</includes>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.6</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources-jks</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/src/test/resources/keystores/products
+                            </outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>
+                                        ${basedir}/target/tobeCopied/wso2brs-${project.version}/repository/resources/security/
+                                    </directory>
+                                    <includes>
+                                        <include>**/*.jks</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-stratos-jks</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/src/test/resources/keystores/stratos
+                            </outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>
+                                        ${basedir}/target/tobeCopied/wso2brs-${project.version}/repository/resources/security/
+                                    </directory>
+                                    <includes>
+                                        <include>**/*.jks</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-axis2files</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/src/test/resources/axis2config
+                            </outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>
+                                        ${basedir}/target/tobeCopied/wso2brs-${project.version}/repository/conf/axis2/
+                                    </directory>
+                                    <includes>
+                                        <include>**/*.xml</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-resources-mar</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/src/test/resources/client/modules
+                            </outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>
+                                        ${basedir}/target/tobeCopied/wso2brs-${project.version}/repository/deployment/client/modules
+                                    </directory>
+                                    <includes>
+                                        <include>**/*.mar</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        <resources>
+            <resource>
+                <directory>src/test/java</directory>
+                <includes>
+                    <include>*.properties</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
+    <dependencies>
+        <dependency>
+            <groupId>org.wso2.carbon.automation</groupId>
+            <artifactId>org.wso2.carbon.automation.engine</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.automation</groupId>
+            <artifactId>org.wso2.carbon.automation.test.utils</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.rule.ws.stub</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>emma</groupId>
+            <artifactId>emma</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jruby</groupId>
+            <artifactId>jruby-complete</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>SecVerifier</artifactId>
+            <type>aar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.brs</groupId>
+            <artifactId>org.wso2.brs.integration.common.utils</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.integration.common.tests</artifactId>
+        </dependency>
+    </dependencies>
+</project>
