@@ -16,35 +16,37 @@
 *  specific language governing permissions and limitations
 *  under the License.
 */
-package org.wso2.carbon.samples.test;
+package org.wso2.brs.rule.test;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.brs.integration.common.utils.BRSMasterTest;
+import org.wso2.brs.integration.common.utils.RequestSender;
 import org.wso2.carbon.samples.test.orderApprovalService.order.OrderAccept;
 import org.wso2.carbon.samples.test.orderApprovalService.order.PlaceOrder;
 import org.wso2.carbon.samples.test.orderApprovalService.order.PlaceOrderE;
+import org.wso2.carbon.samples.test.orderApprovalService.order.PlaceOrderResponse;
 import org.wso2.carbon.samples.test.orderApprovalService.stub.OrderApprovalServiceCallbackHandler;
 import org.wso2.carbon.samples.test.orderApprovalService.stub.OrderApprovalServiceStub;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
-import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
 
 import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertNotNull;
 
-public class PlaceOrderTestCase extends BrsMaterTestCase {
+public class PlaceOrderTestCase extends BRSMasterTest {
 
     private static final Log log = LogFactory.getLog(PlaceOrderTestCase.class);
-
+    RequestSender requestSender;
 
     @BeforeClass(groups = {"wso2.brs"})
     public void login() throws Exception {
         init();
-
+        requestSender = new RequestSender();
     }
 
     @Test(groups = {"wso2.brs"})
@@ -54,56 +56,51 @@ public class PlaceOrderTestCase extends BrsMaterTestCase {
         log.info(OrderApprovalServiceAAR);
         FileDataSource fileDataSource = new FileDataSource(OrderApprovalServiceAAR);
         DataHandler dataHandler = new DataHandler(fileDataSource);
-        getRuleServiceFileUploadAdminStub().uploadService("OrderApprovalService.aar", dataHandler);
+        getRuleServiceFileUploadClient().uploadService("OrderApprovalService.aar", dataHandler);
 
     }
 
     @Test(groups = {"wso2.brs"}, dependsOnMethods = {"uploadOrderApprovalService"})
-    public void testPlaceOrder() throws XPathExpressionException {
+    public void testPlaceOrder() throws Exception {
 
-        waitForProcessDeployment(getContext().getContextUrls().getServiceUrl() + "/OrderApprovalService");
-        try {
-            OrderApprovalServiceStub orderApprovalServiceStub =
-                    new OrderApprovalServiceStub(getContext().getContextUrls().getServiceUrl() + "/OrderApprovalService");
+        requestSender.waitForProcessDeployment(getContext().getContextUrls().getServiceUrl() + "/OrderApprovalService");
 
-            PlaceOrderE placeOrderRequest = new PlaceOrderE();
-            PlaceOrder placeOrder = new PlaceOrder();
-            placeOrder.setPrice(2);
-            placeOrder.setSymbol("IBM");
-            placeOrder.setQuantity(22);
-            placeOrderRequest.addOrder(placeOrder);
-            PlaceOrder[] placeOrdersArray = new PlaceOrder[1];
-            placeOrdersArray[0] = placeOrder;
+        OrderApprovalServiceStub orderApprovalServiceStub =
+                new OrderApprovalServiceStub(getContext().getContextUrls().getServiceUrl() + "/OrderApprovalService");
 
-            orderApprovalServiceStub.placeOrder(placeOrdersArray);
+        PlaceOrderE placeOrderRequest = new PlaceOrderE();
+        PlaceOrder placeOrder = new PlaceOrder();
+        placeOrder.setPrice(2);
+        placeOrder.setSymbol("IBM");
+        placeOrder.setQuantity(22);
+        placeOrderRequest.addOrder(placeOrder);
+        PlaceOrder[] placeOrdersArray = new PlaceOrder[1];
+        placeOrdersArray[0] = placeOrder;
 
-            OrderApprovalServiceCallbackHandler callback = new OrderApprovalServiceCallbackHandler() {
+        orderApprovalServiceStub.placeOrder(placeOrdersArray);
 
-                public void receiveResultplaceOrder(
-                        org.wso2.carbon.samples.test.orderApprovalService.order.PlaceOrderResponse result) {
+        OrderApprovalServiceCallbackHandler callback = new OrderApprovalServiceCallbackHandler() {
 
-                    OrderAccept[] orderAcceptList = result.getOrderAccept();
-                    String acceptMessage = orderAcceptList[0].getMessage();
-                    assertNotNull(acceptMessage, "Result cannot be null");
-                    assertNotEquals(acceptMessage, "");
+            public void receiveResultplaceOrder(PlaceOrderResponse result) {
 
-                    synchronized (this) {
-                        this.notify();
-                    }
+                OrderAccept[] orderAcceptList = result.getOrderAccept();
+                String acceptMessage = orderAcceptList[0].getMessage();
+                assertNotNull(acceptMessage, "Result cannot be null");
+                assertNotEquals(acceptMessage, "");
+
+                synchronized (this) {
+                    this.notify();
                 }
+            }
 
-                public void receiveErrorapproveOrder(Exception e) {
-                    e.printStackTrace();
-                }
-            };
+            public void receiveErrorapproveOrder(Exception e) {
+                e.printStackTrace();
+            }
+        };
 
-            orderApprovalServiceStub.startplaceOrder(placeOrdersArray, callback);
-            Thread.sleep(10000);
+        orderApprovalServiceStub.startplaceOrder(placeOrdersArray, callback);
+        Thread.sleep(10000);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            assertNotNull(null);
-        }
     }
 }
 

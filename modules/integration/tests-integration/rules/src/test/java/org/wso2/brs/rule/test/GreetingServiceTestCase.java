@@ -15,14 +15,15 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-package org.wso2.carbon.samples.test;
+package org.wso2.brs.rule.test;
 
-import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.brs.integration.common.utils.BRSMasterTest;
+import org.wso2.brs.integration.common.utils.RequestSender;
 import org.wso2.carbon.samples.test.greetingService.greeting.GreetingMessage;
 import org.wso2.carbon.samples.test.greetingService.greeting.GreetingServiceStub;
 import org.wso2.carbon.samples.test.greetingService.greeting.User;
@@ -30,23 +31,21 @@ import org.wso2.carbon.samples.test.greetingService.greeting.UserE;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
-import java.rmi.RemoteException;
 
 import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertNotNull;
 
-public class GreetingServiceTestCase extends BrsMaterTestCase {
+public class GreetingServiceTestCase extends BRSMasterTest {
 
     private static final Log log = LogFactory.getLog(GreetingServiceTestCase.class);
+    RequestSender requestSender;
 
     @BeforeClass(groups = {"wso2.brs"})
     public void login() throws Exception {
         init();
+        requestSender = new RequestSender();
     }
-
 
     @Test(groups = {"wso2.brs"})
     public void uploadGreetingService() throws Exception {
@@ -55,36 +54,28 @@ public class GreetingServiceTestCase extends BrsMaterTestCase {
         log.info(greetingServiceAAR);
         FileDataSource fileDataSource = new FileDataSource(greetingServiceAAR);
         DataHandler dataHandler = new DataHandler(fileDataSource);
-        getRuleServiceFileUploadAdminStub().uploadService("GreetingService.aar", dataHandler);
-
+        getRuleServiceFileUploadClient().uploadService("GreetingService.aar", dataHandler);
     }
 
     @Test(groups = {"wso2.brs"}, dependsOnMethods = {"uploadGreetingService"})
-    public void callGreet() throws XMLStreamException, AxisFault, XPathExpressionException {
+    public void callGreet() throws Exception {
 
         String result = "";
-        waitForProcessDeployment(getContext().getContextUrls().getServiceUrl() + "/GreetingService");
+        requestSender.waitForProcessDeployment(getContext().getContextUrls().getServiceUrl() + "/GreetingService");
 
-        try {
-            GreetingServiceStub greetingServiceStub = new GreetingServiceStub(getContext().getContextUrls().getServiceUrl() + "/GreetingService");
-            UserE userRequest = new UserE();
-            User user = new User();
-            user.setName("Waruna");
-            User[] users = new User[1];
-            users[0] = user;
-            userRequest.setUser(users);
+        GreetingServiceStub greetingServiceStub = new GreetingServiceStub(getContext().getContextUrls().getServiceUrl() + "/GreetingService");
+        UserE userRequest = new UserE();
+        User user = new User();
+        user.setName("Waruna");
+        User[] users = new User[1];
+        users[0] = user;
+        userRequest.setUser(users);
 
-            GreetingMessage[] greetingMessages = greetingServiceStub.greetMe(users);
-            result = greetingMessages[0].getMessage();
-            System.out.println("Greeting service results1 : " + result);
+        GreetingMessage[] greetingMessages = greetingServiceStub.greetMe(users);
+        result = greetingMessages[0].getMessage();
+        System.out.println("Greeting service results1 : " + result);
 
-        } catch (AxisFault axisFault) {
-            axisFault.printStackTrace();
-            assertNotNull(null);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-            assertNotNull(null);
-        }
+
         System.out.println("Greeting service results2 : " + result);
         assertNotNull(result, "Result cannot be null");
         assertNotEquals(result, "");

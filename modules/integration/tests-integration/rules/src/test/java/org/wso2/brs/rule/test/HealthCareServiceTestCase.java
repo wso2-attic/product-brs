@@ -15,11 +15,10 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-package org.wso2.carbon.samples.test;
+package org.wso2.brs.rule.test;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
-import org.apache.axis2.AxisFault;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
@@ -27,25 +26,32 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.brs.integration.common.utils.BRSMasterTest;
+import org.wso2.brs.integration.common.utils.RequestSender;
+import org.wso2.carbon.samples.test.healthCareService.patientDetail.Dose;
+import org.wso2.carbon.samples.test.healthCareService.patientDetail.Patient;
+import org.wso2.carbon.samples.test.healthCareService.patientDetail.PatientDetail;
+import org.wso2.carbon.samples.test.healthCareService.stub.HealthCareServiceStub;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.xpath.XPathExpressionException;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 
+import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertNotNull;
 
-public class HealthCareServiceTestCase extends BrsMaterTestCase {
+public class HealthCareServiceTestCase extends BRSMasterTest {
 
     private static final Log log = LogFactory.getLog(HealthCareServiceTestCase.class);
-
+    ServiceClient serviceClient;
+    RequestSender requestSender;
 
     @BeforeClass(groups = {"wso2.brs"})
     public void login() throws Exception {
         init();
-
+        requestSender = new RequestSender();
     }
 
     @Test(groups = {"wso2.brs"})
@@ -55,15 +61,15 @@ public class HealthCareServiceTestCase extends BrsMaterTestCase {
         log.info(HealthCareServiceAAR);
         FileDataSource fileDataSource = new FileDataSource(HealthCareServiceAAR);
         DataHandler dataHandler = new DataHandler(fileDataSource);
-        getRuleServiceFileUploadAdminStub().uploadService("HealthCareService.aar", dataHandler);
+        getRuleServiceFileUploadClient().uploadService("HealthCareService.aar", dataHandler);
 
     }
 
     @Test(groups = {"wso2.brs"}, dependsOnMethods = {"uploadHealthCareService"})
-    public void testRecommendDose() throws XMLStreamException, AxisFault, XPathExpressionException {
+    public void testRecommendDose() throws Exception {
 
-        waitForProcessDeployment(getContext().getContextUrls().getServiceUrl() + "/HealthCareService");
-        ServiceClient serviceClient = getClient();
+        requestSender.waitForProcessDeployment(getContext().getContextUrls().getServiceUrl() + "/HealthCareService");
+        serviceClient = new ServiceClient();
         Options options = new Options();
         options.setTo(new EndpointReference(getContext().getContextUrls().getServiceUrl() + "/HealthCareService"));
         options.setAction("urn:recommendDose");
@@ -78,13 +84,37 @@ public class HealthCareServiceTestCase extends BrsMaterTestCase {
                 "   <!--Zero or more repetitions:-->\n" +
                 "   <p:Patient>\n" +
                 "      <!--Zero or 1 repetitions:-->\n" +
-                "      <xs:age xmlns:xs=\"http://heathcare.samples/xsd\">54</xs:age>\n" +
+                "      <xs:age xmlns:xs=\"http://heathcare.brs/xsd\">54</xs:age>\n" +
                 "      <!--Zero or 1 repetitions:-->\n" +
-                "      <xs:creatinineLevel xmlns:xs=\"http://heathcare.samples/xsd\">1.2</xs:creatinineLevel>\n" +
+                "      <xs:creatinineLevel xmlns:xs=\"http://heathcare.brs/xsd\">1.2</xs:creatinineLevel>\n" +
                 "      <!--Zero or 1 repetitions:-->\n" +
-                "      <xs:medication xmlns:xs=\"http://heathcare.samples/xsd\">Cefuroxime</xs:medication>\n" +
+                "      <xs:medication xmlns:xs=\"http://heathcare.brs/xsd\">Cefuroxime</xs:medication>\n" +
                 "   </p:Patient>\n" +
                 "</p:recommendDoseRequest>";
         return new StAXOMBuilder(new ByteArrayInputStream(request.getBytes())).getDocumentElement();
+    }
+
+    @Test(groups = {"wso2.brs"}, dependsOnMethods = {"uploadHealthCareService"})
+    public void testHealthCareStub() throws Exception {
+
+        requestSender.waitForProcessDeployment(getContext().getContextUrls().getServiceUrl() + "/HealthCareService");
+        HealthCareServiceStub healthCareServiceStub =
+                new HealthCareServiceStub(getContext().getContextUrls().getServiceUrl() + "/HealthCareService");
+
+        PatientDetail patientDetail = new PatientDetail();
+        Patient patient = new Patient();
+        patient.setAge(43);
+        patient.setCreatinineLevel(1.0);
+        patient.setMedication("Levofloxacin");
+
+        Patient[] patients = new Patient[1];
+        patients[0] = patient;
+        patientDetail.setPatientDetail(patients);
+
+        Dose[] doses = healthCareServiceStub.recommendDose(patients);
+        String result = doses[0].getMessage();
+        assertNotNull(result, "Result cannot be null");
+        assertNotEquals(result, "");
+
     }
 }

@@ -15,11 +15,10 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-package org.wso2.carbon.samples.test;
+package org.wso2.brs.rule.test;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
-import org.apache.axis2.AxisFault;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
@@ -27,25 +26,32 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.brs.integration.common.utils.BRSMasterTest;
+import org.wso2.brs.integration.common.utils.RequestSender;
+import org.wso2.carbon.samples.test.insuranceService.insurance.ApplyForInsurance;
+import org.wso2.carbon.samples.test.insuranceService.insurance.Car;
+import org.wso2.carbon.samples.test.insuranceService.insurance.Driver;
+import org.wso2.carbon.samples.test.insuranceService.insurance.Policy;
+import org.wso2.carbon.samples.test.insuranceService.stub.InsuranceServiceStub;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.xpath.XPathExpressionException;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 
 import static org.testng.Assert.assertNotNull;
 
-public class InsuranceServiceTestCase extends BrsMaterTestCase {
+public class InsuranceServiceTestCase extends BRSMasterTest {
 
     private static final Log log = LogFactory.getLog(InsuranceServiceTestCase.class);
-
+    ServiceClient serviceClient;
+    RequestSender requestSender;
 
     @BeforeClass(groups = {"wso2.brs"})
     public void login() throws Exception {
         init();
-
+        requestSender = new RequestSender();
     }
 
     @Test(groups = {"wso2.brs"})
@@ -55,15 +61,15 @@ public class InsuranceServiceTestCase extends BrsMaterTestCase {
         log.info(InsuranceServiceAAR);
         FileDataSource fileDataSource = new FileDataSource(InsuranceServiceAAR);
         DataHandler dataHandler = new DataHandler(fileDataSource);
-        getRuleServiceFileUploadAdminStub().uploadService("InsuranceService.aar", dataHandler);
+        getRuleServiceFileUploadClient().uploadService("InsuranceService.aar", dataHandler);
 
     }
 
     @Test(groups = {"wso2.brs"}, dependsOnMethods = {"uploadInsuranceService"})
-    public void testApplyForInsurance() throws AxisFault, XMLStreamException, XPathExpressionException {
+    public void testApplyForInsurance() throws Exception {
 
-        waitForProcessDeployment(getContext().getContextUrls().getServiceUrl() + "/InsuranceService");
-        ServiceClient serviceClient = getClient();
+        requestSender.waitForProcessDeployment(getContext().getContextUrls().getServiceUrl() + "/InsuranceService");
+        serviceClient = new ServiceClient();
         Options options = new Options();
         options.setTo(new EndpointReference(getContext().getContextUrls().getServiceUrl() + "/InsuranceService"));
         options.setAction("urn:applyForInsurance");
@@ -78,20 +84,54 @@ public class InsuranceServiceTestCase extends BrsMaterTestCase {
                 "   <!--Zero or more repetitions:-->\n" +
                 "   <p:Car>\n" +
                 "      <!--Zero or 1 repetitions:-->\n" +
-                "      <xs:color xmlns:xs=\"http://insurance.samples/xsd\">red</xs:color>\n" +
+                "      <xs:color xmlns:xs=\"http://insurance.brs/xsd\">red</xs:color>\n" +
                 "      <!--Zero or 1 repetitions:-->\n" +
-                "      <xs:style xmlns:xs=\"http://insurance.samples/xsd\">sport</xs:style>\n" +
+                "      <xs:style xmlns:xs=\"http://insurance.brs/xsd\">sport</xs:style>\n" +
                 "   </p:Car>\n" +
                 "   <!--Zero or more repetitions:-->\n" +
                 "   <p:Driver>\n" +
                 "      <!--Zero or 1 repetitions:-->\n" +
-                "      <xs:age xmlns:xs=\"http://insurance.samples/xsd\">20</xs:age>\n" +
+                "      <xs:age xmlns:xs=\"http://insurance.brs/xsd\">20</xs:age>\n" +
                 "      <!--Zero or 1 repetitions:-->\n" +
-                "      <xs:male xmlns:xs=\"http://insurance.samples/xsd\">true</xs:male>\n" +
+                "      <xs:male xmlns:xs=\"http://insurance.brs/xsd\">true</xs:male>\n" +
                 "      <!--Zero or 1 repetitions:-->\n" +
-                "      <xs:name xmlns:xs=\"http://insurance.samples/xsd\">shammi</xs:name>\n" +
+                "      <xs:name xmlns:xs=\"http://insurance.brs/xsd\">shammi</xs:name>\n" +
                 "   </p:Driver>\n" +
                 "</p:applyForInsuranceRequest>";
         return new StAXOMBuilder(new ByteArrayInputStream(request.getBytes())).getDocumentElement();
+    }
+
+    @Test(groups = {"wso2.brs"}, dependsOnMethods = {"uploadInsuranceService"})
+    public void testInsuranceStub() throws Exception {
+
+        requestSender.waitForProcessDeployment(getContext().getContextUrls().getServiceUrl() + "/InsuranceService");
+        InsuranceServiceStub insuranceServiceStub =
+                new InsuranceServiceStub(getContext().getContextUrls().getServiceUrl() + "/InsuranceService");
+
+        ApplyForInsurance applyForInsurance = new ApplyForInsurance();
+
+        Car car = new Car();
+        car.setColor("red");
+        car.setStyle("sport");
+        Car[] cars = new Car[1];
+        cars[0] = car;
+
+        Driver driver = new Driver();
+        driver.setName("Waruna");
+        driver.setAge(24);
+        driver.setMale(true);
+        Driver[] drivers = new Driver[1];
+        drivers[0] = driver;
+
+        applyForInsurance.setCarInsurance(cars);
+        applyForInsurance.setDriverInsurance(drivers);
+
+
+        Policy[] policies = insuranceServiceStub.applyForInsurance(cars, drivers);
+        double result = policies[0].getPremium();
+        assertNotNull(result, "Result cannot be null");
+        System.out.println("Premium:" + result);
+
+
     }
 }

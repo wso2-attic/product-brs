@@ -15,11 +15,10 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-package org.wso2.carbon.samples.test;
+package org.wso2.brs.rule.test;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
-import org.apache.axis2.AxisFault;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
@@ -27,46 +26,48 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.brs.integration.common.utils.BRSMasterTest;
+import org.wso2.brs.integration.common.utils.RequestSender;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.xpath.XPathExpressionException;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 
 import static org.testng.Assert.assertNotNull;
 
-public class GetQuoteServiceTestCase extends BrsMaterTestCase {
+public class OrderApprovalTestCase extends BRSMasterTest {
 
-    private static final Log log = LogFactory.getLog(GetQuoteServiceTestCase.class);
-
+    private static final Log log = LogFactory.getLog(OrderApprovalTestCase.class);
+    ServiceClient serviceClient;
+    RequestSender requestSender;
 
     @BeforeClass(groups = {"wso2.brs"})
     public void login() throws Exception {
         init();
-
+        requestSender = new RequestSender();
     }
 
     @Test(groups = {"wso2.brs"})
-    public void uploadGetQuoteService() throws Exception {
+    public void uploadOrderApprovalService() throws Exception {
         String samplesDir = System.getProperty("samples.dir");
-        String GetQuoteServiceAAR = samplesDir + File.separator + "quotation.service/service/target/GetQuoteService.aar";
-        log.info(GetQuoteServiceAAR);
-        FileDataSource fileDataSource = new FileDataSource(GetQuoteServiceAAR);
+        String OrderApprovalServiceAAR = samplesDir + File.separator + "orderApproval.service/service/target/OrderApprovalService.aar";
+        log.info(OrderApprovalServiceAAR);
+        FileDataSource fileDataSource = new FileDataSource(OrderApprovalServiceAAR);
         DataHandler dataHandler = new DataHandler(fileDataSource);
-        getRuleServiceFileUploadAdminStub().uploadService("GetQuoteService.aar", dataHandler);
+        getRuleServiceFileUploadClient().uploadService("OrderApprovalService.aar", dataHandler);
 
     }
 
-    @Test(groups = {"wso2.brs"}, dependsOnMethods = {"uploadGetQuoteService"})
-    public void testGetQuote() throws AxisFault, XMLStreamException, XPathExpressionException {
+    @Test(groups = {"wso2.brs"}, dependsOnMethods = {"uploadOrderApprovalService"})
+    public void testPlaceOrder() throws Exception {
 
-        waitForProcessDeployment(getContext().getContextUrls().getServiceUrl() + "/GetQuoteService");
-        ServiceClient serviceClient = getClient();
+        requestSender.waitForProcessDeployment(getContext().getContextUrls().getServiceUrl() + "/OrderApprovalService");
+        serviceClient = new ServiceClient();
         Options options = new Options();
-        options.setTo(new EndpointReference(getContext().getContextUrls().getServiceUrl() + "/GetQuoteService"));
-        options.setAction("urn:getQuote");
+        options.setTo(new EndpointReference(getContext().getContextUrls().getServiceUrl() + "/OrderApprovalService"));
+        options.setAction("urn:placeOrder");
         serviceClient.setOptions(options);
 
         OMElement result = serviceClient.sendReceive(createPayload());
@@ -74,13 +75,17 @@ public class GetQuoteServiceTestCase extends BrsMaterTestCase {
     }
 
     private OMElement createPayload() throws XMLStreamException {
-        String request = "<p:getQuoteRequest xmlns:p=\"http://brs.carbon.wso2.org\">\n" +
+        String request = "<p:placeOrderRequest xmlns:p=\"http://brs.carbon.wso2.org\">\n" +
                 "   <!--Zero or more repetitions:-->\n" +
-                "   <p:Customer>\n" +
+                "   <p:PlaceOrder>\n" +
                 "      <!--Zero or 1 repetitions:-->\n" +
-                "      <xs:status xmlns:xs=\"http://quotation.samples/xsd\">bronze</xs:status>\n" +
-                "   </p:Customer>\n" +
-                "</p:getQuoteRequest>";
+                "      <xs:price xmlns:xs=\"http://userguide.brs/xsd\">14</xs:price>\n" +
+                "      <!--Zero or 1 repetitions:-->\n" +
+                "      <xs:quantity xmlns:xs=\"http://userguide.brs/xsd\">223</xs:quantity>\n" +
+                "      <!--Zero or 1 repetitions:-->\n" +
+                "      <xs:symbol xmlns:xs=\"http://userguide.brs/xsd\">IBM</xs:symbol>\n" +
+                "   </p:PlaceOrder>\n" +
+                "</p:placeOrderRequest>";
         return new StAXOMBuilder(new ByteArrayInputStream(request.getBytes())).getDocumentElement();
     }
 }

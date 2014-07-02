@@ -15,11 +15,10 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-package org.wso2.carbon.samples.test;
+package org.wso2.brs.rule.test;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
-import org.apache.axis2.AxisFault;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
@@ -27,25 +26,33 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.brs.integration.common.utils.BRSMasterTest;
+import org.wso2.brs.integration.common.utils.RequestSender;
+import org.wso2.carbon.samples.test.shoppingService.product.AddProduct;
+import org.wso2.carbon.samples.test.shoppingService.product.Product;
+import org.wso2.carbon.samples.test.shoppingService.purchaseOrder.Discount;
+import org.wso2.carbon.samples.test.shoppingService.purchaseOrder.Purchase;
+import org.wso2.carbon.samples.test.shoppingService.purchaseOrder.PurchaseOrder;
+import org.wso2.carbon.samples.test.shoppingService.stub.ShoppingServiceStub;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.xpath.XPathExpressionException;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 
 import static org.testng.Assert.assertNotNull;
 
-public class ShoppingServiceTestCase extends BrsMaterTestCase {
+public class ShoppingServiceTestCase extends BRSMasterTest {
 
     private static final Log log = LogFactory.getLog(ShoppingServiceTestCase.class);
-
+    ServiceClient serviceClient;
+    RequestSender requestSender;
 
     @BeforeClass(groups = {"wso2.brs"})
     public void login() throws Exception {
         init();
-
+        requestSender = new RequestSender();
     }
 
     @Test(groups = {"wso2.brs"})
@@ -55,17 +62,17 @@ public class ShoppingServiceTestCase extends BrsMaterTestCase {
         log.info(ShoppingServiceAAR);
         FileDataSource fileDataSource = new FileDataSource(ShoppingServiceAAR);
         DataHandler dataHandler = new DataHandler(fileDataSource);
-        getRuleServiceFileUploadAdminStub().uploadService("ShoppingService.aar", dataHandler);
+        getRuleServiceFileUploadClient().uploadService("ShoppingService.aar", dataHandler);
 
     }
 
     @Test(groups = {"wso2.brs"}, dependsOnMethods = {"uploadShoppingService"})
-    public void testAddProduct() throws XMLStreamException, AxisFault, XPathExpressionException {
-        
-        waitForProcessDeployment(getContext().getContextUrls().getServiceUrl() + "/ShoppingService");
-        ServiceClient serviceClient = getClient();
+    public void testAddProduct() throws Exception {
+
+        requestSender.waitForProcessDeployment(getContext().getContextUrls().getServiceUrl() + "/ShoppingService");
+        serviceClient = new ServiceClient();
         Options options = new Options();
-        options.setTo(new EndpointReference(getContext().getContextUrls().getServiceUrl() +"/ShoppingService"));
+        options.setTo(new EndpointReference(getContext().getContextUrls().getServiceUrl() + "/ShoppingService"));
         options.setAction("urn:addProduct");
         serviceClient.setOptions(options);
 
@@ -73,10 +80,10 @@ public class ShoppingServiceTestCase extends BrsMaterTestCase {
     }
 
     @Test(groups = {"wso2.brs"}, dependsOnMethods = {"testAddProduct"})
-    public void testPurchase() throws XMLStreamException, AxisFault, XPathExpressionException {
+    public void testPurchase() throws Exception {
 
-        waitForProcessDeployment(getContext().getContextUrls().getServiceUrl() + "/ShoppingService");
-        ServiceClient serviceClient = getClient();
+        requestSender.waitForProcessDeployment(getContext().getContextUrls().getServiceUrl() + "/ShoppingService");
+        serviceClient = new ServiceClient();
         Options options = new Options();
         options.setTo(new EndpointReference("http://localhost:9763/services/ShoppingService"));
         options.setAction("urn:purchase");
@@ -91,9 +98,9 @@ public class ShoppingServiceTestCase extends BrsMaterTestCase {
                 "   <!--Zero or more repetitions:-->\n" +
                 "   <p:Product>\n" +
                 "      <!--Zero or 1 repetitions:-->\n" +
-                "      <xs:name xmlns:xs=\"http://shopping.samples/xsd\">Pencil Box</xs:name>\n" +
+                "      <xs:name xmlns:xs=\"http://shopping.brs/xsd\">Pencil Box</xs:name>\n" +
                 "      <!--Zero or 1 repetitions:-->\n" +
-                "      <xs:price xmlns:xs=\"http://shopping.samples/xsd\">156.55</xs:price>\n" +
+                "      <xs:price xmlns:xs=\"http://shopping.brs/xsd\">156.55</xs:price>\n" +
                 "   </p:Product>\n" +
                 "</p:addProductRequest>";
         return new StAXOMBuilder(new ByteArrayInputStream(request.getBytes())).getDocumentElement();
@@ -104,12 +111,49 @@ public class ShoppingServiceTestCase extends BrsMaterTestCase {
                 "   <!--Zero or more repetitions:-->\n" +
                 "   <p:Purchase>\n" +
                 "      <!--Zero or 1 repetitions:-->\n" +
-                "      <xs:customer xmlns:xs=\"http://shopping.samples/xsd\">shammi</xs:customer>\n" +
+                "      <xs:customer xmlns:xs=\"http://shopping.brs/xsd\">shammi</xs:customer>\n" +
                 "      <!--Zero or 1 repetitions:-->\n" +
-                "      <xs:product xmlns:xs=\"http://shopping.samples/xsd\">Pencil Box</xs:product>\n" +
+                "      <xs:product xmlns:xs=\"http://shopping.brs/xsd\">Pencil Box</xs:product>\n" +
                 "   </p:Purchase>\n" +
                 "</p:purchaseRequest>";
         return new StAXOMBuilder(new ByteArrayInputStream(request.getBytes())).getDocumentElement();
+    }
+
+    @Test(groups = {"wso2.brs"}, dependsOnMethods = {"uploadShoppingService"})
+    public void testShoppingServicec() throws Exception {
+
+        ShoppingServiceStub shoppingServiceStub = null;
+        requestSender.waitForProcessDeployment(getContext().getContextUrls().getServiceUrl() + "/ShoppingService");
+        shoppingServiceStub = new ShoppingServiceStub(getContext().getContextUrls().getServiceUrl() + "/ShoppingService");
+        shoppingServiceStub._getServiceClient().getOptions().setManageSession(true);
+
+        AddProduct addProduct = new AddProduct();
+        Product product = new Product();
+        product.setName("toy");
+        product.setPrice(200);
+        Product[] products = new Product[1];
+        products[0] = product;
+
+        // addProduct.setAddProduct(products);
+        shoppingServiceStub.addProduct(products);
+
+        PurchaseOrder purchaseOrder = new PurchaseOrder();
+        Purchase purchase = new Purchase();
+        purchase.setCustomer("Waruna");
+        purchase.setProduct("toy");
+
+        Purchase[] purchases = new Purchase[1];
+        purchases[0] = purchase;
+
+
+        purchaseOrder.setPurchase(purchases);
+        // shoppingServiceStub.
+
+
+        Discount[] discounts = shoppingServiceStub.purchase(purchases);
+        int result = discounts[0].getAmount();
+        assertNotNull(result, "Result cannot be null");
+
     }
 
 }

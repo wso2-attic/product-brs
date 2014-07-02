@@ -15,11 +15,10 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-package org.wso2.carbon.samples.test;
+package org.wso2.brs.rule.test;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
-import org.apache.axis2.AxisFault;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
@@ -27,26 +26,29 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.brs.integration.common.utils.BRSMasterTest;
+import org.wso2.brs.integration.common.utils.RequestSender;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.xpath.XPathExpressionException;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 
 import static org.testng.Assert.assertNotNull;
 
-public class CallChargingTestCase extends BrsMaterTestCase {
+public class CallChargingTestCase extends BRSMasterTest {
 
     private static final Log log = LogFactory.getLog(CallChargingTestCase.class);
-
+    ServiceClient serviceClient;
+    RequestSender requestSender;
 
     @BeforeClass(groups = {"wso2.brs"})
     public void login() throws Exception {
         init();
-
+        requestSender = new RequestSender();
     }
+
     @Test(groups = {"wso2.brs"})
     public void uploadCallChargingService() throws Exception {
 
@@ -55,15 +57,15 @@ public class CallChargingTestCase extends BrsMaterTestCase {
         log.info(CallChargingServiceAAR);
         FileDataSource fileDataSource = new FileDataSource(CallChargingServiceAAR);
         DataHandler dataHandler = new DataHandler(fileDataSource);
-        getRuleServiceFileUploadAdminStub().uploadService("CallChargingService.aar", dataHandler);
+        getRuleServiceFileUploadClient().uploadService("CallChargingService.aar", dataHandler);
 
     }
 
     @Test(groups = {"wso2.brs"}, dependsOnMethods = {"uploadCallChargingService"})
-    public void testCharge() throws XMLStreamException, AxisFault, XPathExpressionException {
+    public void testCharge() throws Exception {
 
-        waitForProcessDeployment(getContext().getContextUrls().getServiceUrl() + "/CallChargingService");
-        ServiceClient serviceClient = getClient();
+        requestSender.waitForProcessDeployment(getContext().getContextUrls().getServiceUrl() + "/CallChargingService");
+        serviceClient = new ServiceClient();
         Options options = new Options();
         options.setTo(new EndpointReference(getContext().getContextUrls().getServiceUrl() + "/CallChargingService"));
         options.setAction("urn:charge");
@@ -75,14 +77,14 @@ public class CallChargingTestCase extends BrsMaterTestCase {
 
     private OMElement createPayload() throws XMLStreamException {
         String request = "<p:chargeRequest xmlns:p=\"http://brs.carbon.wso2.org\">\n" +
-                         "   <!--Zero or more repetitions:-->\n" +
-                         "   <p:CallLog>\n" +
-                         "      <!--Zero or 1 repetitions:-->\n" +
-                         "      <xs:period xmlns:xs=\"http://callcharging.samples/xsd\">12</xs:period>\n" +
-                         "      <!--Zero or 1 repetitions:-->\n" +
-                         "      <xs:type xmlns:xs=\"http://callcharging.samples/xsd\">idd</xs:type>\n" +
-                         "   </p:CallLog>\n" +
-                         "</p:chargeRequest>";
+                "   <!--Zero or more repetitions:-->\n" +
+                "   <p:CallLog>\n" +
+                "      <!--Zero or 1 repetitions:-->\n" +
+                "      <xs:period xmlns:xs=\"http://callcharging.brs/xsd\">12</xs:period>\n" +
+                "      <!--Zero or 1 repetitions:-->\n" +
+                "      <xs:type xmlns:xs=\"http://callcharging.brs/xsd\">idd</xs:type>\n" +
+                "   </p:CallLog>\n" +
+                "</p:chargeRequest>";
         return new StAXOMBuilder(new ByteArrayInputStream(request.getBytes())).getDocumentElement();
     }
 }

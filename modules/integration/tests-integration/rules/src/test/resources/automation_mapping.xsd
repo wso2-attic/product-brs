@@ -27,7 +27,13 @@
                                     </xs:documentation>
                                 </xs:annotation>
                             </xs:element>
-
+                            <xs:element type="xs:boolean" name="multiTenantMode">
+                                <xs:annotation>
+                                    <xs:documentation>Change this to user/tenant to execute test
+                                        with user mode or tenant mode
+                                    </xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
                             <xs:element type="xs:string" name="coverage">
                                 <xs:annotation>
                                     <xs:documentation>Change this to true if you want to generate

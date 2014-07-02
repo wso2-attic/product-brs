@@ -15,10 +15,12 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-package org.wso2.carbon.samples.test;
+package org.wso2.brs.rule.test;
+
+import org.wso2.brs.integration.common.utils.BRSMasterTest;
 
 /**
  * Test to ensure that the WSO2 BRS is properly secured
  */
-public class SecurityVerificationTestCase extends BrsMaterTestCase {
+public class SecurityVerificationTestCase extends BRSMasterTest {
 }
