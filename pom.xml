@@ -43,7 +43,7 @@
         <module>modules/org.wso2.brs.dashboard.ui</module>
         <module>modules/org.wso2.stratos.brs.login.ui</module>
         <module>modules/distribution</module>
-        <!--module>modules/integration</module-->
+        <module>modules/integration</module>
     </modules>
 
     <dependencyManagement>
