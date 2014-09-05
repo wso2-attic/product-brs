@@ -10,7 +10,7 @@
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestTransformerListener"/>
     </listeners>
 
-    <test name="brs-integration-tests-server-mgt" preserve-order="true" parallel="false">
+    <test name="brs-tests-integration-ui" preserve-order="true" parallel="false">
         <classes>
             <class name="org.wso2.carbon.integration.test.ui.LoginTestCase"/>
         </classes>
