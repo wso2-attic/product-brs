@@ -16,7 +16,7 @@
 *under the License.
 */
 
-package org.wso2.carbon.integration.test.ui;
+package org.wso2.brs.integration.ui.pages;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -31,9 +31,9 @@ import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
 import java.rmi.RemoteException;
 
-public class BRSIntegrationUITestCase {
+public class BRSIntegrationUiBaseTestCase {
 
-    private static final Log log = LogFactory.getLog(BRSIntegrationUITestCase.class);
+    private static final Log log = LogFactory.getLog(BRSIntegrationUiBaseTestCase.class);
     protected AutomationContext automationContext;
 
     protected void init() throws IOException, XMLStreamException, XPathExpressionException {

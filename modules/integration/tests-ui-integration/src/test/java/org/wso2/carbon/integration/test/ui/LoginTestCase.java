@@ -18,15 +18,16 @@
 
 package org.wso2.carbon.integration.test.ui;
 
-import org.wso2.brs.integration.ui.pages.login.LoginPage;
-import org.wso2.brs.integration.ui.pages.home.HomePage;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.brs.integration.ui.pages.BRSIntegrationUiBaseTestCase;
+import org.wso2.brs.integration.ui.pages.home.HomePage;
+import org.wso2.brs.integration.ui.pages.login.LoginPage;
 import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 
-public class LoginTestCase extends BRSIntegrationUITestCase {
+public class LoginTestCase extends BRSIntegrationUiBaseTestCase {
 
     private WebDriver driver;
 
