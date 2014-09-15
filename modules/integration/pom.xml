@@ -18,6 +18,8 @@
         <module>tests-common/integration-test-utils</module>
         <module>org.wso2.carbon.brs.integration.services</module>
         <module>tests-integration/rules</module>
+        <module>tests-common/ui-pages</module> 
+        <module>tests-ui-integration</module> 
     </modules>
     <build>
         <plugins>

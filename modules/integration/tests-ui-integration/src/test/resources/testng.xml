@@ -1,0 +1,12 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="BRS Tests-UI-Integration Suite" parallel="false">
+    <parameter name="useDefaultListeners" value="false"/>
+
+    <test name="BRS Tests-UI" preserve-order="true" parallel="false">
+        <!--packages>
+            <package name="org.wso2.brs.rule.test"/>
+        </packages-->
+    </test>
+
+</suite>
