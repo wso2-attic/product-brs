@@ -141,7 +141,7 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.integration.common.utils</artifactId>
-                <version>${carbon.kernel.version}</version>
+                <version>${carbon.platform.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -170,7 +170,7 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.integration.common.tests</artifactId>
-                <version>${carbon.kernel.version}</version>
+                <version>${carbon.platform.version}</version>
             </dependency>
             <dependency>
                 <groupId>groovy</groupId>
@@ -341,7 +341,7 @@
 
     <properties>
         <carbon.platform.version>4.3.0-SNAPSHOT</carbon.platform.version>
-        <carbon.kernel.version>4.3.0-SNAPSHOT</carbon.kernel.version>
+        <carbon.kernel.version>4.3.0</carbon.kernel.version>
         <carbon.version>4.3.0</carbon.version>
         <brs.version>2.2.0-SNAPSHOT</brs.version>
         <log4j.version>1.2.13</log4j.version>
@@ -354,16 +354,16 @@
         <carbon.p2.plugin.version>1.5.3</carbon.p2.plugin.version>
 
         <!-- Apache Axis2 -->
-        <orbit.version.axis2>1.6.1.wso2v11-SNAPSHOT</orbit.version.axis2>
-        <axis2.wso2.version>1.6.1.wso2v11-SNAPSHOT</axis2.wso2.version>
+        <orbit.version.axis2>1.6.1.wso2v11</orbit.version.axis2>
+        <axis2.wso2.version>1.6.1.wso2v11</axis2.wso2.version>
 
         <!-- Apache Axiom -->
-        <orbit.version.axiom>1.2.11.wso2v5-SNAPSHOT</orbit.version.axiom>
-        <axiom.wso2.version>1.2.11.wso2v5-SNAPSHOT</axiom.wso2.version>
+        <orbit.version.axiom>1.2.11.wso2v5</orbit.version.axiom>
+        <axiom.wso2.version>1.2.11.wso2v5</axiom.wso2.version>
 
         <!-- Testing -->
         <testng.version>6.8</testng.version>
-        <test.framework.version>4.3.1-SNAPSHOT</test.framework.version>
+        <test.framework.version>4.3.1</test.framework.version>
 
         <groovy.version>1.1-rc-1</groovy.version>
         <emma.version>2.1.5320</emma.version>
