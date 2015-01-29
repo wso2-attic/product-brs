@@ -119,15 +119,6 @@
                                     org.wso2.carbon:org.wso2.carbon.security.mgt.feature:${carbon.platform.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.transport.mgt.feature:${carbon.platform.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.transport.jms.feature:${carbon.platform.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.transport.mail.feature:${carbon.platform.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.message.flows.feature:${carbon.platform.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -299,18 +290,6 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.security.mgt.feature.group</id>
-                                    <version>${carbon.platform.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.transport.mgt.feature.group</id>
-                                    <version>${carbon.platform.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.transport.jms.feature.group</id>
-                                    <version>${carbon.platform.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.transport.mail.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
                                 <feature>
@@ -497,22 +476,6 @@
                                     <version>${carbon.platform.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.transport.mgt.feature.group</id>
-                                    <version>${carbon.platform.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.transport.mgt.server.feature.group</id>
-                                    <version>${carbon.platform.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.transport.jms.feature.group</id>
-                                    <version>${carbon.platform.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.transport.mail.feature.group</id>
-                                    <version>${carbon.platform.version}</version>
-                                </feature>
-                                <feature>
                                     <id>org.wso2.carbon.message.flows.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
@@ -528,10 +491,6 @@
                                     <id>org.wso2.carbon.registry.resource.properties.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
-                                <!--feature>
-                                    <id>org.wso2.carbon.wsdl.tools.feature.group</id>
-                                    <version>${carbon.platform.version}</version>
-                                </feature-->
                                 <feature>
                                     <id>org.wso2.carbon.rule.service.feature.group</id>
                                     <version>${carbon.platform.version}</version>
