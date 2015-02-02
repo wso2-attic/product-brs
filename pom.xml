@@ -93,13 +93,13 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.service.mgt.stub</artifactId>
-                <version>${carbon.platform.version}</version>
+                <version>${carbon.deployment.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.rule.ws.stub</artifactId>
-                <version>${carbon.platform.version}</version>
+                <version>${carbon.rules.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.brs</groupId>
@@ -109,7 +109,7 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>SecVerifier</artifactId>
-                <version>${carbon.platform.version}</version>
+                <version>${carbon.kernel.version}</version>
                 <scope>test</scope>
                 <type>aar</type>
             </dependency>
@@ -340,11 +340,35 @@
     </mailingLists>
 
     <properties>
-        <carbon.platform.version>4.3.0-SNAPSHOT</carbon.platform.version>
-        <carbon.kernel.version>4.3.0</carbon.kernel.version>
-        <carbon.version>4.3.0</carbon.version>
+
         <brs.version>2.2.0-SNAPSHOT</brs.version>
+
+        <carbon.rules.version>4.3.0</carbon.rules.version>
+        <carbon.rules.imp.pkg.version>[4.3.0,4.4.0)</carbon.rules.imp.pkg.version>
+
+        <carbon.kernel.version>4.3.0</carbon.kernel.version>
+        <carbon.kernel.imp.pkg.version>[4.3.0,4.4.0)</carbon.kernel.imp.pkg.version>
+
+
+        <carbon.commons.version>4.3.1</carbon.commons.version>
+        <carbon.commons.imp.pkg.version>[4.3.1, 4.4.0)</carbon.commons.imp.pkg.version>
+
+        <carbon.registry.version>4.3.0</carbon.registry.version>
+        <carbon.registry.imp.pkg.version>[4.3.0,4.4.0)</carbon.registry.imp.pkg.version>
+
+        <carbon.deployment.version>4.3.0</carbon.deployment.version>
+        <carbon.deployment.imp.pkg.version>[4.3.0, 4.4.0)</carbon.deployment.imp.pkg.version>
+
+        <carbon.identity.version>4.3.0</carbon.identity.version>
+        <carbon.identity.imp.pkg.version>[4.3.0,4.4.0)</carbon.identity.imp.pkg.version>
+
+        <carbon.multitenancy.version>4.3.0</carbon.multitenancy.version>
+        <carbon.multitenancy.imp.pkg.version>[4.3.0,4.4.0)</carbon.multitenancy.imp.pkg.version>
+
+        <carbon.platform.version>4.3.0-SNAPSHOT</carbon.platform.version>
+
         <log4j.version>1.2.13</log4j.version>
+
         <commons.logging.version>1.1.1</commons.logging.version>
         <opencsv.version>1.8</opencsv.version>
         <poi.version>3.0-FINAL</poi.version>
