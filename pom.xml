@@ -43,16 +43,16 @@
         <module>modules/org.wso2.brs.dashboard.ui</module>
         <module>modules/org.wso2.stratos.brs.login.ui</module>
         <module>modules/distribution</module>
-        <module>modules/integration</module>
+        <!--module>modules/integration</module-->
     </modules>
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>org.apache.axis2.wso2</groupId>
-                <artifactId>axis2</artifactId>
-                <version>${axis2.wso2.version}</version>
-            </dependency>
+            <!--<dependency>-->
+            <!--<groupId>org.apache.axis2.wso2</groupId>-->
+            <!--<artifactId>axis2</artifactId>-->
+            <!--<version>${axis2.wso2.version}</version>-->
+            <!--</dependency>-->
             <dependency>
                 <groupId>log4j</groupId>
                 <artifactId>log4j</artifactId>
@@ -63,13 +63,11 @@
                 <artifactId>commons-logging</artifactId>
                 <version>${commons.logging.version}</version>
             </dependency>
-            <!-- Dependencies for login ui -->
             <dependency>
                 <groupId>javax.servlet</groupId>
                 <artifactId>servlet-api</artifactId>
                 <version>${servlet-api.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.apache.ws.commons.axiom.wso2</groupId>
                 <artifactId>axiom</artifactId>
@@ -86,12 +84,12 @@
                 <version>${carbon.kernel.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.automationutils</groupId>
                 <artifactId>org.wso2.carbon.integration.common.admin.client</artifactId>
-                <version>${carbon.platform.version}</version>
+                <version>${org.wso2.carbon.automationutils.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.service.mgt.stub</artifactId>
                 <version>${carbon.deployment.version}</version>
             </dependency>
@@ -118,13 +116,13 @@
             <dependency>
                 <groupId>org.wso2.carbon.automation</groupId>
                 <artifactId>org.wso2.carbon.automation.test.utils</artifactId>
-                <version>${test.framework.version}</version>
+                <version>${carbon.automation.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.automation</groupId>
                 <artifactId>org.wso2.carbon.automation.engine</artifactId>
-                <version>${test.framework.version}</version>
+                <version>${carbon.automation.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -139,9 +137,9 @@
                 <version>${testng.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.automationutils</groupId>
                 <artifactId>org.wso2.carbon.integration.common.utils</artifactId>
-                <version>${carbon.platform.version}</version>
+                <version>${carbon.automationutils.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -158,19 +156,19 @@
             <dependency>
                 <groupId>org.wso2.carbon.automation</groupId>
                 <artifactId>org.wso2.carbon.automation.extensions</artifactId>
-                <version>${test.framework.version}</version>
+                <version>${carbon.automation.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.integration.common.extensions</artifactId>
-                <version>${carbon.platform.version}</version>
+                <groupId>org.wso2.carbon.automationutils</groupId>
+                <artifactId>org.wso2.carbon.integration.common.extensions</artifactId>
+                <version>${carbon.automationutils.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.automationutils</groupId>
                 <artifactId>org.wso2.carbon.integration.common.tests</artifactId>
-                <version>${carbon.platform.version}</version>
+                <version>${carbon.automationutils.version}</version>
             </dependency>
             <dependency>
                 <groupId>groovy</groupId>
@@ -187,7 +185,8 @@
 
     <scm>
         <connection>scm:svn:http://wso2.org/repos/wso2/trunk/brs/java</connection>
-        <developerConnection>scm:svn:https://wso2.org/repos/wso2/trunk/brs/java</developerConnection>
+        <developerConnection>scm:svn:https://wso2.org/repos/wso2/trunk/brs/java
+        </developerConnection>
         <url>https://wso2.org/repos/wso2/trunk/brs/java/</url>
     </scm>
 
@@ -350,22 +349,19 @@
         <carbon.kernel.imp.pkg.version>[4.3.0,4.4.0)</carbon.kernel.imp.pkg.version>
 
 
-        <carbon.commons.version>4.3.1</carbon.commons.version>
-        <carbon.commons.imp.pkg.version>[4.3.1, 4.4.0)</carbon.commons.imp.pkg.version>
+        <carbon.commons.version>4.3.4</carbon.commons.version>
 
         <carbon.registry.version>4.3.0</carbon.registry.version>
-        <carbon.registry.imp.pkg.version>[4.3.0,4.4.0)</carbon.registry.imp.pkg.version>
 
-        <carbon.deployment.version>4.3.0</carbon.deployment.version>
-        <carbon.deployment.imp.pkg.version>[4.3.0, 4.4.0)</carbon.deployment.imp.pkg.version>
+        <carbon.deployment.version>4.3.1</carbon.deployment.version>
 
-        <carbon.identity.version>4.3.0</carbon.identity.version>
-        <carbon.identity.imp.pkg.version>[4.3.0,4.4.0)</carbon.identity.imp.pkg.version>
+        <carbon.identity.version>4.3.2</carbon.identity.version>
 
-        <carbon.multitenancy.version>4.3.0</carbon.multitenancy.version>
-        <carbon.multitenancy.imp.pkg.version>[4.3.0,4.4.0)</carbon.multitenancy.imp.pkg.version>
+        <carbon.multitenancy.version>4.3.3</carbon.multitenancy.version>
 
-        <carbon.platform.version>4.3.0-SNAPSHOT</carbon.platform.version>
+        <carbon.automationutils.version>4.3.0</carbon.automationutils.version>
+
+        <carbon.automation.version>4.3.0</carbon.automation.version>
 
         <log4j.version>1.2.13</log4j.version>
 

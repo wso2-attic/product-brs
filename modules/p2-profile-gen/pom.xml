@@ -330,10 +330,6 @@
                                     </id>
                                     <version>${carbon.registry.version}</version>
                                 </feature>
-                                <!--feature>
-                                    <id>org.wso2.carbon.wsdl.tools.feature.group</id>
-                                    <version>${carbon.platform.version}</version>
-                                </feature-->
                                 <feature>
                                     <id>org.wso2.carbon.rule.service.feature.group</id>
                                     <version>${carbon.rules.version}</version>
@@ -478,6 +474,10 @@
                                     <version>${carbon.commons.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.ndatasource.ui.feature.group</id>
+                                    <version>${carbon.commons.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.databridge.datapublisher.feature.group</id>
                                     <version>${carbon.commons.version}</version>
                                 </feature>
@@ -506,6 +506,10 @@
                                     <version>${carbon.registry.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.registry.ui.menu.feature.group</id>
+                                    <version>${carbon.registry.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.registry.resource.properties.feature.group
                                     </id>
                                     <version>${carbon.registry.version}</version>
@@ -519,6 +523,16 @@
                                     <version>${project.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.brs.dashboard.ui.feature.group</id>
+                                    <version>${project.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>
+                                        org.wso2.carbon.identity.authenticator.saml2.sso.ui.feature.group
+                                    </id>
+                                    <version>${carbon.identity.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.module.mgt.server.feature.group</id>
                                     <version>${carbon.deployment.version}</version>
                                 </feature>
@@ -529,19 +543,23 @@
                                     <version>${carbon.identity.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.service.mgt.ui.feature.group</id>
+                                    <version>${carbon.deployment.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.service.mgt.server.feature.group</id>
                                     <version>${carbon.deployment.version}</version>
                                 </feature>
-
-                                <!--Cloud service deployment feature -->
-
-                                <!--BAM Data publishers -->
                                 <feature>
                                     <id>org.wso2.carbon.event.common.feature.group</id>
                                     <version>${carbon.commons.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.event.server.feature.group</id>
+                                    <version>${carbon.commons.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.event.ui.feature.group</id>
                                     <version>${carbon.commons.version}</version>
                                 </feature>
                                 <feature>
@@ -552,7 +570,7 @@
                                 <!--BRS Application deployer -->
                                 <feature>
                                     <id>org.wso2.carbon.application.deployer.rule.feature.group</id>
-                                    <version>${carbon.rule.version}</version>
+                                    <version>${carbon.rules.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.application.mgt.feature.group</id>
@@ -569,6 +587,10 @@
                                     <version>${carbon.commons.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.discovery.admin.ui.feature.group</id>
+                                    <version>${carbon.commons.version}</version>
+                                </feature>
+                                <feature>
                                     <id>
                                         org.wso2.carbon.deployment.synchronizer.subversion.feature.group
                                     </id>
@@ -576,10 +598,6 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.user.mgt.feature.group</id>
-                                    <version>${carbon.commons.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.user.mgt.server.feature.group</id>
                                     <version>${carbon.commons.version}</version>
                                 </feature>
                                 <!-- Tenant related features.-->
