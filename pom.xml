@@ -43,16 +43,23 @@
         <module>modules/org.wso2.brs.dashboard.ui</module>
         <module>modules/org.wso2.stratos.brs.login.ui</module>
         <module>modules/distribution</module>
-        <!--module>modules/integration</module-->
+        <module>modules/integration</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
-            <!--<dependency>-->
-            <!--<groupId>org.apache.axis2.wso2</groupId>-->
-            <!--<artifactId>axis2</artifactId>-->
-            <!--<version>${axis2.wso2.version}</version>-->
-            <!--</dependency>-->
+            <dependency>
+                <groupId>org.apache.rampart</groupId>
+                <artifactId>rampart</artifactId>
+                <version>${rampart.version}</version>
+                <type>mar</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>wso2carbon-core</artifactId>
+                <version>${carbon.kernel.version}</version>
+                <type>zip</type>
+            </dependency>
             <dependency>
                 <groupId>log4j</groupId>
                 <artifactId>log4j</artifactId>
@@ -86,7 +93,7 @@
             <dependency>
                 <groupId>org.wso2.carbon.automationutils</groupId>
                 <artifactId>org.wso2.carbon.integration.common.admin.client</artifactId>
-                <version>${org.wso2.carbon.automationutils.version}</version>
+                <version>${carbon.automationutils.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.deployment</groupId>
@@ -95,7 +102,7 @@
             </dependency>
 
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.rules</groupId>
                 <artifactId>org.wso2.carbon.rule.ws.stub</artifactId>
                 <version>${carbon.rules.version}</version>
             </dependency>
@@ -366,11 +373,15 @@
         <log4j.version>1.2.13</log4j.version>
 
         <commons.logging.version>1.1.1</commons.logging.version>
+
         <opencsv.version>1.8</opencsv.version>
+
         <poi.version>3.0-FINAL</poi.version>
-        <stratos.version>2.2.0</stratos.version>
+
         <servlet-api.version>2.4</servlet-api.version>
-        <rampart.mar.version>1.6.1-wso2v12</rampart.mar.version>
+
+        <rampart.version>1.6.1-wso2v14</rampart.version>
+
         <carbon.p2.plugin.version>1.5.3</carbon.p2.plugin.version>
 
         <!-- Apache Axis2 -->

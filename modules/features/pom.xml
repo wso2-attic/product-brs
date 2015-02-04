@@ -35,14 +35,13 @@
             <dependency>
                 <groupId>org.wso2.brs</groupId>
                 <artifactId>org.wso2.brs.styles</artifactId>
-                <version>${project.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
 
     <modules>
         <module>product</module>
-        <module>service</module>
+        <!--<module>service</module>-->
     </modules>
 
 </project>

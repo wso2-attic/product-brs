@@ -295,7 +295,7 @@
                             <resources>
                                 <resource>
                                     <directory>
-                                        ${basedir}/target/tobeCopied/wso2brs-${project.version}/repository/resources/security/
+                                        ${basedir}/target/tobeCopied/wso2brs-${brs.version}/repository/resources/security/
                                     </directory>
                                     <includes>
                                         <include>**/*.jks</include>
@@ -316,7 +316,7 @@
                             <resources>
                                 <resource>
                                     <directory>
-                                        ${basedir}/target/tobeCopied/wso2brs-${project.version}/repository/conf/axis2/
+                                        ${basedir}/target/tobeCopied/wso2brs-${brs.version}/repository/conf/axis2/
                                     </directory>
                                     <includes>
                                         <include>**/*.xml</include>
@@ -337,7 +337,7 @@
                             <resources>
                                 <resource>
                                     <directory>
-                                        ${basedir}/target/tobeCopied/wso2brs-${project.version}/repository/deployment/client/modules
+                                        ${basedir}/target/tobeCopied/wso2brs-${brs.version}/repository/deployment/client/modules
                                     </directory>
                                     <includes>
                                         <include>**/*.mar</include>
@@ -368,7 +368,7 @@
             <artifactId>org.wso2.carbon.automation.test.utils</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.rules</groupId>
             <artifactId>org.wso2.carbon.rule.ws.stub</artifactId>
         </dependency>
         <dependency>
@@ -398,7 +398,7 @@
             <artifactId>org.wso2.brs.integration.common.utils</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.automationutils</groupId>
             <artifactId>org.wso2.carbon.integration.common.tests</artifactId>
         </dependency>
     </dependencies>

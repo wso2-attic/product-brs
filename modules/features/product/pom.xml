@@ -47,7 +47,7 @@
 
     <modules>
         <module>org.wso2.brs.styles.feature</module>
-        <module>org.wso2.brs.dashboard.ui.feature</module>
+        <!--<module>org.wso2.brs.dashboard.ui.feature</module>-->
     </modules>
 
 </project>
