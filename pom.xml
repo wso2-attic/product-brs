@@ -117,10 +117,10 @@
                 <artifactId>org.wso2.brs.integration.common.utils</artifactId>
                 <version>${brs.version}</version>
             </dependency>
-	    <dependency>
-            	<groupId>org.wso2.brs</groupId>
-            	<artifactId>org.wso2.brs.styles</artifactId>
-		<version>${brs.version}</version>
+            <dependency>
+                <groupId>org.wso2.brs</groupId>
+                <artifactId>org.wso2.brs.styles</artifactId>
+                <version>${brs.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
@@ -366,8 +366,8 @@
                     </executions>
                 </plugin>
                 <!--<plugin>-->
-                    <!--<artifactId>maven-assembly-plugin</artifactId>-->
-                    <!--<version>2.2-beta-2</version>-->
+                <!--<artifactId>maven-assembly-plugin</artifactId>-->
+                <!--<version>2.2-beta-2</version>-->
                 <!--</plugin>-->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -502,7 +502,7 @@
         <emma.version>2.1.5320</emma.version>
         <jruby.version>1.3.0</jruby.version>
 
-	 <project.scm.id>wso2-scm-server</project.scm.id>
+        <project.scm.id>wso2-scm-server</project.scm.id>
 
     </properties>
 
