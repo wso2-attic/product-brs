@@ -22,7 +22,7 @@
     <groupId>org.wso2.brs</groupId>
     <artifactId>wso2brs-parent</artifactId>
     <packaging>pom</packaging>
-    <version>2.2.0</version>
+    <version>2.2.1-SNAPSHOT</version>
     <name>WSO2 BRS</name>
     <url>http://wso2.org/projects/brs/java</url>
     <description>WSO2 Business Rules Server</description>
@@ -385,7 +385,7 @@
         <url>https://github.com/wso2/product-brs.git</url>
         <developerConnection>scm:git:https://github.com/wso2/product-brs.git</developerConnection>
         <connection>scm:git:https://github.com/wso2/product-brs.git</connection>
-        <tag>2.2.0-m0</tag>
+        <tag>HEAD</tag>
     </scm>
 
 
@@ -447,7 +447,7 @@
 
     <properties>
 
-        <brs.version>2.2.0</brs.version>
+        <brs.version>2.2.1-SNAPSHOT</brs.version>
 
         <carbon.rules.version>4.3.0</carbon.rules.version>
         <carbon.rules.imp.pkg.version>[4.3.0,4.4.0)</carbon.rules.imp.pkg.version>
