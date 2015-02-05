@@ -35,16 +35,6 @@
 
     <description>Features specific to the WSO2 BRS</description>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.wso2.brs</groupId>
-                <artifactId>org.wso2.brs.styles</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
     <modules>
         <module>org.wso2.brs.styles.feature</module>
         <!--<module>org.wso2.brs.dashboard.ui.feature</module>-->

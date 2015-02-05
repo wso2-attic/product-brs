@@ -168,7 +168,7 @@
                         <property>
                             <name>carbon.zip</name>
                             <value>
-                                ${basedir}/../../../distribution/target/wso2brs-${project.version}.zip
+                                ${basedir}/../../../distribution/target/wso2brs-${brs.version}.zip
                             </value>
                         </property>
                         <property>
@@ -233,7 +233,7 @@
                                 <artifactItem>
                                     <groupId>org.wso2.brs</groupId>
                                     <artifactId>wso2brs</artifactId>
-                                    <version>${project.version}</version>
+                                    <version>${brs.version}</version>
                                     <type>zip</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${basedir}/target/tobeCopied/</outputDirectory>
@@ -274,7 +274,7 @@
                             <resources>
                                 <resource>
                                     <directory>
-                                        ${basedir}/target/tobeCopied/wso2brs-${project.version}/repository/resources/security/
+                                        ${basedir}/target/tobeCopied/wso2brs-${brs.version}/repository/resources/security/
                                     </directory>
                                     <includes>
                                         <include>**/*.jks</include>

@@ -30,15 +30,6 @@
     <name>WSO2 BRS - Features Aggregator Module</name>
     <description>Features specific to the WSO2 BRS</description>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.wso2.brs</groupId>
-                <artifactId>org.wso2.brs.styles</artifactId>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
     <modules>
         <module>product</module>
         <!--<module>service</module>-->

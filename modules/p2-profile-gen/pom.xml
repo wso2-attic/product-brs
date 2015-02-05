@@ -152,10 +152,7 @@
                                     org.wso2.carbon.deployment:org.wso2.carbon.service.mgt.server.feature:${carbon.deployment.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.brs:org.wso2.brs.styles.feature:${project.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.brs:org.wso2.brs.dashboard.ui.feature:${project.version}
+                                    org.wso2.brs:org.wso2.brs.styles.feature:${brs.version}
                                 </featureArtifactDef>
 
                                 <!-- Features related to Cloud -->
@@ -336,11 +333,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.brs.styles.feature.group</id>
-                                    <version>${project.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.brs.dashboard.ui.feature.group</id>
-                                    <version>${project.version}</version>
+                                    <version>${brs.version}</version>
                                 </feature>
                                 <feature>
                                     <id>
@@ -520,11 +513,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.brs.styles.feature.group</id>
-                                    <version>${project.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.brs.dashboard.ui.feature.group</id>
-                                    <version>${project.version}</version>
+                                    <version>${brs.version}</version>
                                 </feature>
                                 <feature>
                                     <id>

@@ -124,7 +124,7 @@
                                 <mkdir dir="${tempdir}"/>
                                 <unzip dest="${tempdir}">
                                     <fileset dir="target">
-                                        <include name="wso2brs-${project.version}.zip"/>
+                                        <include name="wso2brs-${brs.version}.zip"/>
                                     </fileset>
                                 </unzip>
                                 <copy todir="target/wso2carbon-core-${carbon.kernel.version}/repository/components/"
