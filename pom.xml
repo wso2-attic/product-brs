@@ -16,15 +16,13 @@
  ~ specific language governing permissions and limitations
  ~ under the License.
  -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.wso2.brs</groupId>
     <artifactId>wso2brs-parent</artifactId>
     <packaging>pom</packaging>
-    <version>2.2.0-SNAPSHOT</version>
+    <version>2.2.0</version>
     <name>WSO2 BRS</name>
     <url>http://wso2.org/projects/brs/java</url>
     <description>WSO2 Business Rules Server</description>
@@ -387,7 +385,7 @@
         <url>https://github.com/wso2/product-brs.git</url>
         <developerConnection>scm:git:https://github.com/wso2/product-brs.git</developerConnection>
         <connection>scm:git:https://github.com/wso2/product-brs.git</connection>
-        <tag>HEAD</tag>
+        <tag>2.2.0-m0</tag>
     </scm>
 
 
@@ -449,7 +447,7 @@
 
     <properties>
 
-        <brs.version>2.2.0-SNAPSHOT</brs.version>
+        <brs.version>2.2.0</brs.version>
 
         <carbon.rules.version>4.3.0</carbon.rules.version>
         <carbon.rules.imp.pkg.version>[4.3.0,4.4.0)</carbon.rules.imp.pkg.version>
