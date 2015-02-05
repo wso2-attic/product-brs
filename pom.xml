@@ -29,6 +29,12 @@
     <url>http://wso2.org/projects/brs/java</url>
     <description>WSO2 Business Rules Server</description>
 
+    <parent>
+        <groupId>org.wso2</groupId>
+        <artifactId>wso2</artifactId>
+        <version>1</version>
+    </parent>
+
     <licenses>
         <license>
             <name>Apache License Version 2.0</name>
@@ -272,6 +278,25 @@
             </releases>
         </pluginRepository>
     </pluginRepositories>
+
+   <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <configuration>
+                        <preparationGoals>clean install</preparationGoals>
+                        <autoVersionSubmodules>true</autoVersionSubmodules>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 
     <!--distributionManagement>
         <repository>
