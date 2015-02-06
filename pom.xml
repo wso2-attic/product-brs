@@ -466,7 +466,7 @@
 
         <carbon.identity.version>4.3.2</carbon.identity.version>
 
-        <carbon.multitenancy.version>4.3.3</carbon.multitenancy.version>
+        <carbon.multitenancy.version>4.3.4</carbon.multitenancy.version>
 
         <carbon.automationutils.version>4.3.0</carbon.automationutils.version>
 
