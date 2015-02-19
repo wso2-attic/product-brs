@@ -212,7 +212,9 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.multitenancy:org.wso2.carbon.tenant.deployment.feature:${carbon.multitenancy.version}
                                 </featureArtifactDef>
-
+                                <featureArtifactDef>
+                                    org.wso2.brs:org.wso2.brs.dashboard.ui.feature:${brs.version}
+                                </featureArtifactDef>
 
                             </featureArtifacts>
                         </configuration>
@@ -426,6 +428,10 @@
                                     <id>org.wso2.carbon.tenant.deployment.feature.group</id>
                                     <version>${carbon.multitenancy.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>org.wso2.brs.dashboard.ui.feature.group</id>
+                                    <version>${brs.version}</version>
+                                </feature>
                             </features>
                         </configuration>
                     </execution>
@@ -605,6 +611,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.tenant.deployment.feature.group</id>
                                     <version>${carbon.multitenancy.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.brs.dashboard.ui.feature.group</id>
+                                    <version>${brs.version}</version>
                                 </feature>
                             </features>
                         </configuration>

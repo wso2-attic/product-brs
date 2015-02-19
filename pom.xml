@@ -46,7 +46,7 @@
         <module>modules/styles</module>
         <module>modules/features</module>
         <module>modules/p2-profile-gen</module>
-        <!--<module>modules/org.wso2.brs.dashboard.ui</module>-->
+        <module>modules/org.wso2.brs.dashboard.ui</module>
         <!--<module>modules/org.wso2.stratos.brs.login.ui</module>-->
         <module>modules/distribution</module>
         <module>modules/integration</module>
@@ -197,6 +197,16 @@
                 <groupId>org.jruby</groupId>
                 <artifactId>jruby-complete</artifactId>
                 <version>${jruby.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.brs</groupId>
+                <artifactId>org.wso2.brs.dashboard.ui</artifactId>
+                <version>${brs.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.ui.menu.stratos</artifactId>
+                <version>2.2.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

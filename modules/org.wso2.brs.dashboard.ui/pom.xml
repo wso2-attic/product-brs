@@ -26,7 +26,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.brs.dashboard.ui</artifactId>
     <packaging>bundle</packaging>
-    <name>WSO2 Stratos BRS - Dashboard UI</name>
+    <name>WSO2 BRS - Dashboard UI</name>
 
     <build>
         <plugins>
@@ -43,9 +43,6 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
-                        <Export-Package>
-                            org.wso2.stratos.governance.dashboard.ui.*,
-                        </Export-Package>
                         <Import-Package>
                             !javax.xml.namespace,
                             javax.xml.namespace; version=0.0.0,
