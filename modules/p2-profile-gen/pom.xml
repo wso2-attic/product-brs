@@ -196,12 +196,15 @@
                                     org.wso2.carbon.commons:org.wso2.carbon.ndatasource.ui.feature:${carbon.commons.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.commons:org.wso2.carbon.user.mgt.feature:${carbon.commons.version}
+                                    org.wso2.carbon.identity:org.wso2.carbon.user.mgt.feature:${carbon.identity.version}
                                 </featureArtifactDef>
 
                                 <!--Tenant related features -->
                                 <featureArtifactDef>
                                     org.wso2.carbon.multitenancy:org.wso2.carbon.tenant.common.feature:${carbon.multitenancy.version}
+                                </featureArtifactDef>
+				<featureArtifactDef>
+                                    org.wso2.carbon.commons:org.wso2.carbon.tenant.mgt.common.feature:${carbon.commons.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.multitenancy:org.wso2.carbon.tenant.usage.agent.feature:${carbon.multitenancy.version}
@@ -212,6 +215,9 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.multitenancy:org.wso2.carbon.tenant.deployment.feature:${carbon.multitenancy.version}
                                 </featureArtifactDef>
+				<featureArtifactDef>
+				    org.wso2.carbon.multitenancy:org.wso2.carbon.tenant.mgt.core.feature:${carbon.multitenancy.version}
+				</featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.brs:org.wso2.brs.dashboard.ui.feature:${brs.version}
                                 </featureArtifactDef>
@@ -316,6 +322,10 @@
                                     <id>org.wso2.carbon.tryit.feature.group</id>
                                     <version>${carbon.commons.version}</version>
                                 </feature>
+				<feature>
+                                    <id>org.wso2.carbon.tenant.mgt.common.feature.group</id>
+                                    <version>${carbon.commons.version}</version>
+                                </feature>
                                 <feature>
                                     <id>org.wso2.carbon.registry.core.feature.group</id>
                                     <version>${carbon.registry.version}</version>
@@ -409,7 +419,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.user.mgt.feature.group</id>
-                                    <version>${carbon.commons.version}</version>
+                                    <version>${carbon.identity.version}</version>
                                 </feature>
                                 <!-- Tenant related features.-->
                                 <feature>
@@ -428,6 +438,10 @@
                                     <id>org.wso2.carbon.tenant.deployment.feature.group</id>
                                     <version>${carbon.multitenancy.version}</version>
                                 </feature>
+				<feature>
+			 	    <id>org.wso2.carbon.tenant.mgt.core.feature.group</id>
+				    <version>${carbon.multitenancy.version}</version>
+				</feature>
                                 <feature>
                                     <id>org.wso2.brs.dashboard.ui.feature.group</id>
                                     <version>${brs.version}</version>
@@ -486,6 +500,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.soaptracer.feature.group</id>
+                                    <version>${carbon.commons.version}</version>
+                                </feature>
+				<feature>
+                                    <id>org.wso2.carbon.tenant.mgt.common.feature.group</id>
                                     <version>${carbon.commons.version}</version>
                                 </feature>
                                 <feature>
@@ -593,7 +611,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.user.mgt.feature.group</id>
-                                    <version>${carbon.commons.version}</version>
+                                    <version>${carbon.identity.version}</version>
                                 </feature>
                                 <!-- Tenant related features.-->
                                 <feature>
@@ -612,6 +630,10 @@
                                     <id>org.wso2.carbon.tenant.deployment.feature.group</id>
                                     <version>${carbon.multitenancy.version}</version>
                                 </feature>
+				<feature>
+				   <id>org.wso2.carbon.tenant.mgt.core.feature.group</id>
+		   		   <version>${carbon.multitenancy.version}</version>
+				</feature>
                                 <feature>
                                     <id>org.wso2.brs.dashboard.ui.feature.group</id>
                                     <version>${brs.version}</version>

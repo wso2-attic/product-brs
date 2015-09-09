@@ -129,6 +129,11 @@
                 <scope>test</scope>
                 <type>aar</type>
             </dependency>
+	    <dependency>
+                <groupId>commons-io.wso2</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io.wso2.version}</version>
+            </dependency>
 
             <!-- Dependencies for Integration test -->
             <dependency>
@@ -332,6 +337,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
+		<configuration>
+			<skip>true</skip>
+		</configuration>
             </plugin>
         </plugins>
         <pluginManagement>
@@ -461,22 +469,22 @@
 
         <brs.version>2.2.0-SNAPSHOT</brs.version>
 
-        <carbon.rules.version>4.3.0</carbon.rules.version>
-        <carbon.rules.imp.pkg.version>[4.3.0,4.4.0)</carbon.rules.imp.pkg.version>
+        <carbon.rules.version>4.4.1</carbon.rules.version>
+        <carbon.rules.imp.pkg.version>[4.4.0,4.5.0)</carbon.rules.imp.pkg.version>
 
-        <carbon.kernel.version>4.3.0</carbon.kernel.version>
-        <carbon.kernel.imp.pkg.version>[4.3.0,4.4.0)</carbon.kernel.imp.pkg.version>
+        <carbon.kernel.version>4.4.1</carbon.kernel.version>
+        <carbon.kernel.imp.pkg.version>[4.4.0,4.5.0)</carbon.kernel.imp.pkg.version>
 
 
-        <carbon.commons.version>4.3.4</carbon.commons.version>
+        <carbon.commons.version>4.4.7</carbon.commons.version>
 
-        <carbon.registry.version>4.3.0</carbon.registry.version>
+        <carbon.registry.version>4.4.5</carbon.registry.version>
 
-        <carbon.deployment.version>4.3.1</carbon.deployment.version>
+        <carbon.deployment.version>4.5.0</carbon.deployment.version>
 
-        <carbon.identity.version>4.3.2</carbon.identity.version>
+        <carbon.identity.version>4.5.5</carbon.identity.version>
 
-        <carbon.multitenancy.version>4.3.4</carbon.multitenancy.version>
+        <carbon.multitenancy.version>4.4.3</carbon.multitenancy.version>
 
         <carbon.automationutils.version>4.3.0</carbon.automationutils.version>
 
@@ -485,6 +493,8 @@
         <log4j.version>1.2.13</log4j.version>
 
         <commons.logging.version>1.1.1</commons.logging.version>
+	
+        <commons-io.wso2.version>2.4.0.wso2v1</commons-io.wso2.version>
 
         <opencsv.version>1.8</opencsv.version>
 
@@ -497,12 +507,12 @@
         <carbon.p2.plugin.version>1.5.3</carbon.p2.plugin.version>
 
         <!-- Apache Axis2 -->
-        <orbit.version.axis2>1.6.1.wso2v11</orbit.version.axis2>
-        <axis2.wso2.version>1.6.1.wso2v11</axis2.wso2.version>
+        <orbit.version.axis2>1.6.1.wso2v12</orbit.version.axis2>
+        <axis2.wso2.version>1.6.1.wso2v12</axis2.wso2.version>
 
         <!-- Apache Axiom -->
-        <orbit.version.axiom>1.2.11.wso2v5</orbit.version.axiom>
-        <axiom.wso2.version>1.2.11.wso2v5</axiom.wso2.version>
+        <orbit.version.axiom>1.2.11.wso2v6</orbit.version.axiom>
+        <axiom.wso2.version>1.2.11.wso2v6</axiom.wso2.version>
 
         <!-- Testing -->
         <testng.version>6.8</testng.version>
