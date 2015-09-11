@@ -40,49 +40,63 @@
                                     <arg line="-uri src/test/resources/wsdl/OrderApprovalService.wsdl -u -uw
                                      -o target/generated-code
                                      -ns2p http://com.test/orderApproval=org.wso2.carbon.samples.test.orderApprovalService.stub,http://com.test/placeorder=org.wso2.carbon.samples.test.orderApprovalService.order"/>
-                                    <classpath refid="wsdl2java.classpath"/>
+                                    <classpath refid="maven.dependency.classpath" />
+                                    <classpath refid="maven.compile.classpath" />
+                                    <classpath refid="maven.runtime.classpath" />
                                 </java>
 
                                 <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
                                     <arg line="-uri src/test/resources/wsdl/BankingService.wsdl -u -uw
                                      -o target/generated-code
                                      -ns2p http://com.test/Banking=org.wso2.carbon.samples.test.bankingService.stub,http://com.test/deposit=org.wso2.carbon.samples.test.bankingService.deposit,http://com.test/withDraw=org.wso2.carbon.samples.test.bankingService.withdraw"/>
-                                    <classpath refid="wsdl2java.classpath"/>
+                                    <classpath refid="maven.dependency.classpath" />
+                                    <classpath refid="maven.compile.classpath" />
+                                    <classpath refid="maven.runtime.classpath" />
                                 </java>
 
                                 <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
                                     <arg line="-uri src/test/resources/wsdl/CallChargingService.wsdl -u -uw
                                      -o target/generated-code
                                      -ns2p http://com.test/callCharge=org.wso2.carbon.samples.test.callChargingService.charges,http://com.test/callcharging=org.wso2.carbon.samples.test.callChargingService.stub"/>
-                                    <classpath refid="wsdl2java.classpath"/>
+                                    <classpath refid="maven.dependency.classpath" />
+                                    <classpath refid="maven.compile.classpath" />
+                                    <classpath refid="maven.runtime.classpath" />
                                 </java>
 
                                 <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
                                     <arg line="-uri src/test/resources/wsdl/CarRentalService.wsdl -u -uw
                                      -o target/generated-code
                                      -ns2p http://com.test/carrental=org.wso2.carbon.samples.test.carRentalService.stub,http://com.test/carReservation=org.wso2.carbon.samples.test.carRentalService.reservation"/>
-                                    <classpath refid="wsdl2java.classpath"/>
+                                    <classpath refid="maven.dependency.classpath" />
+                                    <classpath refid="maven.compile.classpath" />
+                                    <classpath refid="maven.runtime.classpath" />
                                 </java>
 
                                 <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
                                     <arg line="-uri src/test/resources/wsdl/GetQuoteService.wsdl -u -uw
                                      -o target/generated-code
                                      -ns2p http://com.test/placeCustomerDetail=org.wso2.carbon.samples.test.quoteService.customerDetail,http://com.test/quotation=org.wso2.carbon.samples.test.quoteService.stub"/>
-                                    <classpath refid="wsdl2java.classpath"/>
+                                    <classpath refid="maven.dependency.classpath" />
+                                    <classpath refid="maven.compile.classpath" />
+                                    <classpath refid="maven.runtime.classpath" />
                                 </java>
 
                                 <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
                                     <arg line="-uri src/test/resources/wsdl/GreetingService.wsdl -u -uw
                                      -o target/generated-code
                                      -ns2p http://com.test/greeting=org.wso2.carbon.samples.test.greetingService.greeting"/>
-                                    <classpath refid="wsdl2java.classpath"/>
+                                    <classpath refid="maven.dependency.classpath" />
+                                    <classpath refid="maven.compile.classpath" />
+                                    <classpath refid="maven.runtime.classpath" />
                                 </java>
 
                                 <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
                                     <arg line="-uri src/test/resources/wsdl/HealthCareService.wsdl -u -uw
                                      -o target/generated-code
                                      -ns2p http://com.test/HeathCareService=org.wso2.carbon.samples.test.healthCareService.stub,http://com.test/patientDetail=org.wso2.carbon.samples.test.healthCareService.patientDetail"/>
-                                    <classpath refid="wsdl2java.classpath"/>
+                                    <classpath refid="maven.dependency.classpath" />
+                                    <classpath refid="maven.compile.classpath" />
+                                    <classpath refid="maven.runtime.classpath" />
 
                                 </java>
 
@@ -90,21 +104,27 @@
                                     <arg line="-uri src/test/resources/wsdl/InsuranceService.wsdl -u -uw
                                      -o target/generated-code
                                      -ns2p http://com.test/applyForInsurance=org.wso2.carbon.samples.test.insuranceService.insurance,http://com.test/insurance=org.wso2.carbon.samples.test.insuranceService.stub"/>
-                                    <classpath refid="wsdl2java.classpath"/>
+                                    <classpath refid="maven.dependency.classpath" />
+                                    <classpath refid="maven.compile.classpath" />
+                                    <classpath refid="maven.runtime.classpath" />
                                 </java>
 
                                 <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
                                     <arg line="-uri src/test/resources/wsdl/MIPCalculateService.wsdl -u -uw
                                      -o target/generated-code
                                      -ns2p http://com.test/MIPCalculateService=org.wso2.carbon.samples.test.mipCalculateService.stub,http://com.test/placeClientDetail=org.wso2.carbon.samples.test.mipCalculateService.clientDetail"/>
-                                    <classpath refid="wsdl2java.classpath"/>
+                                    <classpath refid="maven.dependency.classpath" />
+                                    <classpath refid="maven.compile.classpath" />
+                                    <classpath refid="maven.runtime.classpath" />
                                 </java>
 
                                 <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
                                     <arg line="-uri src/test/resources/wsdl/ShoppingService.wsdl -u -uw
                                      -o target/generated-code
                                      -ns2p http://com.test/addProduct=org.wso2.carbon.samples.test.shoppingService.product,http://com.test/purchaseOrder=org.wso2.carbon.samples.test.shoppingService.purchaseOrder,http://com.test/shopping=org.wso2.carbon.samples.test.shoppingService.stub"/>
-                                    <classpath refid="wsdl2java.classpath"/>
+                                    <classpath refid="maven.dependency.classpath" />
+                                    <classpath refid="maven.compile.classpath" />
+                                    <classpath refid="maven.runtime.classpath" />
 
                                 </java>
                             </tasks>
