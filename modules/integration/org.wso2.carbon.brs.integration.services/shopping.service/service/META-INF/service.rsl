@@ -40,7 +40,7 @@ then
     System.out.println( "Customer " + $c.name + " just purchased " + $product.name );
 end
 
-rule "Apply 10% discount if total purchases is over 100" salience 9  no-loop true dialect "java"
+rule "Apply discount if total purchases is over 100" salience 9  no-loop true dialect "java"
     when    
             $p : Purchase()  
 $c : Customer(name == $p.customer)
