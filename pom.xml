@@ -47,7 +47,6 @@
         <module>modules/features</module>
         <module>modules/p2-profile-gen</module>
         <module>modules/org.wso2.brs.dashboard.ui</module>
-        <!--<module>modules/org.wso2.stratos.brs.login.ui</module>-->
         <module>modules/distribution</module>
         <module>modules/integration</module>
     </modules>
