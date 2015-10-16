@@ -32,11 +32,11 @@ System Requirements
 
 1. Minimum memory - 1 GB
 2. Processor      - Pentium 800MHz or equivalent at minimum
-3. Java SE Development Kit 1.6.0_24 or higher
+3. Java SE Development Kit 1.7 or higher
 4. To compile and run the sample clients, an Ant version is required. Ant 1.7.0
    version is recommended
 5. To build WSO2 BRS from the Source distribution, it is necessary that you have
-   JDK 1.6 or higher version and Maven 3.0.4 or later
+   JDK 1.7 or higher version and Maven 3.0.4 or later
 
 Installation & Running
 ==================================
