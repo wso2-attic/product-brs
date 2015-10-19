@@ -15,3 +15,9 @@
 -*transports*
 -org.wso2.carbon.mediation.statistics*
 -*startup*
+-org.oasisOpen*
+-org.w3*
+**\wsPolicy\**\*.class
+**\schemaorg_apache_xmlbeans\**\*.class
+**\xmldsig\**\*.class
+**\oasisOpen\**\*.class
