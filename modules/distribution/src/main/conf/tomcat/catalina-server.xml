@@ -75,7 +75,7 @@
                    keystoreFile="${carbon.home}/repository/resources/security/wso2carbon.jks"
                    keystorePass="wso2carbon"
                    URIEncoding="UTF-8"
-		   ciphers="SSL_RSA_WITH_RC4_128_MD5,SSL_RSA_WITH_RC4_128_SHA,TLS_RSA_WITH_AES_128_CBC_SHA,TLS_RSA_WITH_AES_256_CBC_SHA"/>
+                   ciphers="SSL_RSA_WITH_RC4_128_MD5,SSL_RSA_WITH_RC4_128_SHA,TLS_RSA_WITH_AES_128_CBC_SHA,TLS_RSA_WITH_AES_256_CBC_SHA"/>
 
 
         <Engine name="Catalina" defaultHost="localhost">

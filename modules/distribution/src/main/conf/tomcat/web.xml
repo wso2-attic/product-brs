@@ -475,7 +475,7 @@
     <!-- created sessions by modifying the value below.                       -->
 
     <session-config>
-	<cookie-config>
+	    <cookie-config>
          	<secure>true</secure>
      	</cookie-config>
         <session-timeout>30</session-timeout>
