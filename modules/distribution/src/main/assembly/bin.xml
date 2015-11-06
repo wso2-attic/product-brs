@@ -273,5 +273,15 @@
             <outputDirectory>wso2brs-${pom.version}/repository/conf/data-bridge</outputDirectory>
             <fileMode>644</fileMode>
         </file>
+        <file>
+            <source>src/main/conf/tomcat/catalina-server.xml</source>
+            <outputDirectory>wso2brs-${pom.version}/repository/conf/tomcat</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>src/main/conf/tomcat/web.xml</source>
+            <outputDirectory>wso2brs-${pom.version}/repository/conf/tomcat</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
     </files>
 </assembly>
