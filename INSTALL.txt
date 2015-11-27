@@ -1,11 +1,6 @@
 Installing  WSO2  Business Rules Server (BRS) 2.2.0 
 ===================================================
 
-WSO2 BRS 2.2.0 can be run either in standalone mode or as a webapp within a
-servlet container.
-
-Standalone Mode
-=======================
 1. The directory containing this INSTALL.txt file will be the root and it will be
    treated as Carbon home directory and let it be CARBON_HOME.
 
