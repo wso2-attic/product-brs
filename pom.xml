@@ -489,6 +489,8 @@
 
         <carbon.automation.version>4.4.2</carbon.automation.version>
 
+	<cipher.tool.version>1.0.0-wso2v3</cipher.tool.version>
+
         <log4j.version>1.2.17</log4j.version>
 
         <commons.logging.version>1.1.1</commons.logging.version>
