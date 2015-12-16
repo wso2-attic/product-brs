@@ -116,6 +116,9 @@
                                     org.wso2.carbon.commons:org.wso2.carbon.soaptracer.feature:${carbon.commons.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
+                                    org.wso2.carbon.identity:org.wso2.carbon.identity.core.feature:${carbon.identity.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.carbon.identity:org.wso2.carbon.security.mgt.feature:${carbon.identity.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -169,9 +172,9 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.commons:org.wso2.carbon.event.ui.feature:${carbon.commons.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>
+                                <!--<featureArtifactDef>
                                     org.wso2.carbon.deployment:org.wso2.carbon.bam.service.agent.feature:${carbon.deployment.version}
-                                </featureArtifactDef>
+                                </featureArtifactDef>-->
                                 <!-- BRS Application deployer-->
                                 <featureArtifactDef>
                                     org.wso2.carbon.rules:org.wso2.carbon.application.deployer.rule.feature:${carbon.rules.version}
@@ -311,6 +314,20 @@
                                     <id>org.wso2.carbon.soaptracer.feature.group</id>
                                     <version>${carbon.commons.version}</version>
                                 </feature>
+
+                                <!--Carbon Identity Features-->
+                                <feature>
+                                    <id>org.wso2.carbon.identity.core.feature.group</id>
+                                    <version>${carbon.identity.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.security.mgt.server.feature.group</id>
+                                    <version>${carbon.identity.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.user.mgt.server.feature.group</id>
+                                    <version>${carbon.identity.version}</version>
+                                </feature>
                                 <feature>
                                     <id>org.wso2.carbon.security.mgt.feature.group</id>
                                     <version>${carbon.identity.version}</version>
@@ -388,10 +405,10 @@
                                     <id>org.wso2.carbon.event.ui.feature.group</id>
                                     <version>${carbon.commons.version}</version>
                                 </feature>
-                                <feature>
+                                <!--<feature>
                                     <id>org.wso2.carbon.bam.service.agent.feature.group</id>
                                     <version>${carbon.deployment.version}</version>
-                                </feature>
+                                </feature>-->
 
                                 <!--BRS Application deployer -->
                                 <feature>
@@ -508,6 +525,19 @@
                                     <id>org.wso2.carbon.tenant.mgt.common.feature.group</id>
                                     <version>${carbon.commons.version}</version>
                                 </feature>
+                                <!--Carbon Identity Features-->
+                                <feature>
+                                    <id>org.wso2.carbon.identity.core.feature.group</id>
+                                    <version>${carbon.identity.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.security.mgt.server.feature.group</id>
+                                    <version>${carbon.identity.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.user.mgt.server.feature.group</id>
+                                    <version>${carbon.identity.version}</version>
+                                </feature>
                                 <feature>
                                     <id>org.wso2.carbon.security.mgt.feature.group</id>
                                     <version>${carbon.identity.version}</version>
@@ -547,10 +577,10 @@
                                     </id>
                                     <version>${carbon.identity.version}</version>
                                 </feature>
-                                <feature>
+                                <!--<feature>
                                     <id>org.wso2.carbon.identity.core.ui.feature.group</id>
                                     <version>${carbon.identity.version}</version>
-                                </feature>
+                                </feature>-->
                                 <feature>
                                     <id>org.wso2.carbon.module.mgt.server.feature.group</id>
                                     <version>${carbon.deployment.version}</version>
@@ -581,10 +611,10 @@
                                     <id>org.wso2.carbon.event.ui.feature.group</id>
                                     <version>${carbon.commons.version}</version>
                                 </feature>
-                                <feature>
+                                <!--<feature>
                                     <id>org.wso2.carbon.bam.service.agent.feature.group</id>
                                     <version>${carbon.deployment.version}</version>
-                                </feature>
+                                </feature>-->
 
                                 <!--BRS Application deployer -->
                                 <feature>
