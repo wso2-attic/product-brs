@@ -30,8 +30,8 @@ Key Features of WSO2 BRS
 System Requirements
 ==================================
 
-1. Minimum memory - 1 GB
-2. Processor      - Pentium 800MHz or equivalent at minimum
+1. Minimum memory - 2 GB
+2. Processor      - 3GHz Dual­core Xeon/Opteron (or latest)
 3. Java SE Development Kit 1.7 or higher
 4. To compile and run the sample clients, an Ant version is required. Ant 1.7.0
    version is recommended
