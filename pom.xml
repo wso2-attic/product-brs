@@ -527,6 +527,7 @@
         <!-- Apache Axis2 -->
         <orbit.version.axis2>1.6.1.wso2v16</orbit.version.axis2>
         <axis2.wso2.version>1.6.1.wso2v12</axis2.wso2.version>
+        <axis2.aar.maven.plugin.version>1.6.2</axis2.aar.maven.plugin.version>
 
         <!-- Apache Axiom -->
         <orbit.version.axiom>1.2.11.wso2v6</orbit.version.axiom>
