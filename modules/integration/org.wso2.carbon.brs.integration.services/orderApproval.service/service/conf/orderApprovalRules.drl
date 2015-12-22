@@ -23,7 +23,7 @@
                 not ( OrderAccept())
                 $placeOrder : PlaceOrder( symbol == "IBM" )
                 then
-                retract($placeOrder);
+                //retract($placeOrder);
                 OrderReject orderReject = new OrderReject();
                 orderReject.setReason("An Order for stocks of IBM is accepted only if the number of stocks is higher than 10.");
                 insertLogical(orderReject);
@@ -34,7 +34,7 @@
                 not ( OrderAccept())
                 $placeOrder : PlaceOrder( symbol == "SUN" )
                 then
-                retract($placeOrder);
+                //retract($placeOrder);
                 OrderReject orderReject = new OrderReject();
                 orderReject.setReason("An Order for stocks of SUN is accepted only if the stock price is higher than 100 $.");
                 insertLogical(orderReject);
@@ -45,7 +45,7 @@
                 not ( OrderAccept())
                 $placeOrder : PlaceOrder( symbol == "MSFT" )
                 then
-                retract($placeOrder);
+                //retract($placeOrder);
                 OrderReject orderReject = new OrderReject();
                 orderReject.setReason("An Order for stocks of MSFT is accepted only if the stock price is higher than 50 $ and the number of stocks is lower than 200.");
                 insertLogical(orderReject);
