@@ -28,6 +28,10 @@
             <outputDirectory>wso2brs-${pom.version}</outputDirectory>
             <excludes>
                 <exclude>**/carbon.xml</exclude>
+                <exclude>**/*.sh</exclude>
+                <exclude>**/README.txt</exclude>
+                <exclude>**/LICENSE.txt</exclude>
+                <exclude>**/version.txt</exclude>
                 <!--exclude>**/*.sh</exclude>
                 <exclude>**/conf/axis2/axis2.xml</exclude>
                 <exclude>**/log4j.properties</exclude>
