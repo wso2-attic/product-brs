@@ -1,0 +1,18 @@
+# Ignore everything in this directory
+target
+.classpath
+.settings
+.project
+*.iml
+*.iws
+*.ipr
+.idea
+/modules/integration/tests-integration/rules/src/test/resources/client/modules/addressing-1.6.1-wso2v16.mar
+/modules/integration/tests-integration/rules/src/test/resources/client/modules/rampart-1.6.1-wso2v16.mar
+/modules/integration/tests-integration/rules/src/test/resources/keystores/products/client-truststore.jks
+/modules/integration/tests-integration/rules/src/test/resources/keystores/products/wso2carbon.jks
+/modules/integration/tests-integration/rules/src/test/resources/keystores/stratos/client-truststore.jks
+/modules/integration/tests-integration/rules/src/test/resources/keystores/stratos/wso2carbon.jks
+/modules/integration/tests-ui-integration/src/test/resources/client/modules/addressing-1.6.1-wso2v16.mar
+/modules/integration/tests-ui-integration/src/test/resources/client/modules/rampart-1.6.1-wso2v16.mar
+/modules/integration/tests-integration/rules/src/test/resources/axis2config/axis2_client.xml
