@@ -4,6 +4,7 @@
     <property name="generated-code" value="${build}/generated-code"/>
     <property name="classes" value="${build}/classes"/>
     <property name="BRS_HOME" value="${basedir}/../.."/>
+    <property name="log.config" value="file:src/main/resources/log4j.properties"/>
 
     <path id="brs.classpath">
         <pathelement location="${classes}"/>
@@ -32,6 +33,7 @@
         <!--All samples-->
 
         <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
+            <sysproperty key="log4j.configuration" value="${log.config}"/>
             <arg line="-uri http://localhost:9763/services/OrderApprovalService?wsdl -u -uw
                                      -o build/generated-code
                                      -ns2p http://com.test/orderApproval=org.wso2.carbon.samples.orderApprovalService.stub,http://com.test/placeorder=org.wso2.carbon.samples.orderApprovalService.order"/>
@@ -39,6 +41,7 @@
         </java>
 
         <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
+            <sysproperty key="log4j.configuration" value="${log.config}"/>
             <arg line="-uri http://localhost:9763/services/BankingService?wsdl -u -uw
                                      -o build/generated-code
                                      -ns2p http://com.test/Banking=org.wso2.carbon.samples.bankingService.stub,http://com.test/deposit=org.wso2.carbon.samples.bankingService.deposit,http://com.test/withDraw=org.wso2.carbon.samples.bankingService.withdraw"/>
@@ -53,6 +56,7 @@
         </java>-->
 
         <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
+            <sysproperty key="log4j.configuration" value="${log.config}"/>
             <arg line="-uri http://localhost:9763/services/CarRentalService?wsdl -u -uw
                                      -o build/generated-code
                                      -ns2p http://com.test/carrental=org.wso2.carbon.samples.carRentalService.stub,http://com.test/carReservation=org.wso2.carbon.samples.carRentalService.reservation"/>
@@ -60,6 +64,7 @@
         </java>
 
         <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
+            <sysproperty key="log4j.configuration" value="${log.config}"/>
             <arg line="-uri http://localhost:9763/services/GetQuoteService?wsdl -u -uw
                                      -o build/generated-code
                                      -ns2p http://com.test/placeCustomerDetail=org.wso2.carbon.samples.quoteService.customerDetail,http://com.test/quotation=org.wso2.carbon.samples.quoteService.stub"/>
@@ -67,6 +72,7 @@
         </java>
 
         <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
+            <sysproperty key="log4j.configuration" value="${log.config}"/>
             <arg line="-uri http://localhost:9763/services/GreetingService?wsdl -u -uw
                                      -o build/generated-code
                                      -ns2p http://com.test/greeting=org.wso2.carbon.samples.greetingService.greeting"/>
@@ -74,6 +80,7 @@
         </java>
 
         <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
+            <sysproperty key="log4j.configuration" value="${log.config}"/>
             <arg line="-uri http://localhost:9763/services/HealthCareService?wsdl -u -uw
                                      -o build/generated-code
                                      -ns2p http://com.test/HeathCareService=org.wso2.carbon.samples.healthCareService.stub,http://com.test/patientDetail=org.wso2.carbon.samples.healthCareService.patientDetail"/>
@@ -82,6 +89,7 @@
         </java>
 
         <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
+            <sysproperty key="log4j.configuration" value="${log.config}"/>
             <arg line="-uri http://localhost:9763/services/InsuranceService?wsdl -u -uw
                                      -o build/generated-code
                                      -ns2p http://com.test/applyForInsurance=org.wso2.carbon.samples.insuranceService.insurance,http://com.test/insurance=org.wso2.carbon.samples.insuranceService.stub"/>
@@ -89,6 +97,7 @@
         </java>
 
         <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
+            <sysproperty key="log4j.configuration" value="${log.config}"/>
             <arg line="-uri http://localhost:9763/services/MIPCalculateService?wsdl -u -uw
                                      -o build/generated-code
                                      -ns2p http://com.test/MIPCalculateService=org.wso2.carbon.samples.mipCalculateService.stub,http://com.test/placeClientDetail=org.wso2.carbon.samples.mipCalculateService.clientDetail"/>
@@ -96,6 +105,7 @@
         </java>
 
         <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
+            <sysproperty key="log4j.configuration" value="${log.config}"/>
             <arg line="-uri http://localhost:9763/services/ShoppingService?wsdl -u -uw
                                      -o build/generated-code
                                      -ns2p http://com.test/addProduct=org.wso2.carbon.samples.shoppingService.product,http://com.test/purchaseOrder=org.wso2.carbon.samples.shoppingService.purchaseOrder,http://com.test/shopping=org.wso2.carbon.samples.shoppingService.stub"/>
@@ -127,39 +137,39 @@
 
      <target name="run.client.bankingService" depends=" compile.clients">
         <java classname="org.wso2.carbon.samples.BankingServiceTestCase" classpathref="brs.classpath"
-              fork="true"/>
+              fork="true"><sysproperty key="log4j.configuration" value="${log.config}"/></java>
     </target>
      <target name="run.client.carRentalService" depends=" compile.clients">
         <java classname="org.wso2.carbon.samples.CarRentalTestCase" classpathref="brs.classpath"
-              fork="true"/>
+              fork="true"><sysproperty key="log4j.configuration" value="${log.config}"/></java>
     </target>
      <target name="run.client.getQuoteService" depends=" compile.clients">
         <java classname="org.wso2.carbon.samples.GetQuoteServiceTestCase" classpathref="brs.classpath"
-              fork="true"/>
+              fork="true"><sysproperty key="log4j.configuration" value="${log.config}"/></java>
     </target>
      <target name="run.client.greetingService" depends=" compile.clients">
         <java classname="org.wso2.carbon.samples.GreetingServiceTestCase" classpathref="brs.classpath"
-              fork="true"/>
+              fork="true"><sysproperty key="log4j.configuration" value="${log.config}"/></java>
     </target>
      <target name="run.client.healthCareService" depends=" compile.clients">
         <java classname="org.wso2.carbon.samples.HealthCareServiceTestCase" classpathref="brs.classpath"
-              fork="true"/>
+              fork="true"><sysproperty key="log4j.configuration" value="${log.config}"/></java>
     </target>
      <target name="run.client.insuranceService" depends=" compile.clients">
         <java classname="org.wso2.carbon.samples.InsuranceServiceTestCase" classpathref="brs.classpath"
-              fork="true"/>
+              fork="true"><sysproperty key="log4j.configuration" value="${log.config}"/></java>
     </target>
      <target name="run.client.MIPCalculateService" depends=" compile.clients">
         <java classname="org.wso2.carbon.samples.MIPCalculateServiceTestCase" classpathref="brs.classpath"
-              fork="true"/>
+              fork="true"><sysproperty key="log4j.configuration" value="${log.config}"/></java>
     </target>
      <target name="run.client.placeOrderService" depends=" compile.clients">
         <java classname="org.wso2.carbon.samples.PlaceOrderTestCase" classpathref="brs.classpath"
-              fork="true"/>
+              fork="true"><sysproperty key="log4j.configuration" value="${log.config}"/></java>
     </target>
      <target name="run.client.shoppingService" depends=" compile.clients">
         <java classname="org.wso2.carbon.samples.ShoppingServiceTestCase" classpathref="brs.classpath"
-              fork="true"/>
+              fork="true"><sysproperty key="log4j.configuration" value="${log.config}"/></java>
     </target>
 
 

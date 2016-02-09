@@ -1,8 +1,8 @@
 ================================================================================
-                        WSO2  Business Rules Server 2.1.0
+                        WSO2  Business Rules Server 2.2.0
 ================================================================================
 
-Welcome to the WSO2 BRS 2.1.0 release
+Welcome to the WSO2 BRS 2.2.0 release
 
 WSO2 BRS is a lightweight and easy-to-use Open Source  Business Rules Server
 (BRS) is available under the Apache Software License v2.0. and WSO2 BRS supports
@@ -30,18 +30,18 @@ Key Features of WSO2 BRS
 System Requirements
 ==================================
 
-1. Minimum memory - 1 GB
-2. Processor      - Pentium 800MHz or equivalent at minimum
-3. Java SE Development Kit 1.6.0_24 or higher
+1. Minimum memory - 2 GB
+2. Processor      - 3GHz Dual­core Xeon/Opteron (or latest)
+3. Java SE Development Kit 1.7 or higher
 4. To compile and run the sample clients, an Ant version is required. Ant 1.7.0
    version is recommended
 5. To build WSO2 BRS from the Source distribution, it is necessary that you have
-   JDK 1.6 or higher version and Maven 3.0.4 or later
+   JDK 1.7 or higher version and Maven 3.0.4 or later
 
 Installation & Running
 ==================================
 
-1. Extract the wso2brs-2.1.0.zip and go to the extracted directory
+1. Extract the wso2brs-2.2.0.zip and go to the extracted directory
 2. Run the wso2server.sh or wso2server.bat as appropriate
 3. Point your favourite browser to
 
@@ -53,7 +53,7 @@ Installation & Running
     password : admin
 
 
-WSO2 BRS 2.1.0 distribution directory structure
+WSO2 BRS 2.2.0 distribution directory structure
 =============================================
 
 	CARBON_HOME
@@ -129,7 +129,7 @@ WSO2 BRS 2.1.0 distribution directory structure
       This document will contain information on installing WSO2 BRS
 
     - release-notes.html
-      Release information for WSO2 BRS 2.1.0
+      Release information for WSO2 BRS 2.2.0
 
 Support
 ==================================
@@ -145,7 +145,7 @@ please visit http://wso2.com/support/
 
 For more information on WSO2 BRS, visit http://wso2.com/products/business-rules-server/
 
-Known issues of WSO2 BRS 2.1.0
+Known issues of WSO2 BRS 2.2.0
 =================================
 
 Issue Tracker
