@@ -1,6 +1,13 @@
-================================================================================
-                        WSO2  Business Rules Server 2.2.0
-================================================================================
+WSO2  Business Rules Server 2.2.0
+=================================
+---
+
+|  Branch | Build Status |
+| :------------ |:-------------
+| master      | [![Build Status](https://wso2.org/jenkins/job/product-brs/badge/icon)](https://wso2.org/jenkins/job/product-brs) |
+
+
+---
 
 Welcome to the WSO2 BRS 2.2.0 release
 
